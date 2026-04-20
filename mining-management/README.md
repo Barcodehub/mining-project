@@ -30,9 +30,17 @@ El sistema está dividido en capas con estrictos límites de dependencia:
 - **Análisis Exploratorio:** Permite acceder a los datos usando *Criteria API* dinámicos basados en combinaciones múltiples (por ejemplo, buscar el `pH` mínimo, máximas temperaturas y ubicación determinada en el mismo query).
 - **Cálculos Agrupados (Dashboards):** Servicio de cálculo agregado (Aggregations JPQL) de promedios, valores mínimos y máximos en un solo endpoint. 
 
+### 3. API Gateway Lógico (Seguridad & Proxy)
+- **Delegación a Microservicio de Usuarios:** `mining-management` actúa como API Gateway ante el cliente consumiendo y orquestando los tokens. La generación de JWT la realiza `mining-users` y es retornado vía proxy (`/api/v1/auth/login`) a través de un `RestClient`.
+- **Seguridad Centralizada:** Este servicio requiere cabecera de *Bearer Authentication* en casi todos sus endpoints sin interconectar persistencias de Usuario ni emitir sus propios Tokens (Arquitectura Sin Estado). En su lugar procesa, filtra y valida criptográficamente (Jwts).
+- **Autorización RBAC:** Aprovecha las etiquetas nativas `@PreAuthorize` de Spring combinadas con las autoridades extraídas del token provisto para determinar permisos (`ADMINISTRADOR`, `PROPIETARIO`, `EMPLEADO` o `CLIENTE`).
+
 ---
 
 ## 🔌 Referencia de Endpoints
+
+### Autenticación y Autorización (Proxy)
+- `POST /api/v1/auth/login` - Proxifica las credenciales hacia `mining-users` y devuelve la sesión JWT.
 
 ### Posts & Foros (`/api/v1/posts`)
 - `POST /api/v1/posts` - Crea un foro o reporte dependiendo del `type` en el body.

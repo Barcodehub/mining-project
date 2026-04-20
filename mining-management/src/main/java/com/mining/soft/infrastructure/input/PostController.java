@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,6 +31,7 @@ public class PostController {
     private final ICommentDtoMapper commentDtoMapper;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'PROPIETARIO', 'EMPLEADO', 'CLIENTE')")
     public ResponseEntity<PostResponseDto> createPost(@RequestBody PostRequestDto request) {
         Post post;
         if (request.getType() == PostType.REPORT) {
@@ -44,11 +46,13 @@ public class PostController {
     }
 
     @GetMapping("/{postId}/comments")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<CommentResponseDto>> getCommentsByPostId(@PathVariable Long postId) {
         return ResponseEntity.ok(commentDtoMapper.toResponseDtoList(commentServicePort.getCommentsByPostId(postId)));
     }
 
     @GetMapping
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<org.springframework.data.domain.Page<PostResponseDto>> getAllPosts(org.springframework.data.domain.Pageable pageable) {
         return ResponseEntity.ok(postServicePort.getAllPosts(pageable).map(postDtoMapper::toResponseDto));
     }

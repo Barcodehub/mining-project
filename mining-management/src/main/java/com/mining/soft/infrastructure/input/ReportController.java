@@ -8,6 +8,7 @@ import com.mining.soft.infrastructure.input.mapper.IPostDtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -22,6 +23,7 @@ public class ReportController {
     private final IPostDtoMapper postDtoMapper;
 
     @GetMapping
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<ReportResponseDto>> filterReports(
             @RequestParam(required = false) ReportStatus status,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
@@ -36,16 +38,19 @@ public class ReportController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ReportResponseDto> getReportById(@PathVariable Long id) {
         return ResponseEntity.ok(postDtoMapper.toReportResponseDto(postServicePort.getReportById(id)));
     }
 
     @PatchMapping("/{id}/request-validation")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ReportResponseDto> requestValidation(@PathVariable Long id) {
         return ResponseEntity.ok(postDtoMapper.toReportResponseDto(postServicePort.requestValidation(id)));
     }
 
     @PatchMapping("/{id}/status")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'PROPIETARIO', 'EMPLEADO', 'CLIENTE')")
     public ResponseEntity<ReportResponseDto> changeStatus(@PathVariable Long id, @RequestBody ReportStatusRequestDto request) {
         return ResponseEntity.ok(postDtoMapper.toReportResponseDto(
                 postServicePort.changeReportStatus(id, request.getStatus(), request.getValidatorId())

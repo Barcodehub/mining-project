@@ -7,6 +7,7 @@ import com.mining.soft.infrastructure.input.mapper.ICommentDtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,6 +19,7 @@ public class CommentController {
     private final ICommentDtoMapper commentDtoMapper;
 
     @PostMapping
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<CommentResponseDto> createComment(@RequestBody CommentRequestDto request) {
         return new ResponseEntity<>(
                 commentDtoMapper.toResponseDto(commentServicePort.createComment(commentDtoMapper.toModel(request))),

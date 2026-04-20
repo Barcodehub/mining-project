@@ -6,6 +6,7 @@ import com.mining.soft.infrastructure.input.mapper.IEnvironmentalDtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,6 +18,7 @@ public class AdapterController {
     private final IEnvironmentalDtoMapper mapper;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'PROPIETARIO', 'EMPLEADO', 'CLIENTE')")
     public ResponseEntity<Void> createAdapter(@RequestBody AdapterRequestDto request) {
         servicePort.createAdapter(mapper.toAdapterModel(request));
         return ResponseEntity.status(HttpStatus.CREATED).build();
