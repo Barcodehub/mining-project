@@ -1,0 +1,434 @@
+openapi: 3.0.3
+info:
+  title: Mining System Api
+  description: API para gestión de objetos - Generación automática de DTOs con OpenAPI
+  version: 1.0.0
+  contact:
+    name: Brayan Barco
+
+servers:
+  - url: http://localhost:8081
+    description: Servidor local de desarrollo
+
+
+paths:
+  /users:
+    get:
+      tags:
+        - Users
+      summary: Listar todos los usuarios
+      description: Obtiene la lista de todos los usuarios del sistema
+      operationId: getAllUsers
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          description: Número de página
+          required: false
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          description: Tamaño de página
+          required: false
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Lista de usuarios obtenida exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsersListResponse'
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags:
+        - Users
+      summary: Crear un nuevo usuario
+      description: Crea un nuevo usuario en el sistema
+      operationId: createUser
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Datos del objeto a crear
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+      responses:
+        '201':
+          description: Objeto creado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDataResponse'
+        '400':
+          description: Datos de entrada inválidos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /users/{id}:
+    get:
+      tags:
+        - Users
+      summary: Obtener usuario por ID
+      description: Obtiene la información de un usuario específico por su ID
+      operationId: getUserById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: ID del usuario
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Usuario encontrado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDataResponse'
+        '404':
+          description: Usuario no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Autenticación de usuario (login)
+      description: Inicia sesión y retorna el token JWT y datos del usuario autenticado
+      operationId: login
+      requestBody:
+        description: Credenciales de acceso
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Autenticación exitosa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthDataResponse'
+        '401':
+          description: Credenciales inválidas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /users/public:
+    post:
+      tags:
+        - Users
+      summary: Registro público de usuario
+      description: |
+        Permite el registro de usuarios CLIENTE sin autenticación.
+      operationId: publicRegisterUser
+      requestBody:
+        description: Datos del usuario a registrar
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+      responses:
+        '201':
+          description: Usuario registrado exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDataResponse'
+        '400':
+          description: Datos inválidos o intento de registrar rol no permitido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+
+components:
+  schemas:
+    # Wrapper genérico para respuestas exitosas
+    SuccessResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          description: Datos de la respuesta
+      required:
+        - data
+
+    # Wrapper para listas paginadas
+    PaginatedResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+      required:
+        - data
+        - meta
+
+    PaginationMeta:
+      type: object
+      properties:
+        page:
+          type: integer
+          description: Página actual
+          example: 0
+        size:
+          type: integer
+          description: Elementos por página
+          example: 10
+        totalElements:
+          type: integer
+          description: Total de elementos
+          example: 100
+        totalPages:
+          type: integer
+          description: Total de páginas
+          example: 10
+
+    # Response específico para crear/obtener usuario
+    UserDataResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/UserResponse'
+      required:
+        - data
+
+    # Response para lista de usuarios
+    UsersListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserResponse'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
+      required:
+        - data
+        - meta
+
+    AuthDataResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/AuthResponse'
+      required:
+        - data
+
+    UserRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+          example: "Juan"
+        lastName:
+          type: string
+          minLength: 1
+          maxLength: 100
+          example: "Pérez"
+        password:
+          type: string
+          minLength: 8
+          maxLength: 100
+          example: "MiClaveSegura123"
+        email:
+          type: string
+          format: email
+          example: "juan.perez@email.com"
+        identificationDocument:
+          type: string
+          pattern: '^[0-9]+$'
+          maxLength: 20
+          example: "1234567890"
+        phoneNumber:
+          type: string
+          maxLength: 14
+          pattern: '^\+?[0-9]{1,13}$'
+          example: "+573005698325"
+        birthDate:
+          type: string
+          format: date
+          example: "1990-01-01"
+        roleId:
+          type: integer
+          format: int64
+          description: ID del rol a asignar al usuario
+          example: 2
+      required:
+        - name
+        - lastName
+        - password
+        - email
+        - identificationDocument
+        - phoneNumber
+        - roleId
+
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: ID único del objeto
+          example: 1
+        name:
+          type: string
+          description: Nombre del objeto
+          example: "Objeto de ejemplo"
+        lastName:
+          type: string
+          description: Descripción del objeto
+          example: "Apellido"
+        email:
+          type: string
+          description: Descripción del objeto
+          example: "email@email.com"
+        restaurantWorkId:
+          type: integer
+          format: int64
+        phoneNumber:
+          type: string
+          description: Número de teléfono del usuario
+          example: "+573001234567"
+        role:
+          $ref: '#/components/schemas/RoleResponse'
+
+    RoleResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: ID del rol
+          example: 4
+        name:
+          type: string
+          description: Nombre del rol
+          example: "CLIENTE"
+
+    ErrorResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp del error
+          example: "2025-11-29T10:30:00Z"
+        status:
+          type: integer
+          description: Código de estado HTTP
+          example: 400
+        error:
+          type: string
+          description: Tipo de error
+          example: "Bad Request"
+        message:
+          type: string
+          description: Mensaje descriptivo del error
+          example: "El campo 'name' es requerido"
+        path:
+          type: string
+          description: Path de la petición que causó el error
+          example: "/api/v1/objects"
+
+    LoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          example: "usuario@email.com"
+        password:
+          type: string
+          format: password
+          example: "MiClaveSegura123"
+      required:
+        - email
+        - password
+
+    AuthResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          description: Token JWT generado
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        userId:
+          type: integer
+          format: int64
+          description: ID del usuario autenticado
+          example: 1
+        email:
+          type: string
+          format: email
+          description: Email del usuario autenticado
+          example: "usuario@email.com"
+        role:
+          $ref: '#/components/schemas/RoleResponse'
+      required:
+        - token
+        - userId
+        - email
+        - role
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: "Autenticación mediante token JWT. Formato: 'Bearer {token}'"

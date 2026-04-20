@@ -1,0 +1,158 @@
+plugins {
+	id 'org.springframework.boot' version '3.2.0'
+	id 'io.spring.dependency-management' version '1.1.4'
+	id 'java'
+	id 'jacoco'
+	id 'idea'
+	alias(libs.plugins.openapiGenerator)
+}
+
+group = 'com.mining.soft'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+ext {
+	springBootVersion = "3.2.0"
+	postgresqlVersion = "42.7.2"
+}
+
+dependencies {
+	implementation "org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}"
+	implementation "org.springframework.boot:spring-boot-starter-validation:${springBootVersion}"
+	implementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
+	developmentOnly "org.springframework.boot:spring-boot-devtools:${springBootVersion}"
+	testImplementation "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
+
+
+	implementation "org.postgresql:postgresql:${postgresqlVersion}"
+
+	implementation 'org.springframework.boot:spring-boot-starter-security:3.2.0'
+
+	implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.3'
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.3'
+
+	// MapStruct
+	implementation libs.mapstruct
+	annotationProcessor libs.lombok.mapstruct.binding
+	annotationProcessor libs.mapstruct.processor
+
+	// Lombok
+	compileOnly libs.lombok
+	annotationProcessor libs.lombok
+
+	// SpringDoc OpenAPI
+	implementation libs.springDoc
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
+
+	// OpenAPI Generator - Swagger annotations
+	implementation 'io.swagger.core.v3:swagger-annotations:2.2.15'
+	implementation 'org.openapitools:jackson-databind-nullable:0.2.6'
+
+	// Jakarta Validation (requerido para Spring Boot 3)
+	implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
+
+	// AWS SDK for S3
+	implementation 'software.amazon.awssdk:s3:2.25.32'
+	// Thumbnailator para miniaturas
+	implementation 'net.coobird:thumbnailator:0.4.20'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+test {
+	finalizedBy jacocoTestReport
+}
+
+// Configuración para que los procesadores de anotaciones funcionen correctamente
+tasks.withType(JavaCompile) {
+	options.compilerArgs += [
+		'-Amapstruct.defaultComponentModel=spring',
+		'-Amapstruct.unmappedTargetPolicy=IGNORE'
+	]
+}
+
+// Configuración de OpenAPI Generator
+openApiGenerate {
+	generatorName = "spring"
+	inputSpec = "$projectDir/src/main/resources/static/open-api.yaml".toString()
+	outputDir = "$projectDir/build/generated".toString()
+	apiPackage = "com.mining.soft.apifirst.api"
+	invokerPackage = "com.mining.soft.apifirst.invoker"
+	modelPackage = "com.mining.soft.apifirst.model"
+	modelNameSuffix = "Dto"
+	configOptions = [
+			annotationLibrary    : "none",
+			dateLibrary          : "java8",
+			documentationProvider: "none",
+			library              : "spring-boot",
+			openApiNullable      : "false",
+			useBeanValidation    : "true",
+			useSpringBoot3       : "true",
+			interfaceOnly        : "true",
+			serializableModel    : "true",
+			useTags              : "true",
+			skipDefaultInterface : "true"
+	]
+	typeMappings = [
+			"LocalDateTime": "LocalDateTime"
+	]
+	importMappings = [
+			"LocalDateTime": "java.time.LocalDateTime"
+	]
+	globalProperties = [
+			"skipFormModel": "false",
+			"models": "",
+			"apis": "",
+			"modelDocs": "false",
+			"apiDocs": "false"
+	]
+}
+
+openApiValidate {
+	inputSpec.set("$projectDir/src/main/resources/static/open-api.yaml".toString())
+}
+
+// Asegurar que la generación ocurra antes de compilar
+compileJava.dependsOn tasks.openApiGenerate
+
+// Agregar el código generado al sourceset
+sourceSets {
+	main {
+		java {
+			srcDir "$buildDir/generated/src/main/java"
+		}
+	}
+}
+
+// Configurar IntelliJ IDEA para reconocer correctamente las carpetas generadas
+idea {
+	module {
+		// Marcar la carpeta build como excluida
+		excludeDirs += file("${buildDir}")
+		excludeDirs -= file("${buildDir}/generated")
+		// Marcar el paquete generado
+		generatedSourceDirs += file("${buildDir}/generated/src/main/java")
+		// Permitir que IntelliJ reconozca correctamente los archivos generados
+		inheritOutputDirs = false
+		outputDir = file("${buildDir}/classes/java/main")
+		testOutputDir = file("${buildDir}/classes/java/test")
+	}
+}
+
+// Limpiar archivos generados
+clean {
+	delete "${buildDir}/generated"
+}

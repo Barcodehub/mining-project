@@ -1,0 +1,18 @@
+[versions]
+openapi-generator = "7.0.1"
+springdoc = "2.2.0"
+mapstruct = "1.5.5.Final"
+lombok = "1.18.30"
+lombok-mapstruct-binding = "0.2.0"
+
+[libraries]
+openapiGenerator = { module = "org.openapitools:openapi-generator-gradle-plugin", version.ref = "openapi-generator" }
+springDoc = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref = "springdoc" }
+mapstruct = { module = "org.mapstruct:mapstruct", version.ref = "mapstruct" }
+mapstruct-processor = { module = "org.mapstruct:mapstruct-processor", version.ref = "mapstruct" }
+lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
+lombok-mapstruct-binding = { module = "org.projectlombok:lombok-mapstruct-binding", version.ref = "lombok-mapstruct-binding" }
+
+[plugins]
+openapiGenerator = { id = "org.openapi.generator", version.ref = "openapi-generator" }
+

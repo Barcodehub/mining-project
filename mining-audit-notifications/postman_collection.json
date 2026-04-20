@@ -1,0 +1,267 @@
+{
+  "info": {
+    "name": "Mining Management API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Posts",
+      "item": [
+        {
+          "name": "Create Forum Post",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"title\": \"Discusion sobre zonas\",\r\n  \"content\": \"Alguien sabe sobre...\",\r\n  \"userId\": 1,\r\n  \"type\": \"FORUM\"\r\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/posts",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "v1", "posts"]
+            }
+          }
+        },
+        {
+          "name": "Create Report Post",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"title\": \"Mineria encontrada en x zona\",\r\n  \"content\": \"Reporto actividad...\",\r\n  \"userId\": 1,\r\n  \"type\": \"REPORT\",\r\n  \"latitude\": 7.89,\r\n  \"longitude\": -72.50,\r\n  \"images\": [\r\n    { \"imageUrl\": \"http://s3.aws/img1.png\" }\r\n  ]\r\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/posts",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "v1", "posts"]
+            }
+          }
+        },
+        {
+          "name": "Get All Posts (Paginated)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8080/api/v1/posts?page=0&size=10",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "v1", "posts"],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Post Comments",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8080/api/v1/posts/1/comments",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "v1", "posts", "1", "comments"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reports",
+      "item": [
+        {
+          "name": "Filter Reports",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8080/api/v1/reports?status=SIN_VALIDAR",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "v1", "reports"],
+              "query": [
+                { "key": "status", "value": "SIN_VALIDAR" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Report By Id",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8080/api/v1/reports/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "v1", "reports", "1"]
+            }
+          }
+        },
+        {
+          "name": "Request Validation",
+          "request": {
+            "method": "PATCH",
+            "url": {
+              "raw": "http://localhost:8080/api/v1/reports/1/request-validation",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "v1", "reports", "1", "request-validation"]
+            }
+          }
+        },
+        {
+          "name": "Change Report Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"status\": \"VALIDADO\",\r\n  \"validatorId\": 2\r\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/reports/1/status",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "v1", "reports", "1", "status"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Comments",
+      "item": [
+        {
+          "name": "Create Comment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"content\": \"Este reporte es falso\",\r\n  \"userId\": 2,\r\n  \"postId\": 1\r\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/comments",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "v1", "comments"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Environmental Data",
+      "item": [
+        {
+          "name": "Create Adapter",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"sensorType\": \"sensorB\",\r\n  \"mapping\": {\r\n    \"device_id\": \"meta.id\",\r\n    \"ph\": \"phwater_ong\",\r\n    \"temperature\": \"temp_sensor\",\r\n    \"turbidity\": \"turb_val\",\r\n    \"timestamp\": \"time\"\r\n  }\r\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/adapters",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "v1", "adapters"]
+            }
+          }
+        },
+        {
+          "name": "Process Sensor Data",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"sensorType\": \"sensorB\",\r\n  \"payload\": {\r\n    \"meta\": { \"id\": \"sensor_001\" },\r\n    \"phwater_ong\": 5.2,\r\n    \"temp_sensor\": 26.5,\r\n    \"turb_val\": 120,\r\n    \"time\": \"2026-04-19T13:00:00Z\"\r\n  }\r\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/environmental-data",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "v1", "environmental-data"]
+            }
+          }
+        },
+        {
+          "name": "Get Filtered Data",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8080/api/v1/environmental-data?phMin=5.0",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "v1", "environmental-data"],
+              "query": [
+                { "key": "phMin", "value": "5.0" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Aggregated Data",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8080/api/v1/environmental-data/aggregate",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "v1", "environmental-data", "aggregate"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
