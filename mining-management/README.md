@@ -35,6 +35,10 @@ El sistema está dividido en capas con estrictos límites de dependencia:
 - **Seguridad Centralizada:** Este servicio requiere cabecera de *Bearer Authentication* en casi todos sus endpoints sin interconectar persistencias de Usuario ni emitir sus propios Tokens (Arquitectura Sin Estado). En su lugar procesa, filtra y valida criptográficamente (Jwts).
 - **Autorización RBAC:** Aprovecha las etiquetas nativas `@PreAuthorize` de Spring combinadas con las autoridades extraídas del token provisto para determinar permisos (`ADMINISTRADOR`, `PROPIETARIO`, `EMPLEADO` o `CLIENTE`).
 
+### 4. Arquitectura Orientada a Eventos (Kafka)
+- **Productor Asíncrono:** Emite eventos de dominio (ej. `REPORT_CREATED`, `REPORT_VALIDATED`, `COMMENT_CREATED`) hacia el tópico `mining-events`.
+- **Desacoplamiento Total:** No espera respuesta sincrónica de Notificaciones/Auditoría una vez ocurrida la acción crítica, descargando la concurrencia a través de `mining-audit-notifications`.
+
 ---
 
 ## 🔌 Referencia de Endpoints

@@ -2,7 +2,7 @@ package com.mining.soft.infrastructure.exceptionhandler;
 
 public enum ExceptionResponse {
     NO_DATA_FOUND("No se encontraron datos para la petición solicitada"),
-
+    VALIDATION_FAILED("Validación fallida"),
     INTERNAL_SERVER_ERROR("Ha ocurrido un error inesperado. Por favor, contacte al administrador");
 
     private final String message;

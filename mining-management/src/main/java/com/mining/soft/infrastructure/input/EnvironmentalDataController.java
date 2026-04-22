@@ -6,6 +6,8 @@ import com.mining.soft.domain.model.EnvironmentalData;
 import com.mining.soft.domain.model.EnvironmentalDataFilter;
 import com.mining.soft.infrastructure.input.dto.SensorDataRequestDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,11 +24,13 @@ public class EnvironmentalDataController {
     private final IEnvironmentalDataServicePort servicePort;
 
     @PostMapping
+    @CacheEvict(value = "environmental-data", allEntries = true)
     public ResponseEntity<EnvironmentalData> processSensorData(@RequestBody SensorDataRequestDto request) {
         return new ResponseEntity<>(servicePort.processSensorData(request.getSensorType(), request.getPayload()), HttpStatus.CREATED);
     }
 
     @GetMapping
+    @Cacheable(value = "environmental-data", key = "{#startDate, #endDate, #minLat, #maxLat, #minLng, #maxLng, #phMin, #phMax, #turbidityMin, #turbidityMax, #temperatureMin, #temperatureMax, #mercuryMin, #mercuryMax}")
     public ResponseEntity<List<EnvironmentalData>> getEnvironmentalData(
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
@@ -50,6 +54,7 @@ public class EnvironmentalDataController {
     }
 
     @GetMapping("/aggregate")
+    @Cacheable(value = "environmental-data-aggregate", key = "{#startDate, #endDate, #minLat, #maxLat, #minLng, #maxLng, #phMin, #phMax, #turbidityMin, #turbidityMax, #temperatureMin, #temperatureMax, #mercuryMin, #mercuryMax}")
     public ResponseEntity<EnvironmentalAggregate> getAggregateData(
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,

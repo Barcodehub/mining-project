@@ -4,6 +4,7 @@ import com.mining.soft.application.api.IEnvironmentalDataServicePort;
 import com.mining.soft.infrastructure.input.dto.AdapterRequestDto;
 import com.mining.soft.infrastructure.input.mapper.IEnvironmentalDtoMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,6 +19,7 @@ public class AdapterController {
     private final IEnvironmentalDtoMapper mapper;
 
     @PostMapping
+    @CacheEvict(value = "adapters", allEntries = true)
     @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'PROPIETARIO', 'EMPLEADO', 'CLIENTE')")
     public ResponseEntity<Void> createAdapter(@RequestBody AdapterRequestDto request) {
         servicePort.createAdapter(mapper.toAdapterModel(request));

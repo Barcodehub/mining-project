@@ -1,9 +1,11 @@
 package com.mining.soft.infrastructure.out.jpa.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mining.soft.domain.enums.PostType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -11,11 +13,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "posts")
+@Table(name = "posts", indexes = {
+    @Index(name = "idx_post_created_at", columnList = "createdAt"),
+    @Index(name = "idx_post_lat_lng", columnList = "latitude, longitude"),
+    @Index(name = "idx_post_type", columnList = "type")
+})
 @Inheritance(strategy = InheritanceType.JOINED)
 @Getter
 @Setter
-public abstract class PostEntity {
+public class PostEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,6 +46,7 @@ public abstract class PostEntity {
     private LocalDateTime createdAt;
 
     // relación con imágenes
+    @BatchSize(size = 25)
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostImageEntity> images = new ArrayList<>();
 }

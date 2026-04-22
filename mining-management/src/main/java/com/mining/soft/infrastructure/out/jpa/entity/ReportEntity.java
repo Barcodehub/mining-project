@@ -8,7 +8,9 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "reports")
+@Table(name = "reports", indexes = {
+    @Index(name = "idx_report_status", columnList = "status")
+})
 @Getter @Setter
 public class ReportEntity extends PostEntity {
 

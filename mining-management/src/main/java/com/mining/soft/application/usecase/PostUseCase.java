@@ -2,6 +2,7 @@ package com.mining.soft.application.usecase;
 
 import com.mining.soft.application.api.IPostServicePort;
 import com.mining.soft.application.spi.IPostPersistencePort;
+import com.mining.soft.application.spi.IPublishEventPort;
 import com.mining.soft.domain.enums.ReportStatus;
 import com.mining.soft.domain.model.Post;
 import com.mining.soft.domain.model.Report;
@@ -14,15 +15,22 @@ import java.util.List;
 public class PostUseCase implements IPostServicePort {
 
     private final IPostPersistencePort postPersistencePort;
+    private final IPublishEventPort publishEventPort;
 
-    public PostUseCase(IPostPersistencePort postPersistencePort) {
+    public PostUseCase(IPostPersistencePort postPersistencePort, IPublishEventPort publishEventPort) {
         this.postPersistencePort = postPersistencePort;
+        this.publishEventPort = publishEventPort;
     }
 
     @Override
     public Post createPost(Post post) {
         post.validate();
-        return postPersistencePort.savePost(post);
+        Post savedPost = postPersistencePort.savePost(post);
+
+        if (savedPost instanceof Report report) {
+            publishEventPort.publish("REPORT_CREATED", report.getId(), report.getUserId(), null, report.getCreatedAt(), java.util.Map.of("title", report.getTitle()));
+        }
+        return savedPost;
     }
 
     @Override
@@ -51,7 +59,14 @@ public class PostUseCase implements IPostServicePort {
     public Report changeReportStatus(Long reportId, ReportStatus newStatus, Long validatorId) {
         Report report = postPersistencePort.findReportById(reportId);
         report.updateStatus(newStatus, validatorId);
-        return (Report) postPersistencePort.savePost(report);
+        Report savedReport = (Report) postPersistencePort.savePost(report);
+
+        String eventType = newStatus == ReportStatus.VALIDADO ? "REPORT_VALIDATED" :
+                           newStatus == ReportStatus.RECHAZADO ? "REPORT_REJECTED" : "REPORT_STATUS_CHANGED";
+
+        publishEventPort.publish(eventType, savedReport.getId(), validatorId, savedReport.getUserId(), LocalDateTime.now(), java.util.Map.of("newStatus", newStatus.name()));
+
+        return savedReport;
     }
 
     @Override

@@ -8,11 +8,13 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Tuple;
 import jakarta.persistence.criteria.*;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Repository
+@Transactional(readOnly = true)
 public class EnvironmentalDataRepositoryCustomImpl implements EnvironmentalDataRepositoryCustom {
 
     @PersistenceContext
@@ -44,7 +46,8 @@ public class EnvironmentalDataRepositoryCustomImpl implements EnvironmentalDataR
         Root<EnvironmentalDataEntity> root = query.from(EnvironmentalDataEntity.class);
 
         query.where(buildPredicates(cb, root, filter).toArray(new Predicate[0]));
-        return entityManager.createQuery(query).getResultList();
+        query.orderBy(cb.desc(root.get("timestamp")));
+        return entityManager.createQuery(query).setMaxResults(100).getResultList();
     }
 
     @Override

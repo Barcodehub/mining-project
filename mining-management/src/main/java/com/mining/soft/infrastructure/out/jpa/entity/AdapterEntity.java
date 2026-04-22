@@ -7,7 +7,9 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "adapters")
+@Table(name = "adapters", indexes = {
+        @Index(name = "idx_adapter_sensor_type", columnList = "sensorType")
+})
 @Getter @Setter
 public class AdapterEntity {
 

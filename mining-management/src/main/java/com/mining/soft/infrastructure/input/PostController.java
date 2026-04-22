@@ -12,6 +12,7 @@ import com.mining.soft.infrastructure.input.mapper.ICommentDtoMapper;
 import com.mining.soft.infrastructure.input.mapper.IPostDtoMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -31,7 +32,8 @@ public class PostController {
     private final ICommentDtoMapper commentDtoMapper;
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'PROPIETARIO', 'EMPLEADO', 'CLIENTE')")
+    @PreAuthorize("isAuthenticated()")
+    @CacheEvict(value = "reports", allEntries = true)
     public ResponseEntity<PostResponseDto> createPost(@RequestBody PostRequestDto request) {
         Post post;
         if (request.getType() == PostType.REPORT) {

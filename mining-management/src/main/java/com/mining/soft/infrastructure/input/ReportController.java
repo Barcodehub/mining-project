@@ -6,6 +6,7 @@ import com.mining.soft.infrastructure.input.dto.ReportResponseDto;
 import com.mining.soft.infrastructure.input.dto.ReportStatusRequestDto;
 import com.mining.soft.infrastructure.input.mapper.IPostDtoMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,6 +25,7 @@ public class ReportController {
 
     @GetMapping
     @PreAuthorize("isAuthenticated()")
+    @Cacheable(value = "reports", key = "{#status, #startDate, #endDate, #minLat, #maxLat, #minLng, #maxLng}")
     public ResponseEntity<List<ReportResponseDto>> filterReports(
             @RequestParam(required = false) ReportStatus status,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,

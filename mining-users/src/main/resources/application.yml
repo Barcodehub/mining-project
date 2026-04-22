@@ -32,3 +32,20 @@ springdoc:
     enabled: true
     path: /api-docs
 
+  # Actuator & Prometheus Configuration
+  endpoint:
+    prometheus:
+      enabled: true
+    health:
+      show-details: always
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  metrics:
+    tags:
+      application: "${spring.application.name}"
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true

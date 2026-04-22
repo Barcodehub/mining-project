@@ -67,6 +67,19 @@ dependencies {
 	implementation 'software.amazon.awssdk:s3:2.25.32'
 	// Thumbnailator para miniaturas
 	implementation 'net.coobird:thumbnailator:0.4.20'
+	
+	// Kafka (Productor)
+	implementation 'org.springframework.kafka:spring-kafka'
+
+	// Observabilidad
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'io.micrometer:micrometer-registry-prometheus'
+
+	// Caffeine cache
+	implementation 'com.github.ben-manes.caffeine:caffeine'
+
+	// Soporte de Spring para caché (contiene CaffeineCacheManager)
+	implementation 'org.springframework.boot:spring-boot-starter-cache'
 }
 
 tasks.named('test') {

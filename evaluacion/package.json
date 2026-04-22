@@ -1,0 +1,11 @@
+{
+  "name": "evaluacion-mineria",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Generacion y carga de datasets para mineria-management",
+  "scripts": {
+    "generate:datasets": "node scripts/generate_datasets.js",
+    "load:datasets": "node scripts/load_datasets_api.js"
+  }
+}
+
