@@ -17,6 +17,7 @@ public class Post {
     private PostType type;
     private Double latitude;
     private Double longitude;
+    private String clusterId;
     private LocalDateTime createdAt;
     private List<PostImage> images;
 

@@ -17,6 +17,7 @@ public class EnvironmentalData {
     private Double temperature;
     private Double mercury;
     private LocalDateTime timestamp;
+    private String clusterId;
     // Getters y setters
     // ...
 }

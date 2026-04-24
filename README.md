@@ -1,63 +1,92 @@
-# Sistema de GestiÛn de MinerÌa API
+# Sistema de Gesti√≥n de Miner√≠a API
 Plataforma basada en microservicios desarrollada con **Spring Boot (Java 17)** y estructurada bajo **Arquitectura Hexagonal**. Permite el registro de actividad minera ilegal, datos de sensores ambientales y notificaciones distribuidas.
 ---
-## ??? Arquitectura de Microservicios
-El sistema est· diseÒado en 3 microservicios principales:
-1. **mining-management (Core / Puerto 8080)**: 
+## Arquitectura de Microservicios
+El sistema est√° dise√±ado en 3 microservicios principales:
+1. **mining-management (Core / Puerto 8082)**: 
    - Microservicio principal y orquestador.
-   - GestiÛn de reportes de denuncias ciudadanas y foros.
-   - Orquestador lÛgico (API Gateway Proxy) para consumir el microservicio de autenticaciÛn.
-   - Mapping, serializaciÛn y almacenamiento din·mico de datos de sensores ambientales y c·lculo de agregados.
+   - Gesti√≥n de reportes de denuncias ciudadanas y foros.
+   - Orquestador l√≥gico (API Gateway Proxy) para consumir el microservicio de autenticaci√≥n.
+   - Mapping, serializaci√≥n y almacenamiento din√°mico de datos de sensores ambientales y c√°lculo de agregados.
    - Almacenamiento seguro por S3.
-   - *Act˙a como Emisor de eventos asÌncronos en Kafka.*
+   - *Act√∫a como Emisor de eventos as√≠ncronos en Kafka.*
 2. **mining-users (Auth / Puerto 8081)**:
    - Microservicio dedicado puramente a Identidad y Acceso (IAM).
-   - EmisiÛn de JWT y gestiÛn de control de roles (RBAC).
-3. **mining-audit-notifications (Event-Driven / Puerto 8082)**:
+   - Emisi√≥n de JWT y gesti√≥n de control de roles (RBAC).
+3. **mining-audit-notifications (Event-Driven / Puerto 8083)**:
    - Consumidor puro orientado a eventos.
    - Recibe la carga de crear Notificaciones mediante MongoDb.
-   - Recibe la carga de generar trazabilidad de auditorÌa inmutable (Append-only) utilizando PostgreSQL.
+   - Recibe la carga de generar trazabilidad de auditor√≠a inmutable (Append-only) utilizando PostgreSQL.
 ---
-## ?? Despliegue y Base de Datos
-Todos los servicios de soporte han sido configurados a travÈs de **Docker Compose**.
-En la raÌz del proyecto, ejecuta:
-\\\ash
+## Despliegue y Ejecuci√≥n
+### Levantar los contenedores
+Todos los servicios de soporte han sido configurados a trav√©s de **Docker Compose**. En la ra√≠z del proyecto, ejecuta:
+
+```bash
 docker-compose up -d
-\\\
-Esto levantar· los siguientes servicios en segundo plano:
-- **Zookeeper & Kafka**: Infraestructura asÌncrona en el puerto \9092\.
-- **PostgreSQL**: Base de datos SQL para auditorÌa en el puerto \5432\.
-- **MongoDB**: Base de datos NoSQL para notificaciones en el puerto \27017\.
-- **Prometheus**: Base de datos Time-Series en el puerto \9090\.
-- **Grafana**: Dashboard de visualizaciÛn en el puerto \3000\.
+```
+
+Esto levantar√° los siguientes servicios en segundo plano:
+- **Zookeeper & Kafka**: Infraestructura as√≠ncrona en el puerto `9092`.
+- **PostgreSQL**: Base de datos SQL para auditor√≠a en el puerto `5432`.
+- **MongoDB**: Base de datos NoSQL para notificaciones en el puerto `27017`.
+- **Prometheus**: Base de datos Time-Series en el puerto `9090`.
+- **Grafana**: Dashboard de visualizaci√≥n en el puerto `4000`.
+- **K6**: Herramienta de pruebas de carga configurada para ejecutar el script `load_test.js`.
+
+### Generar y cargar datasets
+1. Generar datasets:
+   ```bash
+   docker-compose run --rm mining-management node evaluacion/scripts/generate_datasets.js
+   ```
+2. Cargar datasets:
+   ```bash
+   docker-compose run --rm mining-management node evaluacion/scripts/load_datasets_api.js
+   ```
+
+### Ejecutar pruebas de carga
+Para ejecutar las pruebas de carga con K6:
+- Con resultados en un archivo JSON:
+  ```bash
+  docker-compose run --rm k6 --out json=results.json
+  ```
+- Con resultados enviados a InfluxDB para visualizaci√≥n en Grafana:
+  ```bash
+  docker-compose run --rm k6
+  ```
+- Sin guardar resultados:
+  ```bash
+  docker-compose run --rm k6 --no-summary
+  ```
+  - *Nota*: Para escenarios alto (500 VU) a√±adir "-e ESCENARIO=alto" al comando anterior.
 ---
-## ?? Observabilidad (Prometheus & Grafana)
+## Observabilidad (Prometheus & Grafana)
 La plataforma completa ha sido instrumentada con **Micrometer** y **Spring Boot Actuator** en los 3 microservicios generados.
-- **Prometheus** est· pre-configurado (\observability/prometheus.yml\) para interrogar localmente a los 3 microservicios cada 15 segundos sobre sus mÈtricas \/actuator/prometheus\.
+- **Prometheus** est√° pre-configurado (`observability/prometheus.yml`) para interrogar localmente a los 3 microservicios cada 15 segundos sobre sus m√©tricas `/actuator/prometheus`.
 - **Grafana** permite visualizar el comportamiento interno de la JVM y rendimiento HTTP. 
-  - *Acceso Grafana:* [http://localhost:3000](http://localhost:3000)
-  - *Credenciales por defecto:* \dmin\ / \dmin\
-  - *Setup:* La base de datos \Prometheus\ ya fue aÒadida como proveedor de forma autoconfigurada por *Provisioning*. Puedes agregar dashboards como el **JVM Micrometer**.
+  - *Acceso Grafana:* [http://localhost:4000](http://localhost:4000)
+  - *Credenciales por defecto:* admin / admin
+  - *Setup:* La base de datos `Prometheus` ya fue a√±adida como proveedor de forma autoconfigurada por *Provisioning*. Puedes agregar dashboards como el **JVM Micrometer**.
 ---
-## ?? Referencia R·pida de Endpoints
-### 1. AutenticaciÛn (VÌa Core)
-- \POST /api/v1/auth/login\ - Proxifica hacia \mining-users\ devolviendo la sesiÛn JWT.
+## Referencia R√°pida de Endpoints
+### 1. Autenticaci√≥n (V√≠a Core)
+- `POST /api/v1/auth/login` - Proxifica hacia `mining-users` devolviendo la sesi√≥n JWT.
 ### 2. CORE: Reportes & Foro
-- \POST /api/v1/posts\ - Registro (REPORT/FORUM).
-- \GET /api/v1/posts\ - Paginado.
-- \GET /api/v1/reports\ - M˙ltiples Query Params din·micos para los reportes especiales de minerÌa ilegal.
-- Flujos de estado: \PATCH /api/v1/reports/{id}/request-validation\ y \PATCH /api/v1/reports/{id}/status\.
+- `POST /api/v1/posts` - Registro (REPORT/FORUM).
+- `GET /api/v1/posts` - Paginado.
+- `GET /api/v1/reports` - M√∫ltiples Query Params din√°micos para los reportes especiales de miner√≠a ilegal.
+- Flujos de estado: `PATCH /api/v1/reports/{id}/request-validation` y `PATCH /api/v1/reports/{id}/status`.
 ### 3. CORE: Environmental Data
-- \POST /api/v1/adapters\ - CreaciÛn de plantilla/mapping JSON.
-- \POST /api/v1/environmental-data\ - InserciÛn cruda de sensores.
-- \GET /api/v1/environmental-data/aggregate\ - C·lculo de par·metros estadÌsticos.
+- `POST /api/v1/adapters` - Creaci√≥n de plantilla/mapping JSON.
+- `POST /api/v1/environmental-data` - Inserci√≥n cruda de sensores.
+- `GET /api/v1/environmental-data/aggregate` - C√°lculo de par√°metros estad√≠sticos.
 ### 4. CORE: Storage AWS
-- \POST /api/storage/upload\ - Sube archivos normales con MultipartFile.
-- \POST /api/storage/upload-with-thumbnail\ - GeneraciÛn autom·tica de miniaturas.
+- `POST /api/storage/upload` - Sube archivos normales con MultipartFile.
+- `POST /api/storage/upload-with-thumbnail` - Generaci√≥n automÔøΩÔøΩtica de miniaturas.
 ### 5. EVENT-DRIVEN: Audit y Notification
-- \GET /api/v1/notifications/{userId}\ - Bandejas de Notificaciones universales.
-- \GET /api/v1/audit\ - Consulta de Logs inmutables de auditorÌas de todo el sistema.
+- `GET /api/v1/notifications/{userId}` - Bandejas de Notificaciones universales.
+- `GET /api/v1/audit` - Consulta de Logs inmutables de auditor√≠as de todo el sistema.
 ---
-## ??? Herramientas de Desarrollo
+## Herramientas de Desarrollo
 ### Postman Collection Completa
-Se incluye a nivel raÌz el archivo **\postman_collection.json\**. Incluye todas las cabeceras, rutas con las llamadas asÌncronas, simulaciÛn de autenticaciÛn proxy JWT y casos de uso del Core a los puertos definidos.
+Se incluye a nivel ra√≠z el archivo `postman_collection.json`. Incluye todas las cabeceras, rutas con las llamadas as√≠ncronas, simulaci√≥n de autenticaci√≥n proxy JWT y casos de uso del Core a los puertos definidos.

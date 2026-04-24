@@ -54,8 +54,8 @@ class UserUseCaseTest {
     @BeforeEach
     void setUp() {
         adminRole = new RoleModel(RoleEnum.ADMINISTRADOR.getRoleId(), RoleEnum.ADMINISTRADOR.getName(), "Admin");
-        ownerRole = new RoleModel(RoleEnum.PROPIETARIO.getRoleId(), RoleEnum.PROPIETARIO.getName(), "Owner");
-        employeeRole = new RoleModel(RoleEnum.EMPLEADO.getRoleId(), RoleEnum.EMPLEADO.getName(), "Employee");
+        ownerRole = new RoleModel(RoleEnum.INGENIERO.getRoleId(), RoleEnum.INGENIERO.getName(), "Owner");
+        employeeRole = new RoleModel(RoleEnum.MODERADOR.getRoleId(), RoleEnum.MODERADOR.getName(), "Employee");
         clientRole = new RoleModel(RoleEnum.CLIENTE.getRoleId(), RoleEnum.CLIENTE.getName(), "Client");
     }
 
@@ -64,7 +64,7 @@ class UserUseCaseTest {
     class CreateOwnerTests {
 
         @Test
-        @DisplayName("Happy Path: Debe crear propietario mayor de edad correctamente")
+        @DisplayName("Happy Path: Debe crear ingeniero mayor de edad correctamente")
         void shouldCreateOwnerWhenUserIsAdultAndAdminIsAuthenticated() {
             UserModel userModel = createUserModel(ownerRole, LocalDate.now().minusYears(25));
 
@@ -82,7 +82,7 @@ class UserUseCaseTest {
         }
 
         @Test
-        @DisplayName("Validación: Debe rechazar propietario menor de edad")
+        @DisplayName("Validación: Debe rechazar ingeniero menor de edad")
         void shouldThrowExceptionWhenOwnerIsUnderage() {
             UserModel userModel = createUserModel(ownerRole, LocalDate.now().minusYears(17));
 
@@ -94,12 +94,12 @@ class UserUseCaseTest {
         }
 
         @Test
-        @DisplayName("Error: Debe rechazar creación de propietario sin rol administrador")
+        @DisplayName("Error: Debe rechazar creación de ingeniero sin rol administrador")
         void shouldThrowExceptionWhenNonAdminTriesToCreateOwner() {
             UserModel userModel = createUserModel(ownerRole, LocalDate.now().minusYears(25));
 
             when(rolePersistencePort.findById(ownerRole.getId())).thenReturn(Optional.of(ownerRole));
-            when(securityContextPort.getCurrentUserRole()).thenReturn(RoleEnum.PROPIETARIO.getName());
+            when(securityContextPort.getCurrentUserRole()).thenReturn(RoleEnum.INGENIERO.getName());
 
             assertThrows(UnauthorizedRoleCreationException.class, () -> userUseCase.createUser(userModel));
             verify(userPersistencePort, never()).saveUser(any(UserModel.class));
@@ -107,16 +107,16 @@ class UserUseCaseTest {
     }
 
     @Nested
-    @DisplayName("HU6: Crear cuenta empleado")
+    @DisplayName("HU6: Crear cuenta moderador")
     class CreateEmployeeTests {
 
         @Test
-        @DisplayName("Happy Path: Debe crear empleado cuando propietario está autenticado")
+        @DisplayName("Happy Path: Debe crear moderador cuando ingeniero está autenticado")
         void shouldCreateEmployeeWhenOwnerIsAuthenticated() {
             UserModel userModel = createUserModel(employeeRole, LocalDate.now().minusYears(20));
 
             when(rolePersistencePort.findById(employeeRole.getId())).thenReturn(Optional.of(employeeRole));
-            when(securityContextPort.getCurrentUserRole()).thenReturn(RoleEnum.PROPIETARIO.getName());
+            when(securityContextPort.getCurrentUserRole()).thenReturn(RoleEnum.INGENIERO.getName());
             when(passwordEncoderPort.encode(anyString())).thenReturn("encodedPassword");
             when(userPersistencePort.saveUser(any(UserModel.class))).thenReturn(userModel);
 
@@ -129,7 +129,7 @@ class UserUseCaseTest {
         }
 
         @Test
-        @DisplayName("Validación: Debe rechazar creación de empleado por usuario no propietario")
+        @DisplayName("Validación: Debe rechazar creación de moderador por usuario no ingeniero")
         void shouldThrowExceptionWhenNonOwnerTriesToCreateEmployee() {
             UserModel userModel = createUserModel(employeeRole, LocalDate.now().minusYears(20));
 

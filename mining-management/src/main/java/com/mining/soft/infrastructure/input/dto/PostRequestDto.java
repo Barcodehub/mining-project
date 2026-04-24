@@ -12,5 +12,6 @@ public class PostRequestDto {
     private PostType type;
     private Double latitude;
     private Double longitude;
+    private String clusterId;
     private List<PostImageDto> images;
 }

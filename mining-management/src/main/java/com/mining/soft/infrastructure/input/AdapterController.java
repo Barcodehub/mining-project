@@ -20,7 +20,7 @@ public class AdapterController {
 
     @PostMapping
     @CacheEvict(value = "adapters", allEntries = true)
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'PROPIETARIO', 'EMPLEADO', 'CLIENTE')")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Void> createAdapter(@RequestBody AdapterRequestDto request) {
         servicePort.createAdapter(mapper.toAdapterModel(request));
         return ResponseEntity.status(HttpStatus.CREATED).build();

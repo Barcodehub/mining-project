@@ -50,14 +50,14 @@ NORMAL    → resto de casos
 **Resultado estadístico:**
 
 | Nivel    | Cantidad | % del total |
-|----------|----------|-------------|
-| CRITICO  | ~514     | 51.4 %      |
-| ALERTA   | ~149     | 14.9 %      |
-| PRECAUCION | ~129  | 12.9 %      |
-| NORMAL   | ~208     | 20.8 %      |
+|----------|---------|-------------|
+| CRITICO  | 508     | 50.8 %      |
+| ALERTA   | 75      | 7.5 %       |
+| PRECAUCION | 80      | 8 %         |
+| NORMAL   | 337     | 20.8 %      |
 
-Mercurio promedio: **0.669 ppm** (límite OMS: 0.001 mg/L para agua potable; límite IDEAM industria: 0.1 ppm).  
-pH promedio: **5.84** (rango óptimo para ecosistemas acuáticos: 6.5 – 8.5).
+Mercurio promedio: **--** (límite OMS: 0.001 mg/L para agua potable; límite IDEAM industria: 0.1 ppm).  
+pH promedio: **---** (rango óptimo para ecosistemas acuáticos: 6.5 – 8.5).
 
 ### 1.2 Denuncias (500 registros)
 
@@ -77,17 +77,16 @@ El dataset de denuncias refleja la **correlación espacial esperada** entre acti
 
 #### Distribución de estados
 
-La probabilidad de cada estado varía según el tipo de zona, modelando el hecho de que en zonas contaminadas la evidencia es más clara y los reportes tienen mayor tasa de validación:
+Los datos de cada estado varía según el tipo de zona, modelando el hecho de que en zonas contaminadas la evidencia es más clara y los reportes tienen mayor tasa de validación:
 
 | Estado      | Contaminada | Transición | Normal |
-|-------------|-------------|------------|--------|
-| VALIDADO    | 35 %        | 20 %       | 10 %   |
-| PENDIENTE   | 25 %        | 25 %       | 15 %   |
-| SIN_VALIDAR | 25 %        | 30 %       | 35 %   |
-| RECHAZADO   | 15 %        | 25 %       | 40 %   |
+|-------------|-------------|------------|------|
+| VALIDADO    | 109         | 14         | 10   |
+| PENDIENTE   | 74          | 18         | 16   |
+| SIN_VALIDAR | 87          | 16         | 44   |
+| RECHAZADO   | 60          | 12         | 40   |
 
-**Correlación detectada:**  
-66 % de las denuncias se ubican en zonas contaminadas vs. 55 % de las mediciones → ratio de 1.20, indicando que la percepción ciudadana es un **indicador adelantado** de la contaminación ambiental medida instrumentalmente.
+**Correlación detectada:**  --
 
 ---
 
@@ -519,7 +518,7 @@ La correlación de Pearson de **r = 0.74** entre la densidad de denuncias y los 
 
 4. **Modelo de datos ambiental estructurado.** El `EnvironmentalDataFilter` con 12 parámetros de filtrado permite consultas altamente específicas (por rango geográfico, temporal y químico simultáneamente), adecuadas para análisis de campo por inspectores de la Corporación Autónoma Regional (CORPONOR).
 
-5. **Seguridad integrada.** JWT con roles (`ADMINISTRADOR`, `EMPLEADO`, `CLIENTE`) y `@PreAuthorize` a nivel de método garantiza que solo usuarios autorizados puedan validar o rechazar denuncias.
+5. **Seguridad integrada.** JWT con roles (`ADMINISTRADOR`, `MODERADOR`, `CLIENTE`) y `@PreAuthorize` a nivel de método garantiza que solo usuarios autorizados puedan validar o rechazar denuncias.
 
 **Datos y análisis:**
 

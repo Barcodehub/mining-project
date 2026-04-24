@@ -33,11 +33,16 @@ El sistema está dividido en capas con estrictos límites de dependencia:
 ### 3. API Gateway Lógico (Seguridad & Proxy)
 - **Delegación a Microservicio de Usuarios:** `mining-management` actúa como API Gateway ante el cliente consumiendo y orquestando los tokens. La generación de JWT la realiza `mining-users` y es retornado vía proxy (`/api/v1/auth/login`) a través de un `RestClient`.
 - **Seguridad Centralizada:** Este servicio requiere cabecera de *Bearer Authentication* en casi todos sus endpoints sin interconectar persistencias de Usuario ni emitir sus propios Tokens (Arquitectura Sin Estado). En su lugar procesa, filtra y valida criptográficamente (Jwts).
-- **Autorización RBAC:** Aprovecha las etiquetas nativas `@PreAuthorize` de Spring combinadas con las autoridades extraídas del token provisto para determinar permisos (`ADMINISTRADOR`, `PROPIETARIO`, `EMPLEADO` o `CLIENTE`).
+- **Autorización RBAC:** Aprovecha las etiquetas nativas `@PreAuthorize` de Spring combinadas con las autoridades extraídas del token provisto para determinar permisos (`ADMINISTRADOR`, `INGENIERO`, `MODERADOR` o `CLIENTE`).
 
 ### 4. Arquitectura Orientada a Eventos (Kafka)
 - **Productor Asíncrono:** Emite eventos de dominio (ej. `REPORT_CREATED`, `REPORT_VALIDATED`, `COMMENT_CREATED`) hacia el tópico `mining-events`.
 - **Desacoplamiento Total:** No espera respuesta sincrónica de Notificaciones/Auditoría una vez ocurrida la acción crítica, descargando la concurrencia a través de `mining-audit-notifications`.
+
+### 5. Capa de Analytics y Métricas
+- **Métricas Agrupadas por Cluster:** Calcula indicadores ambientales (SAI - Sensor Alert Index) y ciudadanos (CRI - Citizen Report Index) agrupados por zonas geográficas.
+- **Correlación Estadística:** Implementa análisis de correlación Spearman entre datos IoT y reportes ciudadanos para validar hipótesis científicas.
+- **Datos para Paper:** Los endpoints generan datasets estructurados listos para análisis estadístico y publicación académica.
 
 ---
 
@@ -65,6 +70,12 @@ El sistema está dividido en capas con estrictos límites de dependencia:
 - `POST /api/v1/environmental-data` - Recepción del payload crudo a traducir.
 - `GET /api/v1/environmental-data` - Búsqueda de registros ambientales por limitadores dinámicos.
 - `GET /api/v1/environmental-data/aggregate` - Computa Min, Max, y Avg de variables climáticas consultadas.
+
+### Analytics y Correlación (`/api/v1/analytics`)
+- `GET /api/v1/analytics/clusters` - Métricas ambientales agrupadas por cluster (SAI, alertas críticas).
+- `GET /api/v1/analytics/reports` - Métricas de reportes ciudadanos agrupadas por cluster (CRI, pesos por estado).
+- `GET /api/v1/analytics/fusion` - Combinación de SAI y CRI por cluster para análisis conjunto.
+- `GET /api/v1/analytics/correlation` - Coeficiente de correlación Spearman entre SAI y CRI.
 
 ---
 

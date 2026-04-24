@@ -12,6 +12,4 @@ public class Adapter {
     private String sensorType;
     private String mappingJson;
     private LocalDateTime createdAt;
-    // Getters y setters
-    // ...
 }

@@ -100,7 +100,7 @@ class AuthenticationUseCaseTest {
         @Test
         @DisplayName("Validación: Debe autenticar diferentes roles correctamente")
         void shouldAuthenticateDifferentRoles() {
-            RoleModel ownerRole = new RoleModel(2L, "PROPIETARIO", "Owner");
+            RoleModel ownerRole = new RoleModel(2L, "INGENIERO", "Owner");
             AuthResponse ownerAuthResponse = new AuthResponse(
                     "ownerToken",
                     2L,
@@ -114,14 +114,14 @@ class AuthenticationUseCaseTest {
             AuthResponse result = authenticationUseCase.login(ownerLogin);
 
             assertNotNull(result);
-            assertEquals("PROPIETARIO", result.getRole().getName());
+            assertEquals("INGENIERO", result.getRole().getName());
             assertEquals(2L, result.getUserId());
         }
 
         @Test
-        @DisplayName("Validación: Debe autenticar empleado correctamente")
+        @DisplayName("Validación: Debe autenticar moderador correctamente")
         void shouldAuthenticateEmployee() {
-            RoleModel employeeRole = new RoleModel(3L, "EMPLEADO", "Employee");
+            RoleModel employeeRole = new RoleModel(3L, "MODERADOR", "Employee");
             AuthResponse employeeAuthResponse = new AuthResponse(
                     "employeeToken",
                     3L,
@@ -135,7 +135,7 @@ class AuthenticationUseCaseTest {
             AuthResponse result = authenticationUseCase.login(employeeLogin);
 
             assertNotNull(result);
-            assertEquals("EMPLEADO", result.getRole().getName());
+            assertEquals("MODERADOR", result.getRole().getName());
         }
 
         @Test

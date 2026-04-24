@@ -45,6 +45,7 @@ public class EnvironmentalDataUseCase implements IEnvironmentalDataServicePort {
         data.setTurbidity(asDouble(extractValue(payload, mapping.get("turbidity"))));
         data.setTemperature(asDouble(extractValue(payload, mapping.get("temperature"))));
         data.setMercury(asDouble(extractValue(payload, mapping.get("mercury"))));
+        data.setClusterId(asString(extractValue(payload, mapping.get("cluster_id"))));
 
         Object timeObj = extractValue(payload, mapping.get("timestamp"));
         if (timeObj != null) {

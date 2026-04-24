@@ -7,8 +7,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum RoleEnum {
     ADMINISTRADOR(1L, "ADMINISTRADOR"),
-    PROPIETARIO(2L, "PROPIETARIO"),
-    EMPLEADO(3L, "EMPLEADO"),
+    INGENIERO(2L, "INGENIERO"),
+    MODERADOR(3L, "MODERADOR"),
     CLIENTE(4L, "CLIENTE");
 
     private final Long roleId;

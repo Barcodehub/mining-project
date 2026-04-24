@@ -24,9 +24,9 @@ Este microservicio es el núcleo de autenticación y autorización del [sistema 
 - **Autorización**: Validación de roles y permisos jerárquicos
 - **Validación de identidad**: Verificación de documentos únicos, emails válidos y mayoría de edad
 - **Roles soportados**:
-  - `ADMINISTRADOR`: Puede crear usuarios PROPIETARIO
-  - `PROPIETARIO`: Puede crear usuarios EMPLEADO  
-  - `EMPLEADO`: Personal de restaurantes
+  - `ADMINISTRADOR`: Puede crear usuarios INGENIERO
+  - `INGENIERO`: Puede crear usuarios MODERADOR  
+  - `MODERADOR`: Personal de restaurantes
   - `CLIENTE`: Usuarios finales que realizan pedidos
 
 ### Arquitectura
@@ -108,8 +108,8 @@ Authorization: Bearer <token>
 ```
 
 **Validaciones:**
-- ADMINISTRADOR → puede crear PROPIETARIO (roleId=2)
-- PROPIETARIO → puede crear EMPLEADO (roleId=3)
+- ADMINISTRADOR → puede crear INGENIERO (roleId=2)
+- INGENIERO → puede crear MODERADOR (roleId=3)
 - Email y documento únicos
 - Usuario mayor de 18 años
 - Teléfono máximo 13 caracteres, puede incluir +
@@ -125,7 +125,7 @@ Authorization: Bearer <token>
     "documentNumber": "1234567890",
     "phoneNumber": "+573001234567",
     "email": "juan.perez@example.com",
-    "role": "PROPIETARIO"
+    "role": "INGENIERO"
   }
 }
 ```
@@ -191,7 +191,7 @@ Registro publico, un CLIENTE puede registrarse sin autenticación.
   "valid": true,
   "userId": 5,
   "roleId": 2,
-  "roleName": "PROPIETARIO"
+  "roleName": "INGENIERO"
 }
 ```
 
@@ -208,7 +208,7 @@ Este microservicio cubre **4 Historias de Usuario** con más de **21 pruebas uni
 |----------|---------------|---------|
 | HU-1: Crear Propietario | `UserUseCaseTest` | ✅ Validación mayoría edad<br>✅ Validación email único<br>✅ Validación documento único |
 | HU-5: Autenticación | `AuthenticationUseCaseTest` | ✅ Login exitoso<br>✅ Credenciales inválidas<br>✅ Usuario no existe<br>✅ Generación JWT |
-| HU-6: Crear Empleado | `UserUseCaseTest` | ✅ Validación rol propietario<br>✅ Creación exitosa empleado |
+| HU-6: Crear Empleado | `UserUseCaseTest` | ✅ Validación rol ingeniero<br>✅ Creación exitosa moderador |
 | HU-8: Crear Cliente | `UserUseCaseTest` | ✅ Creación cuenta cliente<br>✅ Validaciones generales |
 
 ### Ejecutar Tests
@@ -295,8 +295,8 @@ start build/reports/jacoco/test/html/index.html
 ```sql
 INSERT INTO roles (id, name, description) VALUES
                                               (1, 'ADMINISTRADOR', 'Administrador de la plataforma de plazoleta de comidas'),
-                                              (2, 'PROPIETARIO', 'Propietario de un restaurante'),
-                                              (3, 'EMPLEADO', 'Empleado de un restaurante'),
+                                              (2, 'INGENIERO', 'Propietario de un restaurante'),
+                                              (3, 'MODERADOR', 'Empleado de un restaurante'),
                                               (4, 'CLIENTE', 'Cliente de la plazoleta de comidas')
     ON CONFLICT (name) DO NOTHING;
 

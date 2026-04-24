@@ -68,3 +68,33 @@ services:
       - INFLUXDB_DB=k6
     volumes:
       - influxdb_data:/var/lib/influxdb
+  mining-audit-notifications:
+    build:
+      context: ./mining-audit-notifications
+    ports:
+      - "8083:8083"
+    depends_on:
+      - postgres-audit
+  mining-management:
+    build:
+      context: ./mining-management
+    ports:
+      - "8082:8082"
+    depends_on:
+      - postgres-audit
+  mining-users:
+    build:
+      context: ./mining-users
+    ports:
+      - "8081:8081"
+    depends_on:
+      - postgres-audit
+  k6:
+    image: grafana/k6:latest
+    volumes:
+      - ./evaluacion/k6:/k6
+    entrypoint: ["k6", "run", "/k6/load_test.js"]
+    depends_on:
+      - influxdb
+    environment:
+      - K6_INFLUXDB_ADDR=http://influxdb:8086/k6

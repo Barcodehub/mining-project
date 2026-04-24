@@ -39,7 +39,7 @@ public class UserUseCase implements IUserServicePort {
             validateRoleCreationPermissions(role);
 
 
-        if (role.getId().equals(RoleEnum.PROPIETARIO.getRoleId())) {
+        if (role.getId().equals(RoleEnum.INGENIERO.getRoleId())) {
             validateAge(userModel.getBirthDate());
         }
 
@@ -98,19 +98,19 @@ public class UserUseCase implements IUserServicePort {
         }
         Long roleIdToCreate = roleToCreate.getId();
 
-        // Si intenta crear un PROPIETARIO, debe ser ADMINISTRADOR
-        if (roleIdToCreate.equals(RoleEnum.PROPIETARIO.getRoleId())
+        // Si intenta crear un INGENIERO, debe ser ADMINISTRADOR
+        if (roleIdToCreate.equals(RoleEnum.INGENIERO.getRoleId())
                 && !RoleEnum.ADMINISTRADOR.getName().equalsIgnoreCase(currentUserRole)) {
             throw new UnauthorizedRoleCreationException(
-                "Solo los usuarios con rol ADMINISTRADOR pueden crear usuarios PROPIETARIO"
+                "Solo los usuarios con rol ADMINISTRADOR pueden crear usuarios INGENIERO"
             );
         }
 
-        // Si intenta crear un EMPLEADO, debe ser PROPIETARIO
-        if (roleIdToCreate.equals(RoleEnum.EMPLEADO.getRoleId())
-                && !RoleEnum.PROPIETARIO.getName().equalsIgnoreCase(currentUserRole)) {
+        // Si intenta crear un MODERADOR, debe ser INGENIERO
+        if (roleIdToCreate.equals(RoleEnum.MODERADOR.getRoleId())
+                && !RoleEnum.INGENIERO.getName().equalsIgnoreCase(currentUserRole)) {
             throw new UnauthorizedRoleCreationException(
-                "Solo los usuarios con rol PROPIETARIO pueden crear usuarios EMPLEADO"
+                "Solo los usuarios con rol INGENIERO pueden crear usuarios MODERADOR"
             );
         }
 

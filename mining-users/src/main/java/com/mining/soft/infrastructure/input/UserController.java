@@ -31,7 +31,7 @@ public class UserController implements UsersApi {
     private final IUserMapper userMapper;
 
 
-    @RequireRole({RoleEnum.ADMINISTRADOR, RoleEnum.EMPLEADO, RoleEnum.PROPIETARIO})
+    @RequireRole({RoleEnum.ADMINISTRADOR, RoleEnum.MODERADOR, RoleEnum.INGENIERO})
     @Override
     public ResponseEntity<UserDataResponseDto> createUser(UserRequestDto userRequestDto) {
 
@@ -61,7 +61,7 @@ public class UserController implements UsersApi {
         return ResponseEntity.ok(response);
     }
 
-    @RequireRole({RoleEnum.ADMINISTRADOR, RoleEnum.EMPLEADO, RoleEnum.PROPIETARIO, RoleEnum.CLIENTE})
+    @RequireRole({RoleEnum.ADMINISTRADOR, RoleEnum.MODERADOR, RoleEnum.INGENIERO, RoleEnum.CLIENTE})
     @Override
     public ResponseEntity<UserDataResponseDto> getUserById(Long id) {
         UserModel response = userHandler.getUserById(id);

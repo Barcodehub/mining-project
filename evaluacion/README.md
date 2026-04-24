@@ -2,28 +2,33 @@
 
 Este modulo contiene:
 
-- `scripts/generate_datasets.js`: genera datasets analiticos y API-ready.
+- `scripts/generate_datasets.js`: genera datasets analíticos y API-ready.
 - `scripts/load_datasets_api.js`: carga masiva de datasets API-ready a `mining-management`.
 
 ## Archivos generados
 
 Al ejecutar el generador se crean estos archivos en `data/`:
 
-- `mediciones_ambientales.json` (analitico)
-- `denuncias.json` (analitico)
+- `mediciones_ambientales.json` (analítico)
+- `denuncias.json` (analítico)
 - `mediciones_api.json` (API-ready para `POST /api/v1/environmental-data`)
 - `denuncias_api.json` (API-ready para `POST /api/v1/posts` y flujo de estados)
 
-## Uso rapido
+## Uso con Docker
 
+### Generar datasets
 ```bash
-npm run generate:datasets
-npm run load:datasets
+docker-compose run --rm mining-management node evaluacion/scripts/generate_datasets.js
 ```
 
-## Variables de entorno del loader
+### Cargar datasets
+```bash
+docker-compose run --rm mining-management node evaluacion/scripts/load_datasets_api.js
+```
 
-- `MANAGEMENT_URL` (default: `http://localhost:8080`)
+### Variables de entorno del loader
+
+- `MANAGEMENT_URL` (default: `http://mining-management:8082`)
 - `AUTH_EMAIL` (default: `admin@admin.com`)
 - `AUTH_PASSWORD` (default: `admin`)
 - `SENSOR_TYPE` (default: `multi_parameter_sensor`)
@@ -37,18 +42,12 @@ npm run load:datasets
 
 Para limitar cantidad de registros usa argumento CLI (no variable de entorno):
 
-`node scripts/load_datasets_api.js --max-items=10`
+```bash
+docker-compose run --rm mining-management node evaluacion/scripts/load_datasets_api.js --max-items=10
+```
 
-## Prueba local sin pegarle a la API
+### Prueba local sin pegarle a la API
 
 ```bash
-DRY_RUN=true node scripts/load_datasets_api.js --max-items=10
+docker-compose run --rm -e DRY_RUN=true mining-management node evaluacion/scripts/load_datasets_api.js --max-items=10
 ```
-
-En Windows PowerShell:
-
-```powershell
-$env:DRY_RUN='true'
-node scripts/load_datasets_api.js --max-items=10
-```
-

@@ -52,7 +52,7 @@ public class ReportController {
     }
 
     @PatchMapping("/{id}/status")
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'PROPIETARIO', 'EMPLEADO', 'CLIENTE')")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ReportResponseDto> changeStatus(@PathVariable Long id, @RequestBody ReportStatusRequestDto request) {
         return ResponseEntity.ok(postDtoMapper.toReportResponseDto(
                 postServicePort.changeReportStatus(id, request.getStatus(), request.getValidatorId())

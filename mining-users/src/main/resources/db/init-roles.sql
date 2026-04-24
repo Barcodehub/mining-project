@@ -3,8 +3,8 @@
 -- Roles del sistema
 INSERT INTO roles (id, name, description) VALUES
 (1, 'ADMINISTRADOR', 'Administrador de la plataforma de plazoleta de comidas'),
-(2, 'PROPIETARIO', 'Propietario de un restaurante'),
-(3, 'EMPLEADO', 'Empleado de un restaurante'),
+(2, 'INGENIERO', 'Propietario de un restaurante'),
+(3, 'MODERADOR', 'Empleado de un restaurante'),
 (4, 'CLIENTE', 'Cliente de la plazoleta de comidas')
 ON CONFLICT (name) DO NOTHING;
 
