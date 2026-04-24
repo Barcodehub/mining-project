@@ -10,7 +10,7 @@ const fs = require('fs');
 const path = require('path');
 
 const CONFIG = {
-  managementUrl: process.env.MANAGEMENT_URL || 'http://localhost:8080',
+  managementUrl: process.env.MANAGEMENT_URL || 'http://mining-management:8082',
   authEmail: process.env.AUTH_EMAIL || 'admin@admin.com',
   authPassword: process.env.AUTH_PASSWORD || 'Admin123',
   sensorType: process.env.SENSOR_TYPE || null,
@@ -79,6 +79,7 @@ function validateMedicionRecord(record, index) {
   if (typeof p.deviceId !== 'string' || !p.deviceId.trim()) throw new Error(`${prefix}: payload.deviceId invalido`);
   if (!isNumber(p.latitude) || p.latitude < -90 || p.latitude > 90) throw new Error(`${prefix}: payload.latitude fuera de rango`);
   if (!isNumber(p.longitude) || p.longitude < -180 || p.longitude > 180) throw new Error(`${prefix}: payload.longitude fuera de rango`);
+  if (typeof p.clusterId !== 'string' || !p.clusterId.trim()) throw new Error(`${prefix}: payload.clusterId invalido`);
   if (!isNumber(p.ph)) throw new Error(`${prefix}: payload.ph invalido`);
   if (!isNumber(p.mercury)) throw new Error(`${prefix}: payload.mercury invalido`);
   if (!isNumber(p.turbidity)) throw new Error(`${prefix}: payload.turbidity invalido`);
@@ -100,6 +101,7 @@ function validateDenunciaRecord(record, index) {
   if (!isNumber(post.latitude) || post.latitude < -90 || post.latitude > 90) throw new Error(`${prefix}: post.latitude fuera de rango`);
   if (!isNumber(post.longitude) || post.longitude < -180 || post.longitude > 180) throw new Error(`${prefix}: post.longitude fuera de rango`);
   if (!Array.isArray(post.images)) throw new Error(`${prefix}: post.images debe ser arreglo`);
+  if (typeof post.clusterId !== 'string' || !post.clusterId.trim()) throw new Error(`${prefix}: post.clusterId invalido`);
 
   const status = record.workflow.targetStatus;
   if (!VALID_STATUSES.has(status)) throw new Error(`${prefix}: workflow.targetStatus invalido`);
@@ -183,6 +185,7 @@ async function ensureAdapter(token, sensorType) {
       temperature: 'temperature',
       mercury: 'mercury',
       timestamp: 'timestamp',
+      cluster_id: 'clusterId',
     },
   };
 
@@ -214,9 +217,13 @@ async function loadMediciones(token, records, sensorType) {
 
   for (let i = 0; i < records.length; i++) {
     const record = records[i];
+    // Asegurarse de que clusterId esté presente en el payload
     const payload = {
       sensorType: sensorType || record.sensorType,
-      payload: record.payload,
+      payload: {
+        ...record.payload,
+        clusterId: record.payload.clusterId
+      },
     };
 
     if (CONFIG.dryRun) {
@@ -310,6 +317,11 @@ async function loadDenuncias(token, records) {
       continue;
     }
 
+    // Asegurarse de que clusterId esté presente en el post
+    const postWithCluster = {
+      ...record.post,
+      clusterId: record.post.clusterId
+    };
     const createRes = await requestJson(
       `${CONFIG.managementUrl}/api/v1/posts`,
       {
@@ -318,7 +330,7 @@ async function loadDenuncias(token, records) {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(record.post),
+        body: JSON.stringify(postWithCluster),
       },
       CONFIG.maxRetries,
       CONFIG.requestTimeoutMs
@@ -415,7 +427,4 @@ main().catch((error) => {
   console.error('\nError en carga:', error.message);
   process.exit(1);
 });
-
-
-
 

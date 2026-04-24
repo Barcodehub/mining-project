@@ -344,6 +344,7 @@ function toMedicionesApi(mediciones) {
       turbidity: m.turbidez_ntu,
       temperature: m.temperatura_c,
       timestamp: m.fecha,
+      clusterId: m.cluster_id,
     },
     meta: {
       sourceId: m.id,
@@ -364,6 +365,7 @@ function toDenunciasApi(denuncias) {
       type: 'REPORT',
       latitude: d.latitud,
       longitude: d.longitud,
+      clusterId: d.cluster_id,
       images: [],
     },
     workflow: {
