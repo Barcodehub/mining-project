@@ -4,7 +4,7 @@ Este documento contiene las capturas de pantalla y análisis de las métricas ob
 
 ## Captura 1: http_req_duration (Tiempo Total de Petición)
 
-![http_req_duration](https://drive.google.com/file/d/1OAvkjKYOen-H0aXuH6l9ln2ypIZM03_L/view?usp=sharing)
+![http_req_duration](https://drive.google.com/uc?id=1OAvkjKYOen-H0aXuH6l9ln2ypIZM03_L)
 
 ### Análisis
 - **Sistema estable:** No hay tendencia alcista en las métricas, lo que indica que el sistema mantiene un rendimiento consistente bajo carga sostenida.
@@ -17,7 +17,7 @@ El sistema mantiene latencias consistentes sin degradación progresiva bajo carg
 
 ## Captura 2: http_req_blocked (Tiempo en Cola de Conexión)
 
-![http_req_blocked](https://drive.google.com/file/d/1A4U0DHn1gJEjauvSA2uNF5pfyXjNbp64/view?usp=sharing)
+![http_req_blocked](https://drive.google.com/uc?id=1A4U0DHn1gJEjauvSA2uNF5pfyXjNbp64)
 
 ### Análisis
 - **Casi 0 ms:** La mayoría de las métricas muestran tiempos cercanos a 0 ms.
@@ -30,7 +30,7 @@ No existe contención en el pool de conexiones, lo que demuestra que la arquitec
 
 ## Captura 3: http_req_connecting (Tiempo de Handshake TCP)
 
-![http_req_connecting](https://drive.google.com/file/d/13xZhH8H61XUp0LOigQVeXVaKW_q1ppKl/view?usp=sharing)
+![http_req_connecting](https://drive.google.com/uc?id=13xZhH8H61XUp0LOigQVeXVaKW_q1ppKl)
 
 ### Análisis
 - **Casi 0 ms:** Las métricas muestran tiempos de conexión cercanos a 0 ms.
@@ -43,7 +43,7 @@ El uso eficiente de Keep-Alive reduce el overhead de red al reutilizar conexione
 
 ## Captura 6: http_req_waiting (Tiempo de Procesamiento Real)
 
-![http_req_waiting](https://drive.google.com/file/d/14EtKvSYaULYlZ9kAaYH3G9cEUgqNZ0ZY/view?usp=sharing)
+![http_req_waiting](https://drive.google.com/uc?id=14EtKvSYaULYlZ9kAaYH3G9cEUgqNZ0ZY)
 
 ### Análisis
 - **Similar a http_req_duration:** El tiempo de espera domina el tiempo total de respuesta.
