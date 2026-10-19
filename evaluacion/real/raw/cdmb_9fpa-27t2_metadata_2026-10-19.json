@@ -1,0 +1,3493 @@
+{
+  "id" : "9fpa-27t2",
+  "name" : "MONITOREO DE LA CALIDAD DE AGUAS SUPERFICIALES CDMB",
+  "assetType" : "dataset",
+  "attribution" : "Corporación Autónoma Regional para la Defensa de la Meseta de Bucaramanga, Santander",
+  "attributionLink" : "https://www.cdmb.gov.co/",
+  "averageRating" : 0,
+  "category" : "Ambiente y Desarrollo Sostenible",
+  "createdAt" : 1747751849,
+  "description" : "Este conjunto de datos contiene los resultados del monitoreo de calidad de aguas superficiales realizado por la Corporación Autónoma Regional para la Defensa de la Meseta de Bucaramanga (CDMB) Los datos registrados corresponden al periodo 2024 - 2025\n\nEl objetivo del monitoreo es evaluar el estado físico, químico y microbiológico de diversas fuentes hídricas dentro del área de jurisdicción de la CDMB, mediante el análisis de parámetros como: temperatura, pH, oxígeno disuelto, turbiedad, sólidos totales, DBO₅, DQO, nutrientes (nitratos, nitritos, amonio), metales pesados (plomo, cadmio, mercurio, entre otros) y coliformes totales y termotolerantes como indicadores de contaminación fecal.\n\nLa información contenida en este conjunto es de carácter técnico y tiene una vigencia útil desde la fecha de muestreo hasta la publicación de una nueva campaña de monitoreo que actualice estos resultados. Esta vigencia refleja la dinámica natural de las fuentes hídricas y permite mantener un seguimiento confiable del estado de los cuerpos de agua monitoreados.\n\nAlgunos campos del conjunto presentan la anotación “null” o “vacío”, la cual indica que el parámetro no fue detectado en la muestra tomada o no estaba incluido dentro del alcance analítico para ese punto o periodo específico. Esta clasificación contribuye a preservar la integridad del conjunto de datos y evita interpretaciones erróneas sobre la calidad de la información recolectada",
+  "diciBackend" : false,
+  "displayType" : "table",
+  "downloadCount" : 174,
+  "hideFromCatalog" : false,
+  "hideFromDataJson" : false,
+  "licenseId" : "CC_40_BY_SA",
+  "locked" : false,
+  "newBackend" : true,
+  "numberOfComments" : 0,
+  "oid" : 42373712,
+  "provenance" : "official",
+  "publicationAppendEnabled" : false,
+  "publicationDate" : 1785447412,
+  "publicationGroup" : 19897529,
+  "publicationStage" : "published",
+  "resourceName" : "MONITOREO_DE_AGUA_SUPERFICIALES_2024",
+  "rowsUpdatedAt" : 1785447399,
+  "rowsUpdatedBy" : "ppx5-7gwc",
+  "tableId" : 20505168,
+  "totalTimesRated" : 0,
+  "viewCount" : 1942,
+  "viewLastModified" : 1785447412,
+  "viewType" : "tabular",
+  "approvals" : [ {
+    "reviewedAt" : 1756416745,
+    "reviewedAutomatically" : false,
+    "state" : "approved",
+    "submissionId" : 7599285,
+    "submissionObject" : "public_audience_request",
+    "submissionOutcome" : "change_audience",
+    "submittedAt" : 1756329044,
+    "targetAudience" : "public",
+    "workflowId" : 2188,
+    "reviewer" : {
+      "id" : "r4qn-dwdd",
+      "displayName" : "Ministerio de Tecnologías de la Información y las Comunicaciones - Datos Abiertos"
+    },
+    "submissionDetails" : {
+      "permissionType" : "read"
+    },
+    "submissionOutcomeApplication" : {
+      "endedAt" : 1756416745,
+      "failureCount" : 0,
+      "startedAt" : 1756416745,
+      "status" : "success"
+    },
+    "submitter" : {
+      "id" : "ppx5-7gwc",
+      "displayName" : "CDMB"
+    }
+  } ],
+  "clientContext" : {
+    "clientContextVariables" : [ ],
+    "inheritedVariables" : { }
+  },
+  "columns" : [ {
+    "id" : 640387338,
+    "name" : " Vigencia",
+    "dataTypeName" : "text",
+    "description" : "vigencia de la informacion",
+    "fieldName" : "a_o",
+    "position" : 1,
+    "renderTypeName" : "text",
+    "tableColumnId" : 159672362,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "2025-12-31T00:00:00",
+      "null" : "0",
+      "top" : [ {
+        "item" : "2025-12-31T00:00:00",
+        "count" : "223"
+      }, {
+        "item" : "2024-12-31T00:00:00",
+        "count" : "111"
+      } ],
+      "smallest" : "2024-12-31T00:00:00",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : { }
+  }, {
+    "id" : 640387339,
+    "name" : "FUENTE",
+    "dataTypeName" : "text",
+    "description" : "FUENTE HIDRICA",
+    "fieldName" : "fuente",
+    "position" : 2,
+    "renderTypeName" : "text",
+    "tableColumnId" : 158959325,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "Río Vetas",
+      "null" : "0",
+      "top" : [ {
+        "item" : "Río de Oro",
+        "count" : "33"
+      }, {
+        "item" : "Río Frío",
+        "count" : "30"
+      }, {
+        "item" : "Río Lebrija",
+        "count" : "18"
+      }, {
+        "item" : "Quebrada La Ruitoca o Ruitoque",
+        "count" : "18"
+      }, {
+        "item" : "Río Suratá",
+        "count" : "15"
+      }, {
+        "item" : "Río Tona",
+        "count" : "12"
+      }, {
+        "item" : "Río Manco",
+        "count" : "9"
+      }, {
+        "item" : "Quebrada La Angula",
+        "count" : "9"
+      }, {
+        "item" : "Quebrada La Iglesia",
+        "count" : "9"
+      }, {
+        "item" : "Río Vetas",
+        "count" : "9"
+      }, {
+        "item" : "Río Salamaga",
+        "count" : "7"
+      }, {
+        "item" : "Río Negro",
+        "count" : "6"
+      }, {
+        "item" : "Río Sucio",
+        "count" : "6"
+      }, {
+        "item" : "Quebrada La Baja o Páez",
+        "count" : "6"
+      }, {
+        "item" : "Quebrada El Aburrido",
+        "count" : "6"
+      }, {
+        "item" : "Río Playonero",
+        "count" : "6"
+      }, {
+        "item" : "Quebrada Aranzoque o Mensulí",
+        "count" : "6"
+      }, {
+        "item" : "Quebrada Arenales",
+        "count" : "6"
+      }, {
+        "item" : "Río Lato",
+        "count" : "6"
+      }, {
+        "item" : "Río Cachirí",
+        "count" : "5"
+      } ],
+      "smallest" : "Cañada El Carrasco",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : {
+      "displayStyle" : "normal",
+      "align" : "center"
+    }
+  }, {
+    "id" : 640387340,
+    "name" : "CÓDIGO CDMB",
+    "dataTypeName" : "text",
+    "description" : "CÓDIGO IDENTIFICACION CDMB",
+    "fieldName" : "c_digo_cdmb",
+    "position" : 3,
+    "renderTypeName" : "text",
+    "tableColumnId" : 158959175,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "ZA-01",
+      "null" : "0",
+      "top" : [ {
+        "item" : "RF-B",
+        "count" : "3"
+      }, {
+        "item" : "LB-02",
+        "count" : "3"
+      }, {
+        "item" : "LF-01",
+        "count" : "3"
+      }, {
+        "item" : "RO-O-4H",
+        "count" : "3"
+      }, {
+        "item" : "SA-03",
+        "count" : "3"
+      }, {
+        "item" : "RS-03",
+        "count" : "3"
+      }, {
+        "item" : "QLB-01",
+        "count" : "3"
+      }, {
+        "item" : "AZ-07",
+        "count" : "3"
+      }, {
+        "item" : "LI-01",
+        "count" : "3"
+      }, {
+        "item" : "RF-ZA",
+        "count" : "3"
+      }, {
+        "item" : "LR-02A",
+        "count" : "3"
+      }, {
+        "item" : "SM-01",
+        "count" : "3"
+      }, {
+        "item" : "RC-03",
+        "count" : "3"
+      }, {
+        "item" : "ROM-01",
+        "count" : "3"
+      }, {
+        "item" : "LP-01",
+        "count" : "3"
+      }, {
+        "item" : "RF-SU",
+        "count" : "3"
+      }, {
+        "item" : "RV-02",
+        "count" : "3"
+      }, {
+        "item" : "PY-02A",
+        "count" : "3"
+      }, {
+        "item" : "SL-05",
+        "count" : "3"
+      }, {
+        "item" : "AZ-1A",
+        "count" : "3"
+      } ],
+      "smallest" : "AP-01",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : {
+      "align" : "center"
+    }
+  }, {
+    "id" : 640387341,
+    "name" : "Fecha y Hora de monitoreo SEP Y OCT ",
+    "dataTypeName" : "calendar_date",
+    "description" : "Periodo de toma de muestras",
+    "fieldName" : "fecha_y_hora_de_monitoreo",
+    "position" : 4,
+    "renderTypeName" : "calendar_date",
+    "tableColumnId" : 158959468,
+    "width" : 278,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "2025-11-24T14:34:00.000",
+      "null" : "0",
+      "top" : [ {
+        "item" : "2025-01-20T06:00:00.000",
+        "count" : "4"
+      }, {
+        "item" : "2025-01-21T08:10:00.000",
+        "count" : "4"
+      }, {
+        "item" : "2025-01-13T07:00:00.000",
+        "count" : "4"
+      }, {
+        "item" : "2025-01-20T16:00:00.000",
+        "count" : "4"
+      }, {
+        "item" : "2025-01-16T09:00:00.000",
+        "count" : "4"
+      }, {
+        "item" : "2025-01-15T07:00:00.000",
+        "count" : "4"
+      }, {
+        "item" : "2025-01-13T13:30:00.000",
+        "count" : "4"
+      }, {
+        "item" : "2025-01-20T10:00:00.000",
+        "count" : "4"
+      }, {
+        "item" : "2025-01-14T14:00:00.000",
+        "count" : "2"
+      }, {
+        "item" : "2025-01-21T08:05:00.000",
+        "count" : "2"
+      }, {
+        "item" : "2025-10-30T09:00:00.000",
+        "count" : "2"
+      }, {
+        "item" : "2025-01-13T11:00:00.000",
+        "count" : "2"
+      }, {
+        "item" : "2025-01-23T11:14:00.000",
+        "count" : "2"
+      }, {
+        "item" : "2025-01-13T15:15:00.000",
+        "count" : "2"
+      }, {
+        "item" : "2025-01-21T16:10:00.000",
+        "count" : "2"
+      }, {
+        "item" : "2025-01-15T08:30:00.000",
+        "count" : "2"
+      }, {
+        "item" : "2025-01-22T08:58:00.000",
+        "count" : "2"
+      }, {
+        "item" : "2025-01-20T19:30:00.000",
+        "count" : "2"
+      }, {
+        "item" : "2025-01-14T10:00:00.000",
+        "count" : "2"
+      }, {
+        "item" : "2025-01-18T15:18:00.000",
+        "count" : "2"
+      } ],
+      "smallest" : "2025-01-13T07:00:00.000",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : {
+      "align" : "center"
+    }
+  }, {
+    "id" : 640387342,
+    "name" : "NORTE",
+    "dataTypeName" : "number",
+    "description" : "Coordenadas Planas_N",
+    "fieldName" : "norte",
+    "position" : 5,
+    "renderTypeName" : "number",
+    "tableColumnId" : 158959218,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "1349323",
+      "null" : "0",
+      "top" : [ {
+        "item" : "1246516",
+        "count" : "3"
+      }, {
+        "item" : "1256200",
+        "count" : "3"
+      }, {
+        "item" : "1276168",
+        "count" : "3"
+      }, {
+        "item" : "1276245",
+        "count" : "3"
+      }, {
+        "item" : "1262057",
+        "count" : "3"
+      }, {
+        "item" : "1246475",
+        "count" : "3"
+      }, {
+        "item" : "1286533",
+        "count" : "2"
+      }, {
+        "item" : "1304724",
+        "count" : "2"
+      }, {
+        "item" : "1307383",
+        "count" : "2"
+      }, {
+        "item" : "1317621",
+        "count" : "2"
+      }, {
+        "item" : "1291068",
+        "count" : "2"
+      }, {
+        "item" : "1304746",
+        "count" : "2"
+      }, {
+        "item" : "1288228",
+        "count" : "2"
+      }, {
+        "item" : "1275080",
+        "count" : "2"
+      }, {
+        "item" : "1283128",
+        "count" : "2"
+      }, {
+        "item" : "1298345",
+        "count" : "2"
+      }, {
+        "item" : "1296989",
+        "count" : "2"
+      }, {
+        "item" : "1307348",
+        "count" : "2"
+      }, {
+        "item" : "1296694",
+        "count" : "2"
+      }, {
+        "item" : "1301126",
+        "count" : "2"
+      } ],
+      "smallest" : "1126084",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : {
+      "decimalSeparator" : ".",
+      "groupSeparator" : ",",
+      "align" : "center"
+    }
+  }, {
+    "id" : 640387343,
+    "name" : "ESTE",
+    "dataTypeName" : "number",
+    "description" : "Coordenadas Planas_E",
+    "fieldName" : "este",
+    "position" : 6,
+    "renderTypeName" : "number",
+    "tableColumnId" : 158959521,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "1304146",
+      "null" : "0",
+      "top" : [ {
+        "item" : "1119926",
+        "count" : "3"
+      }, {
+        "item" : "1119912",
+        "count" : "3"
+      }, {
+        "item" : "1122449",
+        "count" : "3"
+      }, {
+        "item" : "1099499",
+        "count" : "3"
+      }, {
+        "item" : "1105855",
+        "count" : "3"
+      }, {
+        "item" : "1119044",
+        "count" : "3"
+      }, {
+        "item" : "1105426",
+        "count" : "3"
+      }, {
+        "item" : "1122540",
+        "count" : "2"
+      }, {
+        "item" : "1133659",
+        "count" : "2"
+      }, {
+        "item" : "1085373",
+        "count" : "2"
+      }, {
+        "item" : "1132029",
+        "count" : "2"
+      }, {
+        "item" : "1132176",
+        "count" : "2"
+      }, {
+        "item" : "1120155",
+        "count" : "2"
+      }, {
+        "item" : "1102186",
+        "count" : "2"
+      }, {
+        "item" : "1086950",
+        "count" : "2"
+      }, {
+        "item" : "1132599",
+        "count" : "2"
+      }, {
+        "item" : "1120824",
+        "count" : "2"
+      }, {
+        "item" : "1122953",
+        "count" : "2"
+      }, {
+        "item" : "1086228",
+        "count" : "2"
+      }, {
+        "item" : "1106233",
+        "count" : "2"
+      } ],
+      "smallest" : "1041851",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : {
+      "decimalSeparator" : ".",
+      "groupSeparator" : ",",
+      "align" : "center"
+    }
+  }, {
+    "id" : 640387344,
+    "name" : "ALTURA",
+    "dataTypeName" : "number",
+    "description" : "Coordenadas Planas_A",
+    "fieldName" : "altura",
+    "position" : 7,
+    "renderTypeName" : "number",
+    "tableColumnId" : 158959386,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "3366",
+      "null" : "0",
+      "top" : [ {
+        "item" : "581",
+        "count" : "4"
+      }, {
+        "item" : "857",
+        "count" : "4"
+      }, {
+        "item" : "1000",
+        "count" : "4"
+      }, {
+        "item" : "554",
+        "count" : "3"
+      }, {
+        "item" : "770",
+        "count" : "3"
+      }, {
+        "item" : "1647",
+        "count" : "3"
+      }, {
+        "item" : "239",
+        "count" : "3"
+      }, {
+        "item" : "863",
+        "count" : "3"
+      }, {
+        "item" : "575",
+        "count" : "3"
+      }, {
+        "item" : "3311",
+        "count" : "3"
+      }, {
+        "item" : "747",
+        "count" : "3"
+      }, {
+        "item" : "1066",
+        "count" : "3"
+      }, {
+        "item" : "1724",
+        "count" : "3"
+      }, {
+        "item" : "1292",
+        "count" : "3"
+      }, {
+        "item" : "665",
+        "count" : "3"
+      }, {
+        "item" : "846",
+        "count" : "3"
+      }, {
+        "item" : "3318",
+        "count" : "3"
+      }, {
+        "item" : "1360",
+        "count" : "2"
+      }, {
+        "item" : "761",
+        "count" : "2"
+      }, {
+        "item" : "687",
+        "count" : "2"
+      } ],
+      "smallest" : "59",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : {
+      "decimalSeparator" : ".",
+      "groupSeparator" : ",",
+      "align" : "center"
+    }
+  }, {
+    "id" : 640387345,
+    "name" : "Matriz de agua",
+    "dataTypeName" : "text",
+    "description" : "Matriz de agua",
+    "fieldName" : "matriz_de_agua",
+    "position" : 8,
+    "renderTypeName" : "text",
+    "tableColumnId" : 158959396,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "SP",
+      "null" : "0",
+      "top" : [ {
+        "item" : "SP",
+        "count" : "334"
+      } ],
+      "smallest" : "SP",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : {
+      "align" : "center"
+    }
+  }, {
+    "id" : 640387346,
+    "name" : "Coliformes totales NMP/100 ml",
+    "dataTypeName" : "number",
+    "description" : "Variables Microbiológicas",
+    "fieldName" : "coliformes_totales_nmp_100",
+    "position" : 9,
+    "renderTypeName" : "number",
+    "tableColumnId" : 158959234,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "1600000000",
+      "null" : "0",
+      "top" : [ {
+        "item" : "16000",
+        "count" : "21"
+      }, {
+        "item" : "54000",
+        "count" : "16"
+      }, {
+        "item" : "24000",
+        "count" : "15"
+      }, {
+        "item" : "5400",
+        "count" : "14"
+      }, {
+        "item" : "3500",
+        "count" : "14"
+      }, {
+        "item" : "240000",
+        "count" : "12"
+      }, {
+        "item" : "92000",
+        "count" : "12"
+      }, {
+        "item" : "2400000",
+        "count" : "12"
+      }, {
+        "item" : "9200",
+        "count" : "12"
+      }, {
+        "item" : "35000",
+        "count" : "11"
+      }, {
+        "item" : "2400",
+        "count" : "10"
+      }, {
+        "item" : "160000",
+        "count" : "10"
+      }, {
+        "item" : "35000000",
+        "count" : "10"
+      }, {
+        "item" : "5400000",
+        "count" : "9"
+      }, {
+        "item" : "1600000",
+        "count" : "8"
+      }, {
+        "item" : "920000",
+        "count" : "7"
+      }, {
+        "item" : "16000000",
+        "count" : "6"
+      }, {
+        "item" : "350000",
+        "count" : "6"
+      }, {
+        "item" : "1300",
+        "count" : "6"
+      }, {
+        "item" : "790",
+        "count" : "6"
+      } ],
+      "smallest" : "1.600",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : {
+      "decimalSeparator" : ".",
+      "groupSeparator" : ",",
+      "align" : "center"
+    }
+  }, {
+    "id" : 640387347,
+    "name" : "C. Termotolerantes NMP/100mL",
+    "dataTypeName" : "number",
+    "description" : "Variables Microbiológicas",
+    "fieldName" : "c_termotolerantes_nmp_100ml",
+    "position" : 10,
+    "renderTypeName" : "number",
+    "tableColumnId" : 158959281,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "920000000",
+      "null" : "0",
+      "top" : [ {
+        "item" : "790",
+        "count" : "13"
+      }, {
+        "item" : "5400",
+        "count" : "12"
+      }, {
+        "item" : "3500",
+        "count" : "11"
+      }, {
+        "item" : "35000",
+        "count" : "11"
+      }, {
+        "item" : "490",
+        "count" : "11"
+      }, {
+        "item" : "7900",
+        "count" : "9"
+      }, {
+        "item" : "5400000",
+        "count" : "9"
+      }, {
+        "item" : "1700",
+        "count" : "9"
+      }, {
+        "item" : "13000",
+        "count" : "8"
+      }, {
+        "item" : "16000",
+        "count" : "8"
+      }, {
+        "item" : "13000000",
+        "count" : "7"
+      }, {
+        "item" : "240000",
+        "count" : "7"
+      }, {
+        "item" : "35000000",
+        "count" : "7"
+      }, {
+        "item" : "3500000",
+        "count" : "7"
+      }, {
+        "item" : "24000",
+        "count" : "7"
+      }, {
+        "item" : "92000",
+        "count" : "7"
+      }, {
+        "item" : "79000",
+        "count" : "6"
+      }, {
+        "item" : "1300",
+        "count" : "6"
+      }, {
+        "item" : "540000",
+        "count" : "6"
+      }, {
+        "item" : "130000",
+        "count" : "6"
+      } ],
+      "smallest" : "2.400",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : {
+      "decimalSeparator" : ".",
+      "groupSeparator" : ",",
+      "align" : "center"
+    }
+  }, {
+    "id" : 640387348,
+    "name" : "Alcalinidad  (mg/L)",
+    "dataTypeName" : "text",
+    "description" : "Variables Fisicoquímicas",
+    "fieldName" : "alcalinidad_mg_l",
+    "position" : 11,
+    "renderTypeName" : "text",
+    "tableColumnId" : 158959479,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "99.6",
+      "null" : "0",
+      "top" : [ {
+        "item" : "<2.0",
+        "count" : "6"
+      }, {
+        "item" : "26.9",
+        "count" : "4"
+      }, {
+        "item" : "111",
+        "count" : "3"
+      }, {
+        "item" : "27.7",
+        "count" : "3"
+      }, {
+        "item" : "15.4",
+        "count" : "3"
+      }, {
+        "item" : "26.1",
+        "count" : "3"
+      }, {
+        "item" : "42.7",
+        "count" : "3"
+      }, {
+        "item" : "47.1",
+        "count" : "3"
+      }, {
+        "item" : "28",
+        "count" : "3"
+      }, {
+        "item" : "112",
+        "count" : "2"
+      }, {
+        "item" : "115",
+        "count" : "2"
+      }, {
+        "item" : "217",
+        "count" : "2"
+      }, {
+        "item" : "55",
+        "count" : "2"
+      }, {
+        "item" : "45.4",
+        "count" : "2"
+      }, {
+        "item" : "42.6",
+        "count" : "2"
+      }, {
+        "item" : "41.4",
+        "count" : "2"
+      }, {
+        "item" : "49.8",
+        "count" : "2"
+      }, {
+        "item" : "108",
+        "count" : "2"
+      }, {
+        "item" : "25.7",
+        "count" : "2"
+      }, {
+        "item" : "49.9",
+        "count" : "2"
+      } ],
+      "smallest" : "100",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : {
+      "decimalSeparator" : ".",
+      "groupSeparator" : ",",
+      "align" : "center"
+    }
+  }, {
+    "id" : 640387349,
+    "name" : "Cianuro  (mg/L)",
+    "dataTypeName" : "text",
+    "description" : "Variables Fisicoquímicas",
+    "fieldName" : "cianuro_mg_l",
+    "position" : 12,
+    "renderTypeName" : "text",
+    "tableColumnId" : 158959293,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "-999",
+      "null" : "0",
+      "top" : [ {
+        "item" : "-999",
+        "count" : "246"
+      }, {
+        "item" : "<0.025",
+        "count" : "70"
+      }, {
+        "item" : "0.03",
+        "count" : "2"
+      }, {
+        "item" : "0.07",
+        "count" : "2"
+      }, {
+        "item" : "0.04",
+        "count" : "2"
+      }, {
+        "item" : "0.05",
+        "count" : "2"
+      }, {
+        "item" : "0.22",
+        "count" : "1"
+      }, {
+        "item" : "0.2",
+        "count" : "1"
+      }, {
+        "item" : "1.45",
+        "count" : "1"
+      }, {
+        "item" : "3.14",
+        "count" : "1"
+      }, {
+        "item" : "1.17",
+        "count" : "1"
+      }, {
+        "item" : "0.16",
+        "count" : "1"
+      }, {
+        "item" : "0.99",
+        "count" : "1"
+      }, {
+        "item" : "0.042",
+        "count" : "1"
+      }, {
+        "item" : "0.12",
+        "count" : "1"
+      }, {
+        "item" : "0.074",
+        "count" : "1"
+      } ],
+      "smallest" : "<0.025",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : {
+      "align" : "center"
+    }
+  }, {
+    "id" : 640387350,
+    "name" : "Conductividad  (mg/L)",
+    "dataTypeName" : "text",
+    "description" : "Variables Fisicoquímicas",
+    "fieldName" : "conductividad_mg_l",
+    "position" : 13,
+    "renderTypeName" : "text",
+    "tableColumnId" : 158959430,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "99.5",
+      "null" : "0",
+      "top" : [ {
+        "item" : "<146",
+        "count" : "19"
+      }, {
+        "item" : "221",
+        "count" : "4"
+      }, {
+        "item" : "272",
+        "count" : "3"
+      }, {
+        "item" : "261",
+        "count" : "3"
+      }, {
+        "item" : "280",
+        "count" : "2"
+      }, {
+        "item" : "308",
+        "count" : "2"
+      }, {
+        "item" : "310",
+        "count" : "2"
+      }, {
+        "item" : "266",
+        "count" : "2"
+      }, {
+        "item" : "65.4",
+        "count" : "2"
+      }, {
+        "item" : "207.9",
+        "count" : "2"
+      }, {
+        "item" : "411",
+        "count" : "2"
+      }, {
+        "item" : "121.6",
+        "count" : "2"
+      }, {
+        "item" : "202",
+        "count" : "2"
+      }, {
+        "item" : "283",
+        "count" : "2"
+      }, {
+        "item" : "295",
+        "count" : "2"
+      }, {
+        "item" : "146",
+        "count" : "1"
+      }, {
+        "item" : "175.6",
+        "count" : "1"
+      }, {
+        "item" : "391",
+        "count" : "1"
+      }, {
+        "item" : "151.2",
+        "count" : "1"
+      }, {
+        "item" : "36.3",
+        "count" : "1"
+      } ],
+      "smallest" : "100",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : {
+      "align" : "center"
+    }
+  }, {
+    "id" : 640387351,
+    "name" : "DBO5  (mg/L)",
+    "dataTypeName" : "text",
+    "description" : "Variables Fisicoquímicas",
+    "fieldName" : "dbo5_mg_l",
+    "position" : 14,
+    "renderTypeName" : "text",
+    "tableColumnId" : 158959411,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "9.9",
+      "null" : "0",
+      "top" : [ {
+        "item" : "<2.0",
+        "count" : "174"
+      }, {
+        "item" : "2.4",
+        "count" : "7"
+      }, {
+        "item" : "2.7",
+        "count" : "3"
+      }, {
+        "item" : "4.6",
+        "count" : "3"
+      }, {
+        "item" : "3.4",
+        "count" : "3"
+      }, {
+        "item" : "2.6",
+        "count" : "2"
+      }, {
+        "item" : "15.4",
+        "count" : "2"
+      }, {
+        "item" : "11.7",
+        "count" : "2"
+      }, {
+        "item" : "23",
+        "count" : "2"
+      }, {
+        "item" : "7.3",
+        "count" : "2"
+      }, {
+        "item" : "4.5",
+        "count" : "2"
+      }, {
+        "item" : "13.3",
+        "count" : "2"
+      }, {
+        "item" : "18.1",
+        "count" : "2"
+      }, {
+        "item" : "10.6",
+        "count" : "2"
+      }, {
+        "item" : "2.3",
+        "count" : "2"
+      }, {
+        "item" : "203",
+        "count" : "2"
+      }, {
+        "item" : "2.2",
+        "count" : "2"
+      }, {
+        "item" : "8.5",
+        "count" : "2"
+      }, {
+        "item" : "2",
+        "count" : "2"
+      }, {
+        "item" : "3.5",
+        "count" : "2"
+      } ],
+      "smallest" : "10.6",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : {
+      "align" : "center"
+    }
+  }, {
+    "id" : 640387352,
+    "name" : "DQO  (mg/L)",
+    "dataTypeName" : "text",
+    "description" : "Variables Fisicoquímicas",
+    "fieldName" : "dqo_mg_l",
+    "position" : 15,
+    "renderTypeName" : "text",
+    "tableColumnId" : 158959172,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "99.4",
+      "null" : "0",
+      "top" : [ {
+        "item" : "<15.0",
+        "count" : "100"
+      }, {
+        "item" : "<15",
+        "count" : "5"
+      }, {
+        "item" : "19.2",
+        "count" : "3"
+      }, {
+        "item" : "171",
+        "count" : "2"
+      }, {
+        "item" : "30",
+        "count" : "2"
+      }, {
+        "item" : "61.7",
+        "count" : "2"
+      }, {
+        "item" : "31.5",
+        "count" : "2"
+      }, {
+        "item" : "23.4",
+        "count" : "2"
+      }, {
+        "item" : "27.7",
+        "count" : "2"
+      }, {
+        "item" : "24.1",
+        "count" : "2"
+      }, {
+        "item" : "20",
+        "count" : "2"
+      }, {
+        "item" : "42.9",
+        "count" : "2"
+      }, {
+        "item" : "101",
+        "count" : "2"
+      }, {
+        "item" : "74.5",
+        "count" : "2"
+      }, {
+        "item" : "20.2",
+        "count" : "2"
+      }, {
+        "item" : "29.7",
+        "count" : "2"
+      }, {
+        "item" : "201",
+        "count" : "2"
+      }, {
+        "item" : "19.4",
+        "count" : "2"
+      }, {
+        "item" : "15",
+        "count" : "2"
+      }, {
+        "item" : "39",
+        "count" : "2"
+      } ],
+      "smallest" : "101",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : {
+      "align" : "center"
+    }
+  }, {
+    "id" : 640387382,
+    "name" : "Dureza total  (mg/L)",
+    "dataTypeName" : "text",
+    "description" : "Variables Fisicoquímicas",
+    "fieldName" : "dureza_total_mg_l",
+    "position" : 16,
+    "renderTypeName" : "text",
+    "tableColumnId" : 170205687,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "98.6",
+      "null" : "0",
+      "top" : [ {
+        "item" : "20.5",
+        "count" : "5"
+      }, {
+        "item" : "11.4",
+        "count" : "4"
+      }, {
+        "item" : "48.4",
+        "count" : "3"
+      }, {
+        "item" : "10.1",
+        "count" : "3"
+      }, {
+        "item" : "58.8",
+        "count" : "3"
+      }, {
+        "item" : "12.9",
+        "count" : "3"
+      }, {
+        "item" : "32",
+        "count" : "3"
+      }, {
+        "item" : "32.8",
+        "count" : "3"
+      }, {
+        "item" : "8.2",
+        "count" : "3"
+      }, {
+        "item" : "7.8",
+        "count" : "3"
+      }, {
+        "item" : "5",
+        "count" : "3"
+      }, {
+        "item" : "7.4",
+        "count" : "3"
+      }, {
+        "item" : "5.2",
+        "count" : "2"
+      }, {
+        "item" : "48.3",
+        "count" : "2"
+      }, {
+        "item" : "28.3",
+        "count" : "2"
+      }, {
+        "item" : "75.2",
+        "count" : "2"
+      }, {
+        "item" : "36.4",
+        "count" : "2"
+      }, {
+        "item" : "16.1",
+        "count" : "2"
+      }, {
+        "item" : "6.4",
+        "count" : "2"
+      }, {
+        "item" : "98.1",
+        "count" : "2"
+      } ],
+      "smallest" : "10",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : {
+      "decimalSeparator" : ".",
+      "groupSeparator" : ",",
+      "align" : "center"
+    }
+  }, {
+    "id" : 640387354,
+    "name" : "Fosforo total  (mg/L)",
+    "dataTypeName" : "text",
+    "description" : "Variables Fisicoquímicas",
+    "fieldName" : "fosforo_total_mg_l",
+    "position" : 17,
+    "renderTypeName" : "text",
+    "tableColumnId" : 158959197,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "8.1",
+      "null" : "0",
+      "top" : [ {
+        "item" : "<0.05",
+        "count" : "61"
+      }, {
+        "item" : "0.07",
+        "count" : "16"
+      }, {
+        "item" : "0.08",
+        "count" : "13"
+      }, {
+        "item" : "0.06",
+        "count" : "12"
+      }, {
+        "item" : "0.09",
+        "count" : "11"
+      }, {
+        "item" : "0.14",
+        "count" : "9"
+      }, {
+        "item" : "0.1",
+        "count" : "9"
+      }, {
+        "item" : "0.12",
+        "count" : "8"
+      }, {
+        "item" : "0.13",
+        "count" : "8"
+      }, {
+        "item" : "0.05",
+        "count" : "7"
+      }, {
+        "item" : "0.18",
+        "count" : "6"
+      }, {
+        "item" : "0.17",
+        "count" : "6"
+      }, {
+        "item" : "0.27",
+        "count" : "6"
+      }, {
+        "item" : "0.19",
+        "count" : "6"
+      }, {
+        "item" : "0.11",
+        "count" : "6"
+      }, {
+        "item" : "0.34",
+        "count" : "5"
+      }, {
+        "item" : "0.15",
+        "count" : "4"
+      }, {
+        "item" : "0.33",
+        "count" : "4"
+      }, {
+        "item" : "0.26",
+        "count" : "4"
+      }, {
+        "item" : "0.7",
+        "count" : "3"
+      } ],
+      "smallest" : "<0.05",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : {
+      "align" : "center"
+    }
+  }, {
+    "id" : 640387355,
+    "name" : "Nitratos  (mg/L)",
+    "dataTypeName" : "text",
+    "description" : "Variables Fisicoquímicas",
+    "fieldName" : "nitratos_mg_l",
+    "position" : 18,
+    "renderTypeName" : "text",
+    "tableColumnId" : 158959451,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "8.3",
+      "null" : "0",
+      "top" : [ {
+        "item" : "<0.10",
+        "count" : "87"
+      }, {
+        "item" : "0.13",
+        "count" : "10"
+      }, {
+        "item" : "0.16",
+        "count" : "8"
+      }, {
+        "item" : "0.11",
+        "count" : "6"
+      }, {
+        "item" : "0.14",
+        "count" : "6"
+      }, {
+        "item" : "0.17",
+        "count" : "6"
+      }, {
+        "item" : "0.26",
+        "count" : "6"
+      }, {
+        "item" : "0.2",
+        "count" : "6"
+      }, {
+        "item" : "0.12",
+        "count" : "6"
+      }, {
+        "item" : "0.34",
+        "count" : "5"
+      }, {
+        "item" : "0.35",
+        "count" : "5"
+      }, {
+        "item" : "0.25",
+        "count" : "4"
+      }, {
+        "item" : "0.15",
+        "count" : "4"
+      }, {
+        "item" : "0.22",
+        "count" : "4"
+      }, {
+        "item" : "0.1",
+        "count" : "4"
+      }, {
+        "item" : "0.23",
+        "count" : "4"
+      }, {
+        "item" : "0.19",
+        "count" : "4"
+      }, {
+        "item" : "0.53",
+        "count" : "4"
+      }, {
+        "item" : "0.33",
+        "count" : "3"
+      }, {
+        "item" : "0.82",
+        "count" : "3"
+      } ],
+      "smallest" : "0.1",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : {
+      "align" : "center"
+    }
+  }, {
+    "id" : 640387356,
+    "name" : "Nitritos  (mg/L)",
+    "dataTypeName" : "text",
+    "description" : "Variables Fisicoquímicas",
+    "fieldName" : "nitritos_mg_l",
+    "position" : 19,
+    "renderTypeName" : "text",
+    "tableColumnId" : 158959513,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "5",
+      "null" : "0",
+      "top" : [ {
+        "item" : "<0.005",
+        "count" : "79"
+      }, {
+        "item" : "0.006",
+        "count" : "17"
+      }, {
+        "item" : "0.005",
+        "count" : "16"
+      }, {
+        "item" : "0.012",
+        "count" : "14"
+      }, {
+        "item" : "0.009",
+        "count" : "13"
+      }, {
+        "item" : "0.007",
+        "count" : "12"
+      }, {
+        "item" : "0.011",
+        "count" : "12"
+      }, {
+        "item" : "0.008",
+        "count" : "11"
+      }, {
+        "item" : "0.01",
+        "count" : "8"
+      }, {
+        "item" : "0.02",
+        "count" : "7"
+      }, {
+        "item" : "0.016",
+        "count" : "6"
+      }, {
+        "item" : "0.014",
+        "count" : "6"
+      }, {
+        "item" : "0.021",
+        "count" : "5"
+      }, {
+        "item" : "0.023",
+        "count" : "4"
+      }, {
+        "item" : "0.013",
+        "count" : "4"
+      }, {
+        "item" : "0.03",
+        "count" : "3"
+      }, {
+        "item" : "0.017",
+        "count" : "3"
+      }, {
+        "item" : "0.04",
+        "count" : "3"
+      }, {
+        "item" : "0.141",
+        "count" : "3"
+      }, {
+        "item" : "0.041",
+        "count" : "3"
+      } ],
+      "smallest" : "0.002",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : {
+      "align" : "center"
+    }
+  }, {
+    "id" : 640387357,
+    "name" : "Nitrogeno Amoniacal  (mg/L)",
+    "dataTypeName" : "text",
+    "description" : "Variables Fisicoquímicas",
+    "fieldName" : "nitrogeno_amoniacal_mg_l",
+    "position" : 20,
+    "renderTypeName" : "text",
+    "tableColumnId" : 158959182,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "8.86",
+      "null" : "0",
+      "top" : [ {
+        "item" : "<2.0",
+        "count" : "248"
+      }, {
+        "item" : "12",
+        "count" : "2"
+      }, {
+        "item" : "18.8",
+        "count" : "2"
+      }, {
+        "item" : "44.8",
+        "count" : "1"
+      }, {
+        "item" : "12.4",
+        "count" : "1"
+      }, {
+        "item" : "333",
+        "count" : "1"
+      }, {
+        "item" : "36.8",
+        "count" : "1"
+      }, {
+        "item" : "64.3",
+        "count" : "1"
+      }, {
+        "item" : "30.6",
+        "count" : "1"
+      }, {
+        "item" : "13.4",
+        "count" : "1"
+      }, {
+        "item" : "5.93",
+        "count" : "1"
+      }, {
+        "item" : "14.4",
+        "count" : "1"
+      }, {
+        "item" : "27.8",
+        "count" : "1"
+      }, {
+        "item" : "32.5",
+        "count" : "1"
+      }, {
+        "item" : "28.4",
+        "count" : "1"
+      }, {
+        "item" : "28.5",
+        "count" : "1"
+      }, {
+        "item" : "6.8",
+        "count" : "1"
+      }, {
+        "item" : "11.7",
+        "count" : "1"
+      }, {
+        "item" : "36.5",
+        "count" : "1"
+      }, {
+        "item" : "11.8",
+        "count" : "1"
+      } ],
+      "smallest" : "0.82",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : {
+      "align" : "center"
+    }
+  }, {
+    "id" : 640387358,
+    "name" : "Nitrogeno kjeldahl  (mg/L)",
+    "dataTypeName" : "text",
+    "description" : "Variables Fisicoquímicas",
+    "fieldName" : "nitrogeno_kjeldahl_mg_l",
+    "position" : 21,
+    "renderTypeName" : "text",
+    "tableColumnId" : 158959490,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "9.91",
+      "null" : "0",
+      "top" : [ {
+        "item" : "<3.0",
+        "count" : "247"
+      }, {
+        "item" : "4.28",
+        "count" : "2"
+      }, {
+        "item" : "13.4",
+        "count" : "2"
+      }, {
+        "item" : "17.3",
+        "count" : "2"
+      }, {
+        "item" : "10.2",
+        "count" : "2"
+      }, {
+        "item" : "45.8",
+        "count" : "2"
+      }, {
+        "item" : "5.29",
+        "count" : "1"
+      }, {
+        "item" : "23.7",
+        "count" : "1"
+      }, {
+        "item" : "6",
+        "count" : "1"
+      }, {
+        "item" : "37",
+        "count" : "1"
+      }, {
+        "item" : "387",
+        "count" : "1"
+      }, {
+        "item" : "19",
+        "count" : "1"
+      }, {
+        "item" : "17.1",
+        "count" : "1"
+      }, {
+        "item" : "10.6",
+        "count" : "1"
+      }, {
+        "item" : "32.4",
+        "count" : "1"
+      }, {
+        "item" : "4.16",
+        "count" : "1"
+      }, {
+        "item" : "5.74",
+        "count" : "1"
+      }, {
+        "item" : "9.1",
+        "count" : "1"
+      }, {
+        "item" : "10.7",
+        "count" : "1"
+      }, {
+        "item" : "12.5",
+        "count" : "1"
+      } ],
+      "smallest" : "10.2",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : {
+      "align" : "center"
+    }
+  }, {
+    "id" : 640387359,
+    "name" : "Oxigeno Disuelto  (mg/L)",
+    "dataTypeName" : "text",
+    "description" : "Variables Fisicoquímicas",
+    "fieldName" : "oxigeno_disuelto_mg_l",
+    "position" : 22,
+    "renderTypeName" : "text",
+    "tableColumnId" : 158959439,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "9.73",
+      "null" : "0",
+      "top" : [ {
+        "item" : "7.58",
+        "count" : "5"
+      }, {
+        "item" : "7.51",
+        "count" : "4"
+      }, {
+        "item" : "7.69",
+        "count" : "4"
+      }, {
+        "item" : "7.8",
+        "count" : "4"
+      }, {
+        "item" : "7.86",
+        "count" : "3"
+      }, {
+        "item" : "8.28",
+        "count" : "3"
+      }, {
+        "item" : "7.63",
+        "count" : "3"
+      }, {
+        "item" : "8",
+        "count" : "3"
+      }, {
+        "item" : "7.65",
+        "count" : "3"
+      }, {
+        "item" : "6.51",
+        "count" : "3"
+      }, {
+        "item" : "7.5",
+        "count" : "3"
+      }, {
+        "item" : "7.4",
+        "count" : "3"
+      }, {
+        "item" : "6.8",
+        "count" : "3"
+      }, {
+        "item" : "7",
+        "count" : "3"
+      }, {
+        "item" : "4.63",
+        "count" : "3"
+      }, {
+        "item" : "0",
+        "count" : "3"
+      }, {
+        "item" : "7.52",
+        "count" : "3"
+      }, {
+        "item" : "4.2",
+        "count" : "3"
+      }, {
+        "item" : "7.83",
+        "count" : "3"
+      }, {
+        "item" : "6.91",
+        "count" : "3"
+      } ],
+      "smallest" : "0",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : {
+      "align" : "center"
+    }
+  }, {
+    "id" : 640387360,
+    "name" : "Sólidos sedimentables  (ml/L)",
+    "dataTypeName" : "text",
+    "description" : "Variables Fisicoquímicas",
+    "fieldName" : "s_lidos_sedimentables_ml",
+    "position" : 23,
+    "renderTypeName" : "text",
+    "tableColumnId" : 158959528,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "8",
+      "null" : "0",
+      "top" : [ {
+        "item" : "<0.1",
+        "count" : "168"
+      }, {
+        "item" : "0.2",
+        "count" : "30"
+      }, {
+        "item" : "0.1",
+        "count" : "25"
+      }, {
+        "item" : "0.5",
+        "count" : "17"
+      }, {
+        "item" : "0.4",
+        "count" : "14"
+      }, {
+        "item" : "0.3",
+        "count" : "10"
+      }, {
+        "item" : "0.6",
+        "count" : "10"
+      }, {
+        "item" : "1",
+        "count" : "8"
+      }, {
+        "item" : "0.8",
+        "count" : "5"
+      }, {
+        "item" : "2",
+        "count" : "5"
+      }, {
+        "item" : "1.5",
+        "count" : "4"
+      }, {
+        "item" : "1.4",
+        "count" : "3"
+      }, {
+        "item" : "1.1",
+        "count" : "3"
+      }, {
+        "item" : "3",
+        "count" : "3"
+      }, {
+        "item" : "0.7",
+        "count" : "3"
+      }, {
+        "item" : "1.8",
+        "count" : "3"
+      }, {
+        "item" : "8",
+        "count" : "2"
+      }, {
+        "item" : "2.2",
+        "count" : "2"
+      }, {
+        "item" : "0.9",
+        "count" : "2"
+      }, {
+        "item" : "3.5",
+        "count" : "1"
+      } ],
+      "smallest" : "<0.1",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : {
+      "align" : "center"
+    }
+  }, {
+    "id" : 640387361,
+    "name" : "Sólidos suspendidos totales  (mg/L)",
+    "dataTypeName" : "text",
+    "description" : "Variables Fisicoquímicas",
+    "fieldName" : "s_lidos_suspendidos_totales",
+    "position" : 24,
+    "renderTypeName" : "text",
+    "tableColumnId" : 158959500,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "97.3",
+      "null" : "0",
+      "top" : [ {
+        "item" : "<10.0",
+        "count" : "118"
+      }, {
+        "item" : "<10",
+        "count" : "34"
+      }, {
+        "item" : "20.5",
+        "count" : "3"
+      }, {
+        "item" : "11.3",
+        "count" : "3"
+      }, {
+        "item" : "11",
+        "count" : "3"
+      }, {
+        "item" : "15.3",
+        "count" : "3"
+      }, {
+        "item" : "15",
+        "count" : "3"
+      }, {
+        "item" : "70",
+        "count" : "2"
+      }, {
+        "item" : "75",
+        "count" : "2"
+      }, {
+        "item" : "28",
+        "count" : "2"
+      }, {
+        "item" : "228",
+        "count" : "2"
+      }, {
+        "item" : "18",
+        "count" : "2"
+      }, {
+        "item" : "22.5",
+        "count" : "2"
+      }, {
+        "item" : "25.7",
+        "count" : "2"
+      }, {
+        "item" : "13.2",
+        "count" : "2"
+      }, {
+        "item" : "42.5",
+        "count" : "2"
+      }, {
+        "item" : "13.3",
+        "count" : "2"
+      }, {
+        "item" : "11.5",
+        "count" : "2"
+      }, {
+        "item" : "33.5",
+        "count" : "2"
+      }, {
+        "item" : "10.2",
+        "count" : "2"
+      } ],
+      "smallest" : "<10",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : {
+      "align" : "center"
+    }
+  }, {
+    "id" : 640387383,
+    "name" : "Sólidos totales  (mg/L)",
+    "dataTypeName" : "text",
+    "description" : "Variables Fisicoquímicas",
+    "fieldName" : "s_lidos_totales_mg_l",
+    "position" : 25,
+    "renderTypeName" : "text",
+    "tableColumnId" : 170205688,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "98",
+      "null" : "0",
+      "top" : [ {
+        "item" : "90",
+        "count" : "6"
+      }, {
+        "item" : "65",
+        "count" : "5"
+      }, {
+        "item" : "180",
+        "count" : "5"
+      }, {
+        "item" : "69",
+        "count" : "4"
+      }, {
+        "item" : "126",
+        "count" : "4"
+      }, {
+        "item" : "162",
+        "count" : "4"
+      }, {
+        "item" : "87",
+        "count" : "4"
+      }, {
+        "item" : "153",
+        "count" : "3"
+      }, {
+        "item" : "49",
+        "count" : "3"
+      }, {
+        "item" : "67",
+        "count" : "3"
+      }, {
+        "item" : "120",
+        "count" : "3"
+      }, {
+        "item" : "73",
+        "count" : "3"
+      }, {
+        "item" : "158",
+        "count" : "3"
+      }, {
+        "item" : "82.2",
+        "count" : "3"
+      }, {
+        "item" : "211",
+        "count" : "3"
+      }, {
+        "item" : "142",
+        "count" : "3"
+      }, {
+        "item" : "82",
+        "count" : "3"
+      }, {
+        "item" : "114",
+        "count" : "3"
+      }, {
+        "item" : "75",
+        "count" : "3"
+      }, {
+        "item" : "214",
+        "count" : "3"
+      } ],
+      "smallest" : "<10.0",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : {
+      "decimalSeparator" : ".",
+      "groupSeparator" : ",",
+      "align" : "center"
+    }
+  }, {
+    "id" : 640387363,
+    "name" : "Turbiedad (NTU)",
+    "dataTypeName" : "text",
+    "description" : "Variables Fisicoquímicas",
+    "fieldName" : "turbiedad_ntu",
+    "position" : 26,
+    "renderTypeName" : "text",
+    "tableColumnId" : 158959354,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "9.7",
+      "null" : "0",
+      "top" : [ {
+        "item" : "<2.0",
+        "count" : "23"
+      }, {
+        "item" : "14",
+        "count" : "10"
+      }, {
+        "item" : "11",
+        "count" : "7"
+      }, {
+        "item" : "12",
+        "count" : "6"
+      }, {
+        "item" : "2.4",
+        "count" : "6"
+      }, {
+        "item" : "4.4",
+        "count" : "5"
+      }, {
+        "item" : "80",
+        "count" : "5"
+      }, {
+        "item" : "19",
+        "count" : "5"
+      }, {
+        "item" : "13",
+        "count" : "5"
+      }, {
+        "item" : "6.3",
+        "count" : "5"
+      }, {
+        "item" : "2.5",
+        "count" : "4"
+      }, {
+        "item" : "60",
+        "count" : "4"
+      }, {
+        "item" : "110",
+        "count" : "4"
+      }, {
+        "item" : "4.7",
+        "count" : "4"
+      }, {
+        "item" : "100",
+        "count" : "4"
+      }, {
+        "item" : "2.2",
+        "count" : "4"
+      }, {
+        "item" : "45",
+        "count" : "4"
+      }, {
+        "item" : "17",
+        "count" : "4"
+      }, {
+        "item" : "37",
+        "count" : "4"
+      }, {
+        "item" : "3.1",
+        "count" : "4"
+      } ],
+      "smallest" : "10",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : {
+      "decimalSeparator" : ".",
+      "groupSeparator" : ",",
+      "align" : "center"
+    }
+  }, {
+    "id" : 640387364,
+    "name" : "Aluminio (mg/L)",
+    "dataTypeName" : "text",
+    "description" : "Variables Fisicoquímicas",
+    "fieldName" : "aluminio_mg_l",
+    "position" : 27,
+    "renderTypeName" : "text",
+    "tableColumnId" : 158959206,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "-999",
+      "null" : "0",
+      "top" : [ {
+        "item" : "-999",
+        "count" : "246"
+      }, {
+        "item" : "<2.00",
+        "count" : "30"
+      }, {
+        "item" : "<0.2",
+        "count" : "30"
+      }, {
+        "item" : "0.38",
+        "count" : "2"
+      }, {
+        "item" : "0.3",
+        "count" : "1"
+      }, {
+        "item" : "1.5",
+        "count" : "1"
+      }, {
+        "item" : "1.33",
+        "count" : "1"
+      }, {
+        "item" : "0.66",
+        "count" : "1"
+      }, {
+        "item" : "2.13",
+        "count" : "1"
+      }, {
+        "item" : "2.87",
+        "count" : "1"
+      }, {
+        "item" : "0.36",
+        "count" : "1"
+      }, {
+        "item" : "1.8",
+        "count" : "1"
+      }, {
+        "item" : "0.32",
+        "count" : "1"
+      }, {
+        "item" : "0.5",
+        "count" : "1"
+      }, {
+        "item" : "7.03",
+        "count" : "1"
+      }, {
+        "item" : "16.6",
+        "count" : "1"
+      }, {
+        "item" : "3.31",
+        "count" : "1"
+      }, {
+        "item" : "0.58",
+        "count" : "1"
+      }, {
+        "item" : "0.71",
+        "count" : "1"
+      }, {
+        "item" : "3.89",
+        "count" : "1"
+      } ],
+      "smallest" : "<0.2",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : {
+      "align" : "center"
+    }
+  }, {
+    "id" : 640387365,
+    "name" : "Arsenico (mg/L)",
+    "dataTypeName" : "text",
+    "description" : "Variables Fisicoquímicas",
+    "fieldName" : "arsenico_mg_l",
+    "position" : 28,
+    "renderTypeName" : "text",
+    "tableColumnId" : 158959375,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "-999",
+      "null" : "0",
+      "top" : [ {
+        "item" : "-999",
+        "count" : "246"
+      }, {
+        "item" : "<0.001",
+        "count" : "55"
+      }, {
+        "item" : "<5.00",
+        "count" : "24"
+      }, {
+        "item" : "0.002",
+        "count" : "3"
+      }, {
+        "item" : "5",
+        "count" : "2"
+      }, {
+        "item" : "5.63",
+        "count" : "1"
+      }, {
+        "item" : "16.9",
+        "count" : "1"
+      }, {
+        "item" : "8.56",
+        "count" : "1"
+      }, {
+        "item" : "11.8",
+        "count" : "1"
+      } ],
+      "smallest" : "<0.001",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : {
+      "align" : "center"
+    }
+  }, {
+    "id" : 640387366,
+    "name" : "Cadmio (mg/L)",
+    "dataTypeName" : "text",
+    "description" : "Variables Fisicoquímicas",
+    "fieldName" : "cadmio_mg_l",
+    "position" : 29,
+    "renderTypeName" : "text",
+    "tableColumnId" : 158959186,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "-999",
+      "null" : "0",
+      "top" : [ {
+        "item" : "-999",
+        "count" : "246"
+      }, {
+        "item" : "<0.005",
+        "count" : "42"
+      }, {
+        "item" : "<0.010",
+        "count" : "30"
+      }, {
+        "item" : "0.005",
+        "count" : "6"
+      }, {
+        "item" : "0.01",
+        "count" : "5"
+      }, {
+        "item" : "0.007",
+        "count" : "3"
+      }, {
+        "item" : "0.009",
+        "count" : "1"
+      }, {
+        "item" : "0.006",
+        "count" : "1"
+      } ],
+      "smallest" : "<0.005",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : {
+      "align" : "center"
+    }
+  }, {
+    "id" : 640387367,
+    "name" : "Cobre (mg/L)",
+    "dataTypeName" : "text",
+    "description" : "Variables Fisicoquímicas",
+    "fieldName" : "cobre_mg_l",
+    "position" : 30,
+    "renderTypeName" : "text",
+    "tableColumnId" : 158959264,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "-999",
+      "null" : "0",
+      "top" : [ {
+        "item" : "-999",
+        "count" : "246"
+      }, {
+        "item" : "<0.10",
+        "count" : "28"
+      }, {
+        "item" : "<0.01",
+        "count" : "17"
+      }, {
+        "item" : "0.01",
+        "count" : "9"
+      }, {
+        "item" : "0.02",
+        "count" : "7"
+      }, {
+        "item" : "0.03",
+        "count" : "6"
+      }, {
+        "item" : "0.04",
+        "count" : "3"
+      }, {
+        "item" : "0.12",
+        "count" : "3"
+      }, {
+        "item" : "0.11",
+        "count" : "2"
+      }, {
+        "item" : "0.15",
+        "count" : "2"
+      }, {
+        "item" : "0.05",
+        "count" : "2"
+      }, {
+        "item" : "0.2",
+        "count" : "1"
+      }, {
+        "item" : "0.07",
+        "count" : "1"
+      }, {
+        "item" : "0.38",
+        "count" : "1"
+      }, {
+        "item" : "0.3",
+        "count" : "1"
+      }, {
+        "item" : "0.17",
+        "count" : "1"
+      }, {
+        "item" : "0.08",
+        "count" : "1"
+      }, {
+        "item" : "0.18",
+        "count" : "1"
+      }, {
+        "item" : "0.23",
+        "count" : "1"
+      }, {
+        "item" : "0.27",
+        "count" : "1"
+      } ],
+      "smallest" : "<0.01",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : {
+      "align" : "center"
+    }
+  }, {
+    "id" : 640387368,
+    "name" : "Cromo (mg/L)",
+    "dataTypeName" : "text",
+    "description" : "Variables Fisicoquímicas",
+    "fieldName" : "cromo_mg_l",
+    "position" : 31,
+    "renderTypeName" : "text",
+    "tableColumnId" : 158959345,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "-999",
+      "null" : "0",
+      "top" : [ {
+        "item" : "-999",
+        "count" : "246"
+      }, {
+        "item" : "<0.05",
+        "count" : "58"
+      }, {
+        "item" : "<0.10",
+        "count" : "30"
+      } ],
+      "smallest" : "<0.05",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : {
+      "align" : "center"
+    }
+  }, {
+    "id" : 640387369,
+    "name" : "Hierro (mg/L)",
+    "dataTypeName" : "text",
+    "description" : "Variables Fisicoquímicas",
+    "fieldName" : "hierro_mg_l",
+    "position" : 32,
+    "renderTypeName" : "text",
+    "tableColumnId" : 158959300,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "-999",
+      "null" : "0",
+      "top" : [ {
+        "item" : "-999",
+        "count" : "246"
+      }, {
+        "item" : "<0.10",
+        "count" : "11"
+      }, {
+        "item" : "0.11",
+        "count" : "4"
+      }, {
+        "item" : "0.07",
+        "count" : "3"
+      }, {
+        "item" : "0.3",
+        "count" : "2"
+      }, {
+        "item" : "0.1",
+        "count" : "2"
+      }, {
+        "item" : "0.41",
+        "count" : "2"
+      }, {
+        "item" : "1.05",
+        "count" : "2"
+      }, {
+        "item" : "0.46",
+        "count" : "2"
+      }, {
+        "item" : "0.49",
+        "count" : "2"
+      }, {
+        "item" : "0.29",
+        "count" : "2"
+      }, {
+        "item" : "0.12",
+        "count" : "2"
+      }, {
+        "item" : "0.75",
+        "count" : "2"
+      }, {
+        "item" : "0.5",
+        "count" : "1"
+      }, {
+        "item" : "0.66",
+        "count" : "1"
+      }, {
+        "item" : "0.96",
+        "count" : "1"
+      }, {
+        "item" : "0.78",
+        "count" : "1"
+      }, {
+        "item" : "4.59",
+        "count" : "1"
+      }, {
+        "item" : "1.15",
+        "count" : "1"
+      }, {
+        "item" : "3.92",
+        "count" : "1"
+      } ],
+      "smallest" : "<0.05",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : {
+      "align" : "center"
+    }
+  }, {
+    "id" : 640387370,
+    "name" : "Niquel (mg/L)",
+    "dataTypeName" : "text",
+    "description" : "Variables Fisicoquímicas",
+    "fieldName" : "niquel_mg_l",
+    "position" : 33,
+    "renderTypeName" : "text",
+    "tableColumnId" : 158959213,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "-999",
+      "null" : "0",
+      "top" : [ {
+        "item" : "-999",
+        "count" : "246"
+      }, {
+        "item" : "<0.05",
+        "count" : "52"
+      }, {
+        "item" : "<0.010",
+        "count" : "30"
+      }, {
+        "item" : "0.07",
+        "count" : "2"
+      }, {
+        "item" : "0.09",
+        "count" : "1"
+      }, {
+        "item" : "1.38",
+        "count" : "1"
+      }, {
+        "item" : "0.05",
+        "count" : "1"
+      }, {
+        "item" : "0.06",
+        "count" : "1"
+      } ],
+      "smallest" : "<0.010",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : {
+      "align" : "center"
+    }
+  }, {
+    "id" : 640387371,
+    "name" : "Manganeso (mg/L)",
+    "dataTypeName" : "text",
+    "description" : "Variables Fisicoquímicas",
+    "fieldName" : "manganeso_mg_l",
+    "position" : 34,
+    "renderTypeName" : "text",
+    "tableColumnId" : 158959225,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "-999",
+      "null" : "0",
+      "top" : [ {
+        "item" : "-999",
+        "count" : "246"
+      }, {
+        "item" : "<0.05",
+        "count" : "22"
+      }, {
+        "item" : "<0.10",
+        "count" : "22"
+      }, {
+        "item" : "0.1",
+        "count" : "3"
+      }, {
+        "item" : "0.68",
+        "count" : "2"
+      }, {
+        "item" : "0.08",
+        "count" : "2"
+      }, {
+        "item" : "0.23",
+        "count" : "2"
+      }, {
+        "item" : "0.19",
+        "count" : "2"
+      }, {
+        "item" : "0.17",
+        "count" : "2"
+      }, {
+        "item" : "0.26",
+        "count" : "2"
+      }, {
+        "item" : "0.12",
+        "count" : "2"
+      }, {
+        "item" : "0.47",
+        "count" : "2"
+      }, {
+        "item" : "0.28",
+        "count" : "1"
+      }, {
+        "item" : "0.78",
+        "count" : "1"
+      }, {
+        "item" : "0.54",
+        "count" : "1"
+      }, {
+        "item" : "1.82",
+        "count" : "1"
+      }, {
+        "item" : "2.13",
+        "count" : "1"
+      }, {
+        "item" : "0.55",
+        "count" : "1"
+      }, {
+        "item" : "0.06",
+        "count" : "1"
+      }, {
+        "item" : "2.42",
+        "count" : "1"
+      } ],
+      "smallest" : "<0.05",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : { }
+  }, {
+    "id" : 640387372,
+    "name" : "Mercurio (mg/L)",
+    "dataTypeName" : "text",
+    "description" : "Variables Fisicoquímicas",
+    "fieldName" : "mercurio_mg_l",
+    "position" : 35,
+    "renderTypeName" : "text",
+    "tableColumnId" : 158959422,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "-999",
+      "null" : "0",
+      "top" : [ {
+        "item" : "-999",
+        "count" : "246"
+      }, {
+        "item" : "<0.0005",
+        "count" : "29"
+      }, {
+        "item" : "<0.0003",
+        "count" : "17"
+      }, {
+        "item" : "0.0004",
+        "count" : "10"
+      }, {
+        "item" : "0.001",
+        "count" : "7"
+      }, {
+        "item" : "0.0009",
+        "count" : "7"
+      }, {
+        "item" : "0.0003",
+        "count" : "6"
+      }, {
+        "item" : "0.0005",
+        "count" : "3"
+      }, {
+        "item" : "0.0007",
+        "count" : "2"
+      }, {
+        "item" : "0.0006",
+        "count" : "2"
+      }, {
+        "item" : "0.0012",
+        "count" : "1"
+      }, {
+        "item" : "0.0015",
+        "count" : "1"
+      }, {
+        "item" : "0.0008",
+        "count" : "1"
+      }, {
+        "item" : "0.0019",
+        "count" : "1"
+      }, {
+        "item" : "0.0013",
+        "count" : "1"
+      } ],
+      "smallest" : "<0.0003",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : {
+      "align" : "center"
+    }
+  }, {
+    "id" : 640387373,
+    "name" : "Plomo (mg/L)",
+    "dataTypeName" : "text",
+    "description" : "Variables Fisicoquímicas",
+    "fieldName" : "plomo_mg_l",
+    "position" : 36,
+    "renderTypeName" : "text",
+    "tableColumnId" : 158959461,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "-999",
+      "null" : "0",
+      "top" : [ {
+        "item" : "-999",
+        "count" : "246"
+      }, {
+        "item" : "<0.05",
+        "count" : "32"
+      }, {
+        "item" : "<0.010",
+        "count" : "30"
+      }, {
+        "item" : "0.06",
+        "count" : "4"
+      }, {
+        "item" : "0.07",
+        "count" : "2"
+      }, {
+        "item" : "0.11",
+        "count" : "2"
+      }, {
+        "item" : "0.19",
+        "count" : "2"
+      }, {
+        "item" : "0.39",
+        "count" : "2"
+      }, {
+        "item" : "0.34",
+        "count" : "2"
+      }, {
+        "item" : "0.05",
+        "count" : "2"
+      }, {
+        "item" : "0.08",
+        "count" : "2"
+      }, {
+        "item" : "0.42",
+        "count" : "1"
+      }, {
+        "item" : "0.14",
+        "count" : "1"
+      }, {
+        "item" : "0.1",
+        "count" : "1"
+      }, {
+        "item" : "0.4",
+        "count" : "1"
+      }, {
+        "item" : "1.07",
+        "count" : "1"
+      }, {
+        "item" : "0.36",
+        "count" : "1"
+      }, {
+        "item" : "0.21",
+        "count" : "1"
+      }, {
+        "item" : "0.13",
+        "count" : "1"
+      } ],
+      "smallest" : "<0.010",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : {
+      "align" : "center"
+    }
+  }, {
+    "id" : 640387374,
+    "name" : "Zinc (mg/L)",
+    "dataTypeName" : "text",
+    "description" : "Variables Fisicoquímicas",
+    "fieldName" : "zinc_mg_l",
+    "position" : 37,
+    "renderTypeName" : "text",
+    "tableColumnId" : 158959201,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "-999",
+      "null" : "0",
+      "top" : [ {
+        "item" : "-999",
+        "count" : "246"
+      }, {
+        "item" : "<0.10",
+        "count" : "28"
+      }, {
+        "item" : "<0.025",
+        "count" : "19"
+      }, {
+        "item" : "0.15",
+        "count" : "2"
+      }, {
+        "item" : "0.11",
+        "count" : "2"
+      }, {
+        "item" : "0.4",
+        "count" : "2"
+      }, {
+        "item" : "0.027",
+        "count" : "2"
+      }, {
+        "item" : "0.038",
+        "count" : "1"
+      }, {
+        "item" : "0.073",
+        "count" : "1"
+      }, {
+        "item" : "0.6",
+        "count" : "1"
+      }, {
+        "item" : "0.059",
+        "count" : "1"
+      }, {
+        "item" : "0.16",
+        "count" : "1"
+      }, {
+        "item" : "0.028",
+        "count" : "1"
+      }, {
+        "item" : "0.064",
+        "count" : "1"
+      }, {
+        "item" : "0.066",
+        "count" : "1"
+      }, {
+        "item" : "0.079",
+        "count" : "1"
+      }, {
+        "item" : "0.053",
+        "count" : "1"
+      }, {
+        "item" : "0.054",
+        "count" : "1"
+      }, {
+        "item" : "0.2",
+        "count" : "1"
+      }, {
+        "item" : "0.49",
+        "count" : "1"
+      } ],
+      "smallest" : "<0.025",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : {
+      "align" : "center"
+    }
+  }, {
+    "id" : 640387375,
+    "name" : "Uranio (µg/L)",
+    "dataTypeName" : "text",
+    "description" : "Variables Fisicoquímicas",
+    "fieldName" : "uranio_g_l",
+    "position" : 38,
+    "renderTypeName" : "text",
+    "tableColumnId" : 158959506,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "-999",
+      "null" : "0",
+      "top" : [ {
+        "item" : "-999",
+        "count" : "304"
+      }, {
+        "item" : "<1.00",
+        "count" : "9"
+      }, {
+        "item" : "2.6",
+        "count" : "3"
+      }, {
+        "item" : "16",
+        "count" : "2"
+      }, {
+        "item" : "3.1",
+        "count" : "1"
+      }, {
+        "item" : "2.3",
+        "count" : "1"
+      }, {
+        "item" : "3.9",
+        "count" : "1"
+      }, {
+        "item" : "11",
+        "count" : "1"
+      }, {
+        "item" : "1.5",
+        "count" : "1"
+      }, {
+        "item" : "1.7",
+        "count" : "1"
+      }, {
+        "item" : "7.5",
+        "count" : "1"
+      }, {
+        "item" : "2.5",
+        "count" : "1"
+      }, {
+        "item" : "6.6",
+        "count" : "1"
+      }, {
+        "item" : "26",
+        "count" : "1"
+      }, {
+        "item" : "1.8",
+        "count" : "1"
+      }, {
+        "item" : "5.6",
+        "count" : "1"
+      }, {
+        "item" : "1.2",
+        "count" : "1"
+      }, {
+        "item" : "1.6",
+        "count" : "1"
+      }, {
+        "item" : "4.4",
+        "count" : "1"
+      }, {
+        "item" : "2.4",
+        "count" : "1"
+      } ],
+      "smallest" : "<1.00",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : {
+      "align" : "center"
+    }
+  }, {
+    "id" : 640387376,
+    "name" : "T° Ambiente (°C)",
+    "dataTypeName" : "number",
+    "description" : "DATOS DE CAMPO",
+    "fieldName" : "t_ambiente_c",
+    "position" : 39,
+    "renderTypeName" : "number",
+    "tableColumnId" : 158959254,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "40.1",
+      "null" : "0",
+      "top" : [ {
+        "item" : "30.19",
+        "count" : "4"
+      }, {
+        "item" : "24.76",
+        "count" : "4"
+      }, {
+        "item" : "29.6",
+        "count" : "3"
+      }, {
+        "item" : "25.48",
+        "count" : "3"
+      }, {
+        "item" : "26.48",
+        "count" : "3"
+      }, {
+        "item" : "24.55",
+        "count" : "2"
+      }, {
+        "item" : "27.81",
+        "count" : "2"
+      }, {
+        "item" : "27.55",
+        "count" : "2"
+      }, {
+        "item" : "28.46",
+        "count" : "2"
+      }, {
+        "item" : "32.45",
+        "count" : "2"
+      }, {
+        "item" : "29.35",
+        "count" : "2"
+      }, {
+        "item" : "31.21",
+        "count" : "2"
+      }, {
+        "item" : "25.88",
+        "count" : "2"
+      }, {
+        "item" : "26",
+        "count" : "2"
+      }, {
+        "item" : "30.01",
+        "count" : "2"
+      }, {
+        "item" : "27.49",
+        "count" : "2"
+      }, {
+        "item" : "24.26",
+        "count" : "2"
+      }, {
+        "item" : "22.28",
+        "count" : "2"
+      }, {
+        "item" : "22.65",
+        "count" : "2"
+      }, {
+        "item" : "23.96",
+        "count" : "2"
+      } ],
+      "smallest" : "7.58",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : {
+      "decimalSeparator" : ".",
+      "groupSeparator" : ",",
+      "align" : "center"
+    }
+  }, {
+    "id" : 640387377,
+    "name" : "T° Muestra (°C)",
+    "dataTypeName" : "number",
+    "description" : "DATOS DE CAMPO",
+    "fieldName" : "t_muestra_c",
+    "position" : 40,
+    "renderTypeName" : "number",
+    "tableColumnId" : 158959152,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "33.06",
+      "null" : "0",
+      "top" : [ {
+        "item" : "24.35",
+        "count" : "4"
+      }, {
+        "item" : "25.5",
+        "count" : "3"
+      }, {
+        "item" : "22.38",
+        "count" : "3"
+      }, {
+        "item" : "21.48",
+        "count" : "3"
+      }, {
+        "item" : "21.08",
+        "count" : "3"
+      }, {
+        "item" : "23.49",
+        "count" : "3"
+      }, {
+        "item" : "25",
+        "count" : "3"
+      }, {
+        "item" : "21.35",
+        "count" : "3"
+      }, {
+        "item" : "25.69",
+        "count" : "3"
+      }, {
+        "item" : "23.06",
+        "count" : "3"
+      }, {
+        "item" : "22.05",
+        "count" : "3"
+      }, {
+        "item" : "15.08",
+        "count" : "2"
+      }, {
+        "item" : "23.55",
+        "count" : "2"
+      }, {
+        "item" : "25.6",
+        "count" : "2"
+      }, {
+        "item" : "19.55",
+        "count" : "2"
+      }, {
+        "item" : "19.6",
+        "count" : "2"
+      }, {
+        "item" : "29.3",
+        "count" : "2"
+      }, {
+        "item" : "23.1",
+        "count" : "2"
+      }, {
+        "item" : "32.4",
+        "count" : "2"
+      }, {
+        "item" : "12.65",
+        "count" : "2"
+      } ],
+      "smallest" : "6.88",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : {
+      "decimalSeparator" : ".",
+      "groupSeparator" : ",",
+      "align" : "center"
+    }
+  }, {
+    "id" : 640387378,
+    "name" : "pH  \n(Unidades de pH)",
+    "dataTypeName" : "number",
+    "description" : "DATOS DE CAMPO",
+    "fieldName" : "ph_unidades_de_ph",
+    "position" : 41,
+    "renderTypeName" : "number",
+    "tableColumnId" : 158959199,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "10.05",
+      "null" : "0",
+      "top" : [ {
+        "item" : "7.52",
+        "count" : "7"
+      }, {
+        "item" : "7.67",
+        "count" : "5"
+      }, {
+        "item" : "8.06",
+        "count" : "5"
+      }, {
+        "item" : "7.66",
+        "count" : "5"
+      }, {
+        "item" : "7.35",
+        "count" : "5"
+      }, {
+        "item" : "7.74",
+        "count" : "5"
+      }, {
+        "item" : "7.71",
+        "count" : "5"
+      }, {
+        "item" : "7.61",
+        "count" : "4"
+      }, {
+        "item" : "7.7",
+        "count" : "4"
+      }, {
+        "item" : "7.4",
+        "count" : "4"
+      }, {
+        "item" : "7.27",
+        "count" : "4"
+      }, {
+        "item" : "7.28",
+        "count" : "4"
+      }, {
+        "item" : "7.07",
+        "count" : "4"
+      }, {
+        "item" : "7.57",
+        "count" : "4"
+      }, {
+        "item" : "7.92",
+        "count" : "4"
+      }, {
+        "item" : "7.86",
+        "count" : "4"
+      }, {
+        "item" : "7.8",
+        "count" : "4"
+      }, {
+        "item" : "7.6",
+        "count" : "4"
+      }, {
+        "item" : "7.58",
+        "count" : "4"
+      }, {
+        "item" : "6.82",
+        "count" : "3"
+      } ],
+      "smallest" : "4.66",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : {
+      "decimalSeparator" : ".",
+      "groupSeparator" : ",",
+      "align" : "center"
+    }
+  }, {
+    "id" : 640387379,
+    "name" : "% Saturacion Oxigeno",
+    "dataTypeName" : "number",
+    "description" : "DATOS DE CAMPO",
+    "fieldName" : "saturacion_oxigeno",
+    "position" : 42,
+    "renderTypeName" : "number",
+    "tableColumnId" : 158959244,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "162.6",
+      "null" : "0",
+      "top" : [ {
+        "item" : "92.6",
+        "count" : "6"
+      }, {
+        "item" : "98.6",
+        "count" : "4"
+      }, {
+        "item" : "97.4",
+        "count" : "3"
+      }, {
+        "item" : "100.1",
+        "count" : "3"
+      }, {
+        "item" : "101",
+        "count" : "3"
+      }, {
+        "item" : "0",
+        "count" : "3"
+      }, {
+        "item" : "98.2",
+        "count" : "3"
+      }, {
+        "item" : "98.5",
+        "count" : "3"
+      }, {
+        "item" : "103.1",
+        "count" : "3"
+      }, {
+        "item" : "99.9",
+        "count" : "3"
+      }, {
+        "item" : "106.7",
+        "count" : "3"
+      }, {
+        "item" : "74.2",
+        "count" : "3"
+      }, {
+        "item" : "100.4",
+        "count" : "2"
+      }, {
+        "item" : "98.4",
+        "count" : "2"
+      }, {
+        "item" : "99.1",
+        "count" : "2"
+      }, {
+        "item" : "101.5",
+        "count" : "2"
+      }, {
+        "item" : "95.4",
+        "count" : "2"
+      }, {
+        "item" : "103.6",
+        "count" : "2"
+      }, {
+        "item" : "98.8",
+        "count" : "2"
+      }, {
+        "item" : "88.8",
+        "count" : "2"
+      } ],
+      "smallest" : "0",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : {
+      "decimalSeparator" : ".",
+      "groupSeparator" : ",",
+      "align" : "center"
+    }
+  }, {
+    "id" : 640387380,
+    "name" : "Presión atmosférica",
+    "dataTypeName" : "number",
+    "description" : "DATOS DE CAMPO",
+    "fieldName" : "presi_n_atmosf_rica",
+    "position" : 43,
+    "renderTypeName" : "number",
+    "tableColumnId" : 158959192,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "755",
+      "null" : "0",
+      "top" : [ {
+        "item" : "702",
+        "count" : "15"
+      }, {
+        "item" : "703",
+        "count" : "14"
+      }, {
+        "item" : "698",
+        "count" : "10"
+      }, {
+        "item" : "692",
+        "count" : "9"
+      }, {
+        "item" : "691",
+        "count" : "8"
+      }, {
+        "item" : "689",
+        "count" : "6"
+      }, {
+        "item" : "681",
+        "count" : "6"
+      }, {
+        "item" : "700",
+        "count" : "6"
+      }, {
+        "item" : "687",
+        "count" : "6"
+      }, {
+        "item" : "678",
+        "count" : "6"
+      }, {
+        "item" : "694",
+        "count" : "5"
+      }, {
+        "item" : "693",
+        "count" : "5"
+      }, {
+        "item" : "686",
+        "count" : "5"
+      }, {
+        "item" : "672",
+        "count" : "4"
+      }, {
+        "item" : "715",
+        "count" : "4"
+      }, {
+        "item" : "701",
+        "count" : "4"
+      }, {
+        "item" : "755",
+        "count" : "4"
+      }, {
+        "item" : "726",
+        "count" : "4"
+      }, {
+        "item" : "518",
+        "count" : "4"
+      }, {
+        "item" : "683",
+        "count" : "4"
+      } ],
+      "smallest" : "6.97",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : {
+      "decimalSeparator" : ".",
+      "groupSeparator" : ",",
+      "align" : "center"
+    }
+  }, {
+    "id" : 640387384,
+    "name" : "(Qi) Caudal (L/s)",
+    "dataTypeName" : "text",
+    "description" : "DATOS DE CAMPO",
+    "fieldName" : "qi_caudal_l_s",
+    "position" : 44,
+    "renderTypeName" : "text",
+    "tableColumnId" : 170205689,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "99",
+      "null" : "0",
+      "top" : [ {
+        "item" : "26",
+        "count" : "5"
+      }, {
+        "item" : "82",
+        "count" : "4"
+      }, {
+        "item" : "13",
+        "count" : "4"
+      }, {
+        "item" : "64",
+        "count" : "4"
+      }, {
+        "item" : "95",
+        "count" : "4"
+      }, {
+        "item" : "223",
+        "count" : "3"
+      }, {
+        "item" : "4",
+        "count" : "3"
+      }, {
+        "item" : "50",
+        "count" : "3"
+      }, {
+        "item" : "1",
+        "count" : "3"
+      }, {
+        "item" : "6",
+        "count" : "3"
+      }, {
+        "item" : "62",
+        "count" : "3"
+      }, {
+        "item" : "25",
+        "count" : "3"
+      }, {
+        "item" : "565",
+        "count" : "3"
+      }, {
+        "item" : "11",
+        "count" : "2"
+      }, {
+        "item" : "144",
+        "count" : "2"
+      }, {
+        "item" : "43",
+        "count" : "2"
+      }, {
+        "item" : "76",
+        "count" : "2"
+      }, {
+        "item" : "378",
+        "count" : "2"
+      }, {
+        "item" : "81",
+        "count" : "2"
+      }, {
+        "item" : "141",
+        "count" : "2"
+      } ],
+      "smallest" : "0.13",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : {
+      "decimalSeparator" : ".",
+      "groupSeparator" : ",",
+      "align" : "center"
+    }
+  }, {
+    "id" : 640387385,
+    "name" : "GyA",
+    "dataTypeName" : "text",
+    "description" : "Grasas y Aceites",
+    "fieldName" : "gya",
+    "position" : 45,
+    "renderTypeName" : "text",
+    "tableColumnId" : 170205690,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "-999",
+      "null" : "0",
+      "top" : [ {
+        "item" : "-999",
+        "count" : "325"
+      }, {
+        "item" : "<5.0",
+        "count" : "8"
+      }, {
+        "item" : "27.5",
+        "count" : "1"
+      } ],
+      "smallest" : "27.5",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : { }
+  }, {
+    "id" : 640387386,
+    "name" : "Pesticidas Organoclorados (mg/L)",
+    "dataTypeName" : "text",
+    "description" : "Pesticidas Organoclorados (mg/L)\n",
+    "fieldName" : "pesticidas_organoclorados_mg_l_",
+    "position" : 46,
+    "renderTypeName" : "text",
+    "tableColumnId" : 170205691,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "-999",
+      "null" : "0",
+      "top" : [ {
+        "item" : "-999",
+        "count" : "318"
+      }, {
+        "item" : "<0.00004",
+        "count" : "16"
+      } ],
+      "smallest" : "<0.00004",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : { }
+  }, {
+    "id" : 640387387,
+    "name" : "Pesticidas Organofosforados (mg/L)",
+    "dataTypeName" : "text",
+    "description" : "Pesticidas Organofosforados (mg/L)",
+    "fieldName" : "pesticidas_organofosforados_mg_l_",
+    "position" : 47,
+    "renderTypeName" : "text",
+    "tableColumnId" : 170205692,
+    "cachedContents" : {
+      "non_null" : "334",
+      "largest" : "-999",
+      "null" : "0",
+      "top" : [ {
+        "item" : "-999",
+        "count" : "318"
+      }, {
+        "item" : "<0.0004",
+        "count" : "16"
+      } ],
+      "smallest" : "<0.0004",
+      "count" : "334",
+      "cardinality" : "334"
+    },
+    "format" : { }
+  } ],
+  "grants" : [ {
+    "inherited" : false,
+    "type" : "viewer",
+    "flags" : [ "public" ]
+  } ],
+  "license" : {
+    "name" : "Creative Commons Attribution | Share Alike 4.0 International",
+    "logoUrl" : "images/licenses/cc30bysa.png",
+    "termsLink" : "http://creativecommons.org/licenses/by-sa/4.0/legalcode"
+  },
+  "metadata" : {
+    "custom_fields" : {
+      "Información de la Entidad" : {
+        "Municipio" : "Bucaramanga",
+        "Nombre de la Entidad" : "Corporación Autónoma Regional para la Defensa de la Meseta de Bucaramanga, Santander",
+        "DIVIPOLA Municipio" : "68001",
+        "Orden" : "Territorial",
+        "Sector" : "Ambiente y Desarrollo Sostenible",
+        "Área o dependencia" : "SOPIT",
+        "Departamento" : "Santander"
+      },
+      "Información de Datos" : {
+        "Cobertura Geográfica" : "Departamental",
+        "Idioma" : "Español",
+        "Frecuencia de Actualización" : "Anual"
+      }
+    },
+    "availableDisplayTypes" : [ "table", "fatrow", "page" ]
+  },
+  "owner" : {
+    "id" : "ppx5-7gwc",
+    "displayName" : "CDMB",
+    "profileImageUrlLarge" : "/api/users/ppx5-7gwc/profile_images/LARGE",
+    "profileImageUrlMedium" : "/api/users/ppx5-7gwc/profile_images/THUMB",
+    "profileImageUrlSmall" : "/api/users/ppx5-7gwc/profile_images/TINY",
+    "screenName" : "CDMB",
+    "type" : "interactive",
+    "flags" : [ "acceptedEula", "mayBeStoriesCoOwner" ]
+  },
+  "query" : { },
+  "rights" : [ "read" ],
+  "tableAuthor" : {
+    "id" : "ppx5-7gwc",
+    "displayName" : "CDMB",
+    "profileImageUrlLarge" : "/api/users/ppx5-7gwc/profile_images/LARGE",
+    "profileImageUrlMedium" : "/api/users/ppx5-7gwc/profile_images/THUMB",
+    "profileImageUrlSmall" : "/api/users/ppx5-7gwc/profile_images/TINY",
+    "screenName" : "CDMB",
+    "type" : "interactive",
+    "flags" : [ "acceptedEula", "mayBeStoriesCoOwner" ]
+  },
+  "tags" : [ "cdmb", "monitoreo ambiental", "2024", "2025" ],
+  "flags" : [ "default", "ownerMayBeContacted", "restorable", "restorePossibleForType" ]
+}
