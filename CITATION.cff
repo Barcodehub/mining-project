@@ -1,0 +1,33 @@
+cff-version: 1.2.0
+message: "If you use this software or data, please cite the article and this archive."
+title: "Event-driven early warning middleware for mining-related water contamination: code, data and experiments"
+version: v2-paper
+date-released: 2026-10-19
+license: MIT
+repository-code: "https://github.com/Barcodehub/mining-project"
+authors:
+  - family-names: "Barco Cardenas"
+    given-names: "Brayan Alexander"
+    email: "alex.barco.maicol@gmail.com"
+    orcid: "https://orcid.org/0009-0006-0332-7625"
+    affiliation: "Universidad Francisco de Paula Santander, Cúcuta, Colombia"
+keywords:
+  - early warning systems
+  - environmental monitoring
+  - event-driven architecture
+  - Apache Kafka
+  - mercury
+  - cyanide
+  - artisanal and small-scale gold mining
+  - citizen science
+  - Colombia
+preferred-citation:
+  type: article
+  title: "An Event-Driven Early Warning Middleware for Mining-Related Water Contamination: Integrating Sensor, Laboratory, and Citizen Evidence in Northeastern Colombia"
+  authors:
+    - family-names: "Barco Cardenas"
+      given-names: "Brayan Alexander"
+      orcid: "https://orcid.org/0009-0006-0332-7625"
+  journal: "IEEE Access"
+  year: 2026
+  status: submitted
