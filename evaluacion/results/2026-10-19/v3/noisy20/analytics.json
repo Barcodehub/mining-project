@@ -1,0 +1,141 @@
+{
+ "clusters": [
+  {
+   "clusterId": "SIM-D",
+   "classifiedMeasurements": 120,
+   "alertCount": 19,
+   "criticalCount": 5,
+   "sai": 0.15833333333333333
+  },
+  {
+   "clusterId": "SIM-B",
+   "classifiedMeasurements": 180,
+   "alertCount": 43,
+   "criticalCount": 23,
+   "sai": 0.2388888888888889
+  },
+  {
+   "clusterId": "SIM-E",
+   "classifiedMeasurements": 160,
+   "alertCount": 21,
+   "criticalCount": 5,
+   "sai": 0.13125
+  },
+  {
+   "clusterId": "SIM-G",
+   "classifiedMeasurements": 70,
+   "alertCount": 6,
+   "criticalCount": 0,
+   "sai": 0.08571428571428572
+  },
+  {
+   "clusterId": "SIM-A",
+   "classifiedMeasurements": 220,
+   "alertCount": 56,
+   "criticalCount": 23,
+   "sai": 0.2545454545454545
+  },
+  {
+   "clusterId": "SIM-C",
+   "classifiedMeasurements": 150,
+   "alertCount": 20,
+   "criticalCount": 8,
+   "sai": 0.13333333333333333
+  },
+  {
+   "clusterId": "SIM-F",
+   "classifiedMeasurements": 100,
+   "alertCount": 7,
+   "criticalCount": 2,
+   "sai": 0.07
+  }
+ ],
+ "reports": [
+  {
+   "clusterId": "SIM-D",
+   "totalReports": 73,
+   "weightedReports": 32.75,
+   "cri": 0.4486301369863014
+  },
+  {
+   "clusterId": "SIM-B",
+   "totalReports": 86,
+   "weightedReports": 46.75,
+   "cri": 0.5436046511627907
+  },
+  {
+   "clusterId": "SIM-E",
+   "totalReports": 56,
+   "weightedReports": 34.0,
+   "cri": 0.6071428571428571
+  },
+  {
+   "clusterId": "SIM-G",
+   "totalReports": 40,
+   "weightedReports": 17.5,
+   "cri": 0.4375
+  },
+  {
+   "clusterId": "SIM-A",
+   "totalReports": 118,
+   "weightedReports": 87.25,
+   "cri": 0.739406779661017
+  },
+  {
+   "clusterId": "SIM-C",
+   "totalReports": 91,
+   "weightedReports": 55.75,
+   "cri": 0.6126373626373627
+  },
+  {
+   "clusterId": "SIM-F",
+   "totalReports": 36,
+   "weightedReports": 11.5,
+   "cri": 0.3194444444444444
+  }
+ ],
+ "fusion": [
+  {
+   "clusterId": "SIM-D",
+   "sai": 0.15833333333333333,
+   "cri": 0.4486301369863014
+  },
+  {
+   "clusterId": "SIM-B",
+   "sai": 0.2388888888888889,
+   "cri": 0.5436046511627907
+  },
+  {
+   "clusterId": "SIM-E",
+   "sai": 0.13125,
+   "cri": 0.6071428571428571
+  },
+  {
+   "clusterId": "SIM-G",
+   "sai": 0.08571428571428572,
+   "cri": 0.4375
+  },
+  {
+   "clusterId": "SIM-A",
+   "sai": 0.2545454545454545,
+   "cri": 0.739406779661017
+  },
+  {
+   "clusterId": "SIM-C",
+   "sai": 0.13333333333333333,
+   "cri": 0.6126373626373627
+  },
+  {
+   "clusterId": "SIM-F",
+   "sai": 0.07,
+   "cri": 0.3194444444444444
+  }
+ ],
+ "correlation": {
+  "spearmanCoefficient": 0.7142857142857143,
+  "clusters": 7,
+  "exactPermutation": true,
+  "permutations": 5040,
+  "pvalue": 0.0880952380952381
+ }
+}

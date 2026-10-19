@@ -1,0 +1,45 @@
+  $ docker version --format {{.Server.Version}}
+  $ docker info --format {{.NCPU}} CPU, {{.MemTotal}} B
+  $ git rev-parse HEAD
+  $ docker compose -p exp-v3 -f docker-compose.yml down -v --remove-orphans
+  $ docker compose -p exp-v3 -f docker-compose.yml up -d --build zookeeper kafka mongo postgres-audit mining-users mining-management mining-audit-notifications
+  entorno listo en 22s
+measurements: 1000/1000 correctos (C:\Users\BRAYAN\Desktop\Projects\ins\project-mineria\evaluacion\results\2026-10-19\v3\aligned\measurements.input.json)
+reports: 500/500 correctos (C:\Users\BRAYAN\Desktop\Projects\ins\project-mineria\evaluacion\results\2026-10-19\v3\aligned\reports.input.json)
+  aligned: rho=0.9642857142857143 p=None
+  $ docker compose -p exp-v3 -f docker-compose.yml down -v --remove-orphans
+  $ docker compose -p exp-v3 -f docker-compose.yml down -v --remove-orphans
+  $ docker compose -p exp-v3 -f docker-compose.yml up -d --build zookeeper kafka mongo postgres-audit mining-users mining-management mining-audit-notifications
+  entorno listo en 22s
+measurements: 1000/1000 correctos (C:\Users\BRAYAN\Desktop\Projects\ins\project-mineria\evaluacion\results\2026-10-19\v3\null\measurements.input.json)
+reports: 500/500 correctos (C:\Users\BRAYAN\Desktop\Projects\ins\project-mineria\evaluacion\results\2026-10-19\v3\null\reports.input.json)
+  null: rho=-0.5 p=None
+  $ docker compose -p exp-v3 -f docker-compose.yml down -v --remove-orphans
+  $ docker compose -p exp-v3 -f docker-compose.yml down -v --remove-orphans
+  $ docker compose -p exp-v3 -f docker-compose.yml up -d --build zookeeper kafka mongo postgres-audit mining-users mining-management mining-audit-notifications
+  entorno listo en 22s
+measurements: 1000/1000 correctos (C:\Users\BRAYAN\Desktop\Projects\ins\project-mineria\evaluacion\results\2026-10-19\v3\noisy10\measurements.input.json)
+reports: 500/500 correctos (C:\Users\BRAYAN\Desktop\Projects\ins\project-mineria\evaluacion\results\2026-10-19\v3\noisy10\reports.input.json)
+  noisy10: rho=0.7142857142857143 p=None
+  $ docker compose -p exp-v3 -f docker-compose.yml down -v --remove-orphans
+  $ docker compose -p exp-v3 -f docker-compose.yml down -v --remove-orphans
+  $ docker compose -p exp-v3 -f docker-compose.yml up -d --build zookeeper kafka mongo postgres-audit mining-users mining-management mining-audit-notifications
+  entorno listo en 22s
+measurements: 1000/1000 correctos (C:\Users\BRAYAN\Desktop\Projects\ins\project-mineria\evaluacion\results\2026-10-19\v3\noisy20\measurements.input.json)
+reports: 500/500 correctos (C:\Users\BRAYAN\Desktop\Projects\ins\project-mineria\evaluacion\results\2026-10-19\v3\noisy20\reports.input.json)
+  noisy20: rho=0.7142857142857143 p=None
+  $ docker compose -p exp-v3 -f docker-compose.yml down -v --remove-orphans
+  $ docker compose -p exp-v3 -f docker-compose.yml down -v --remove-orphans
+  $ docker compose -p exp-v3 -f docker-compose.yml up -d --build zookeeper kafka mongo postgres-audit mining-users mining-management mining-audit-notifications
+  entorno listo en 22s
+measurements: 1000/1000 correctos (C:\Users\BRAYAN\Desktop\Projects\ins\project-mineria\evaluacion\results\2026-10-19\v3\noisy30\measurements.input.json)
+reports: 500/500 correctos (C:\Users\BRAYAN\Desktop\Projects\ins\project-mineria\evaluacion\results\2026-10-19\v3\noisy30\reports.input.json)
+  noisy30: rho=0.5714285714285714 p=None
+  $ docker compose -p exp-v3 -f docker-compose.yml down -v --remove-orphans
+  $ docker compose -p exp-v3 -f docker-compose.yml down -v --remove-orphans
+  $ docker compose -p exp-v3 -f docker-compose.yml up -d --build zookeeper kafka mongo postgres-audit mining-users mining-management mining-audit-notifications
+  entorno listo en 22s
+measurements: 1000/1000 correctos (C:\Users\BRAYAN\Desktop\Projects\ins\project-mineria\evaluacion\results\2026-10-19\v3\noisy50\measurements.input.json)
+reports: 500/500 correctos (C:\Users\BRAYAN\Desktop\Projects\ins\project-mineria\evaluacion\results\2026-10-19\v3\noisy50\reports.input.json)
+  noisy50: rho=0.75 p=None
+  $ docker compose -p exp-v3 -f docker-compose.yml down -v --remove-orphans

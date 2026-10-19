@@ -62,3 +62,6 @@ articulo/
 REVISION_ARTICULO.md
 DECISION_ENFOQUE.md
 PLAN_ACCION.md
+
+### Precargas repetidas de las corridas de rendimiento (van completas a Zenodo)
+evaluacion/results/**/perf/**/preload_*.jsonl

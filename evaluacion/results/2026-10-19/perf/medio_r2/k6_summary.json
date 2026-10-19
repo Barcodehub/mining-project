@@ -1,0 +1,495 @@
+{
+ "metrics": {
+  "get_mediciones_duration_ms": {
+   "values": {
+    "avg": 1.7923370513562498,
+    "med": 1.7098985,
+    "p(90)": 2.4344391,
+    "p(95)": 2.74881855,
+    "min": 0.532617,
+    "max": 22.510197,
+    "p(99)": 3.6818238800000005,
+    "p(99.9)": 5.847263723000013,
+    "count": 17622
+   },
+   "type": "trend",
+   "contains": "time"
+  },
+  "http_req_connecting": {
+   "values": {
+    "max": 114.272712,
+    "p(90)": 0,
+    "p(95)": 0,
+    "avg": 0.0052353365866929635,
+    "min": 0,
+    "med": 0,
+    "p(99)": 0.12962830000000006,
+    "p(99.9)": 0.22038258000001135,
+    "count": 58811
+   },
+   "type": "trend",
+   "contains": "time"
+  },
+  "mediciones_creadas_total": {
+   "type": "counter",
+   "contains": "default",
+   "values": {
+    "count": 5812,
+    "rate": 12.88363592176952
+   }
+  },
+  "http_req_receiving": {
+   "contains": "time",
+   "values": {
+    "avg": 0.09398829531890335,
+    "max": 4.273971,
+    "p(99.9)": 0.3756579000000471,
+    "min": 0.014271,
+    "med": 0.082432,
+    "p(90)": 0.1484,
+    "p(95)": 0.175353,
+    "p(99)": 0.23401220000000014,
+    "count": 58811
+   },
+   "type": "trend"
+  },
+  "mediciones_fuente_iot_total": {
+   "type": "counter",
+   "contains": "default",
+   "values": {
+    "count": 4347,
+    "rate": 9.636126178928441
+   }
+  },
+  "mediciones_fuente_corponor_total": {
+   "type": "counter",
+   "contains": "default",
+   "values": {
+    "count": 55,
+    "rate": 0.12192016099403365
+   }
+  },
+  "error_rate": {
+   "type": "rate",
+   "contains": "default",
+   "values": {
+    "rate": 0,
+    "passes": 0,
+    "fails": 58808
+   },
+   "thresholds": {
+    "rate<0.03": {
+     "ok": true
+    }
+   }
+  },
+  "http_req_duration{expected_response:true}": {
+   "type": "trend",
+   "contains": "time",
+   "values": {
+    "p(99)": 7.967570100000003,
+    "p(99.9)": 9.687329860000037,
+    "count": 58811,
+    "avg": 3.0038489968713273,
+    "p(95)": 6.6201495,
+    "max": 71.961037,
+    "p(90)": 5.648896,
+    "min": 0.496559,
+    "med": 2.494477
+   }
+  },
+  "http_req_failed": {
+   "values": {
+    "fails": 58811,
+    "rate": 0,
+    "passes": 0
+   },
+   "type": "rate",
+   "contains": "default"
+  },
+  "checks": {
+   "type": "rate",
+   "contains": "default",
+   "values": {
+    "rate": 1,
+    "passes": 94028,
+    "fails": 0
+   }
+  },
+  "data_sent": {
+   "type": "counter",
+   "contains": "data",
+   "values": {
+    "count": 27676759,
+    "rate": 61351.90751041945
+   }
+  },
+  "group_duration": {
+   "type": "trend",
+   "contains": "time",
+   "values": {
+    "min": 202.66379,
+    "med": 984.6103955,
+    "p(99)": 2672.8043631000005,
+    "count": 58808,
+    "avg": 1072.5620537255209,
+    "max": 3004.177698,
+    "p(90)": 1783.0972242,
+    "p(95)": 2163.9075223499985,
+    "p(99.9)": 2972.575139117
+   }
+  },
+  "vus_max": {
+   "type": "gauge",
+   "contains": "default",
+   "values": {
+    "value": 200,
+    "min": 200,
+    "max": 200
+   }
+  },
+  "http_req_tls_handshaking": {
+   "type": "trend",
+   "contains": "time",
+   "values": {
+    "avg": 0,
+    "p(95)": 0,
+    "p(99.9)": 0,
+    "count": 58811,
+    "min": 0,
+    "med": 0,
+    "max": 0,
+    "p(90)": 0,
+    "p(99)": 0
+   }
+  },
+  "http_req_blocked": {
+   "values": {
+    "p(95)": 0.007169,
+    "avg": 0.010805291033990302,
+    "min": 0.00158,
+    "p(90)": 0.005972,
+    "p(99)": 0.1858669000000003,
+    "p(99.9)": 0.3062794500000073,
+    "count": 58811,
+    "med": 0.004383,
+    "max": 114.346793
+   },
+   "type": "trend",
+   "contains": "time"
+  },
+  "data_received": {
+   "type": "counter",
+   "contains": "data",
+   "values": {
+    "count": 252402058,
+    "rate": 559507.2644833713
+   }
+  },
+  "get_reports_duration_ms": {
+   "contains": "time",
+   "values": {
+    "p(90)": 6.727672,
+    "p(99.9)": 10.266587225000018,
+    "avg": 3.9438134782756817,
+    "med": 3.6775665,
+    "p(95)": 7.457077249999999,
+    "p(99)": 8.41533825,
+    "count": 23476,
+    "min": 0.496559,
+    "max": 30.228374
+   },
+   "type": "trend"
+  },
+  "post_medicion_duration_ms": {
+   "type": "trend",
+   "contains": "time",
+   "values": {
+    "min": 1.805458,
+    "med": 2.673348,
+    "p(90)": 3.4667528,
+    "p(95)": 3.8142609,
+    "p(99)": 4.704599800000005,
+    "count": 5812,
+    "avg": 2.8009261756710186,
+    "max": 9.035113,
+    "p(99.9)": 7.364198549000013
+   }
+  },
+  "iterations": {
+   "type": "counter",
+   "contains": "default",
+   "values": {
+    "count": 58808,
+    "rate": 130.36146959522057
+   }
+  },
+  "http_req_sending": {
+   "type": "trend",
+   "contains": "time",
+   "values": {
+    "avg": 0.024421651476764512,
+    "min": 0.004641,
+    "med": 0.027148,
+    "p(90)": 0.038389,
+    "p(95)": 0.043787,
+    "p(99.9)": 0.0992043900000075,
+    "max": 2.65529,
+    "p(99)": 0.05832840000000001,
+    "count": 58811
+   }
+  },
+  "http_req_duration": {
+   "type": "trend",
+   "contains": "time",
+   "values": {
+    "min": 0.496559,
+    "med": 2.494477,
+    "p(99)": 7.967570100000003,
+    "avg": 3.0038489968713273,
+    "p(90)": 5.648896,
+    "p(95)": 6.6201495,
+    "p(99.9)": 9.687329860000037,
+    "count": 58811,
+    "max": 71.961037
+   },
+   "thresholds": {
+    "p(95)<1000": {
+     "ok": true
+    },
+    "p(99)<2000": {
+     "ok": true
+    }
+   }
+  },
+  "mediciones_fuente_cdmb_total": {
+   "type": "counter",
+   "contains": "default",
+   "values": {
+    "count": 1410,
+    "rate": 3.1255895818470445
+   }
+  },
+  "post_report_duration_ms": {
+   "type": "trend",
+   "contains": "time",
+   "values": {
+    "avg": 2.8620815733310843,
+    "min": 1.933709,
+    "p(90)": 3.5442614000000012,
+    "p(95)": 3.9187979,
+    "p(99)": 4.746820319999999,
+    "med": 2.7304535000000003,
+    "max": 22.049586,
+    "p(99.9)": 7.634427089000007,
+    "count": 5932
+   }
+  },
+  "reportes_creados_total": {
+   "type": "counter",
+   "contains": "default",
+   "values": {
+    "count": 5932,
+    "rate": 13.149643545756502
+   }
+  },
+  "vus": {
+   "type": "gauge",
+   "contains": "default",
+   "values": {
+    "value": 1,
+    "min": 0,
+    "max": 200
+   }
+  },
+  "iteration_duration": {
+   "type": "trend",
+   "contains": "time",
+   "values": {
+    "avg": 1072.610537997329,
+    "med": 984.6561839999999,
+    "p(99)": 2672.85136189,
+    "min": 202.703821,
+    "max": 3004.258735,
+    "p(90)": 1783.1441338000002,
+    "p(95)": 2163.9673450499986,
+    "p(99.9)": 2972.6088512120004,
+    "count": 58808
+   }
+  },
+  "http_req_waiting": {
+   "type": "trend",
+   "contains": "time",
+   "values": {
+    "p(99.9)": 9.478237640000152,
+    "p(90)": 5.53353,
+    "min": 0.447429,
+    "med": 2.372153,
+    "max": 71.567655,
+    "p(95)": 6.504829,
+    "p(99)": 7.846625400000001,
+    "count": 58811,
+    "avg": 2.8854390500756604
+   }
+  },
+  "mediciones_publicables_total": {
+   "type": "counter",
+   "contains": "default",
+   "values": {
+    "count": 986,
+    "rate": 2.1856959770930398
+   }
+  },
+  "http_reqs": {
+   "contains": "default",
+   "values": {
+    "count": 58811,
+    "rate": 130.36811978582023
+   },
+   "type": "counter"
+  }
+ },
+ "setup_data": {
+  "startTime": 1792430999771,
+  "token": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU5JU1RSQURPUiIsInJvbGVJZCI6MSwidXNlcklkIjoxLCJzdWIiOiJhZG1pbkBhZG1pbi5jb20iLCJpYXQiOjE3OTI0MzA5OTksImV4cCI6MTc5MjUxNzM5OX0.A_Psm_xob1cfQcytml8IulkPt2QKt1DPhwLXPrzdVpw"
+ },
+ "root_group": {
+  "groups": [
+   {
+    "id": "06379744c6e0c807b0a550df7d8aa355",
+    "groups": [],
+    "checks": [
+      {
+       "path": "::Consultar reportes::GET reportes status 200",
+       "id": "2035f7d724d3aa9a14117aebb5027b5c",
+       "passes": 23476,
+       "fails": 0,
+       "name": "GET reportes status 200"
+      },
+      {
+       "id": "a8d932fb79a677df0d54fa173612cb62",
+       "passes": 23476,
+       "fails": 0,
+       "name": "GET reportes devuelve array",
+       "path": "::Consultar reportes::GET reportes devuelve array"
+      }
+     ],
+    "name": "Consultar reportes",
+    "path": "::Consultar reportes"
+   },
+   {
+    "name": "Consultar mediciones ambientales",
+    "path": "::Consultar mediciones ambientales",
+    "id": "b6e8d84beab14c3b0cb2fa82cc5ebd89",
+    "groups": [],
+    "checks": [
+      {
+       "name": "GET mediciones status 200",
+       "path": "::Consultar mediciones ambientales::GET mediciones status 200",
+       "id": "99ccaa4795061bec01b2fe69a4530ddd",
+       "passes": 17622,
+       "fails": 0
+      }
+     ]
+   },
+   {
+    "name": "Crear reporte de denuncia",
+    "path": "::Crear reporte de denuncia",
+    "id": "ef2ee00b06de09873268b13c63e10675",
+    "groups": [],
+    "checks": [
+      {
+       "id": "3a1d8a215d2511d8bf64f3d3481c102e",
+       "passes": 5932,
+       "fails": 0,
+       "name": "crear reporte status 201",
+       "path": "::Crear reporte de denuncia::crear reporte status 201"
+      },
+      {
+       "passes": 5932,
+       "fails": 0,
+       "name": "reporte tiene id",
+       "path": "::Crear reporte de denuncia::reporte tiene id",
+       "id": "a388cdefac1f762905be7d58f054b87d"
+      }
+     ]
+   },
+   {
+    "path": "::Consultar agregados (dashboard)",
+    "id": "0eceaec89b69723cddf3b7ffe895e668",
+    "groups": [],
+    "checks": [
+      {
+       "name": "GET aggregate status 200",
+       "path": "::Consultar agregados (dashboard)::GET aggregate status 200",
+       "id": "5a12ea8d1133211c06adfb5dcc651ce5",
+       "passes": 2977,
+       "fails": 0
+      }
+     ],
+    "name": "Consultar agregados (dashboard)"
+   },
+   {
+    "groups": [],
+    "checks": [
+      {
+       "fails": 0,
+       "name": "POST medicion status 201",
+       "path": "::Enviar medición de sensor::POST medicion status 201",
+       "id": "cf32859162f32eaf41a106a05b54f34d",
+       "passes": 5812
+      },
+      {
+       "passes": 5812,
+       "fails": 0,
+       "name": "medicion clasificada",
+       "path": "::Enviar medición de sensor::medicion clasificada",
+       "id": "71026cad18c02f1410041f606d0b9afe"
+      }
+     ],
+    "name": "Enviar medición de sensor",
+    "path": "::Enviar medición de sensor",
+    "id": "5b903c6911e190cec13f5abf52925104"
+   },
+   {
+    "path": "::Consultar analytics",
+    "id": "dc012329634d275f9bafeec141a27a79",
+    "groups": [],
+    "checks": [
+      {
+       "id": "0a10ec707dbade84cbfcfe6c4fbfa997",
+       "passes": 2989,
+       "fails": 0,
+       "name": "GET analytics status 200",
+       "path": "::Consultar analytics::GET analytics status 200"
+      }
+     ],
+    "name": "Consultar analytics"
+   }
+  ],
+  "checks": [],
+  "name": "",
+  "path": "",
+  "id": "d41d8cd98f00b204e9800998ecf8427e"
+ },
+ "options": {
+  "summaryTimeUnit": "",
+  "noColor": false,
+  "summaryTrendStats": [
+   "avg",
+   "min",
+   "med",
+   "max",
+   "p(90)",
+   "p(95)",
+   "p(99)",
+   "p(99.9)",
+   "count"
+  ]
+ },
+ "state": {
+  "isStdOutTTY": false,
+  "isStdErrTTY": false,
+  "testRunDurationMs": 451114.889872
+ }
+}

@@ -1,0 +1,129 @@
+  $ docker version --format {{.Server.Version}}
+  $ docker info --format {{.NCPU}} CPU, {{.MemTotal}} B
+  $ git rev-parse HEAD
+
+=== perf bajo repetición 1 ===
+  $ docker compose -p exp-perf -f docker-compose.yml down -v --remove-orphans
+  $ docker compose -p exp-perf -f docker-compose.yml up -d --build zookeeper kafka mongo postgres-audit mining-users mining-management mining-audit-notifications
+  entorno listo en 22s
+adapter cdmb_open_data: HTTP 201
+adapter corponor_report: HTTP 201
+measurements: 1000/1000 correctos (C:\Users\BRAYAN\Desktop\Projects\ins\project-mineria\evaluacion\results\2026-10-19\perf\bajo_r1\preload_measurements.input.json)
+measurements: 345/345 correctos (C:\Users\BRAYAN\Desktop\Projects\ins\project-mineria\evaluacion\results\2026-10-19\perf\bajo_r1\preload_real.input.json)
+reports: 500/500 correctos (C:\Users\BRAYAN\Desktop\Projects\ins\project-mineria\evaluacion\results\2026-10-19\perf\bajo_r1\preload_reports.input.json)
+  $ docker compose -p exp-perf -f docker-compose.yml run --rm --no-deps -e ESCENARIO=bajo -e RESULT_FILE=/results/2026-10-19/perf/bajo_r1/k6_summary.json --entrypoint k6 k6 run --quiet -e ESCENARIO=bajo -e RESULT_FILE=/results/2026-10-19/perf/bajo_r1/k6_summary.json /k6/load_test_v2.js
+
+[k6] escenario=bajo iteraciones=2951
+  $ docker compose -p exp-perf -f docker-compose.yml down -v --remove-orphans
+
+=== perf medio repetición 1 ===
+  $ docker compose -p exp-perf -f docker-compose.yml down -v --remove-orphans
+  $ docker compose -p exp-perf -f docker-compose.yml up -d --build zookeeper kafka mongo postgres-audit mining-users mining-management mining-audit-notifications
+  entorno listo en 22s
+adapter cdmb_open_data: HTTP 201
+adapter corponor_report: HTTP 201
+measurements: 1000/1000 correctos (C:\Users\BRAYAN\Desktop\Projects\ins\project-mineria\evaluacion\results\2026-10-19\perf\medio_r1\preload_measurements.input.json)
+measurements: 345/345 correctos (C:\Users\BRAYAN\Desktop\Projects\ins\project-mineria\evaluacion\results\2026-10-19\perf\medio_r1\preload_real.input.json)
+reports: 500/500 correctos (C:\Users\BRAYAN\Desktop\Projects\ins\project-mineria\evaluacion\results\2026-10-19\perf\medio_r1\preload_reports.input.json)
+  $ docker compose -p exp-perf -f docker-compose.yml run --rm --no-deps -e ESCENARIO=medio -e RESULT_FILE=/results/2026-10-19/perf/medio_r1/k6_summary.json --entrypoint k6 k6 run --quiet -e ESCENARIO=medio -e RESULT_FILE=/results/2026-10-19/perf/medio_r1/k6_summary.json /k6/load_test_v2.js
+
+[k6] escenario=medio iteraciones=58877
+  $ docker compose -p exp-perf -f docker-compose.yml down -v --remove-orphans
+
+=== perf alto repetición 1 ===
+  $ docker compose -p exp-perf -f docker-compose.yml down -v --remove-orphans
+  $ docker compose -p exp-perf -f docker-compose.yml up -d --build zookeeper kafka mongo postgres-audit mining-users mining-management mining-audit-notifications
+  entorno listo en 22s
+adapter cdmb_open_data: HTTP 201
+adapter corponor_report: HTTP 201
+measurements: 1000/1000 correctos (C:\Users\BRAYAN\Desktop\Projects\ins\project-mineria\evaluacion\results\2026-10-19\perf\alto_r1\preload_measurements.input.json)
+measurements: 345/345 correctos (C:\Users\BRAYAN\Desktop\Projects\ins\project-mineria\evaluacion\results\2026-10-19\perf\alto_r1\preload_real.input.json)
+reports: 500/500 correctos (C:\Users\BRAYAN\Desktop\Projects\ins\project-mineria\evaluacion\results\2026-10-19\perf\alto_r1\preload_reports.input.json)
+  $ docker compose -p exp-perf -f docker-compose.yml run --rm --no-deps -e ESCENARIO=alto -e RESULT_FILE=/results/2026-10-19/perf/alto_r1/k6_summary.json --entrypoint k6 k6 run --quiet -e ESCENARIO=alto -e RESULT_FILE=/results/2026-10-19/perf/alto_r1/k6_summary.json /k6/load_test_v2.js
+
+[k6] escenario=alto iteraciones=151029
+  $ docker compose -p exp-perf -f docker-compose.yml down -v --remove-orphans
+
+=== perf bajo repetición 2 ===
+  $ docker compose -p exp-perf -f docker-compose.yml down -v --remove-orphans
+  $ docker compose -p exp-perf -f docker-compose.yml up -d --build zookeeper kafka mongo postgres-audit mining-users mining-management mining-audit-notifications
+  entorno listo en 22s
+adapter cdmb_open_data: HTTP 201
+adapter corponor_report: HTTP 201
+measurements: 1000/1000 correctos (C:\Users\BRAYAN\Desktop\Projects\ins\project-mineria\evaluacion\results\2026-10-19\perf\bajo_r2\preload_measurements.input.json)
+measurements: 345/345 correctos (C:\Users\BRAYAN\Desktop\Projects\ins\project-mineria\evaluacion\results\2026-10-19\perf\bajo_r2\preload_real.input.json)
+reports: 500/500 correctos (C:\Users\BRAYAN\Desktop\Projects\ins\project-mineria\evaluacion\results\2026-10-19\perf\bajo_r2\preload_reports.input.json)
+  $ docker compose -p exp-perf -f docker-compose.yml run --rm --no-deps -e ESCENARIO=bajo -e RESULT_FILE=/results/2026-10-19/perf/bajo_r2/k6_summary.json --entrypoint k6 k6 run --quiet -e ESCENARIO=bajo -e RESULT_FILE=/results/2026-10-19/perf/bajo_r2/k6_summary.json /k6/load_test_v2.js
+
+[k6] escenario=bajo iteraciones=2933
+  $ docker compose -p exp-perf -f docker-compose.yml down -v --remove-orphans
+
+=== perf medio repetición 2 ===
+  $ docker compose -p exp-perf -f docker-compose.yml down -v --remove-orphans
+  $ docker compose -p exp-perf -f docker-compose.yml up -d --build zookeeper kafka mongo postgres-audit mining-users mining-management mining-audit-notifications
+  entorno listo en 22s
+adapter cdmb_open_data: HTTP 201
+adapter corponor_report: HTTP 201
+measurements: 1000/1000 correctos (C:\Users\BRAYAN\Desktop\Projects\ins\project-mineria\evaluacion\results\2026-10-19\perf\medio_r2\preload_measurements.input.json)
+measurements: 345/345 correctos (C:\Users\BRAYAN\Desktop\Projects\ins\project-mineria\evaluacion\results\2026-10-19\perf\medio_r2\preload_real.input.json)
+reports: 500/500 correctos (C:\Users\BRAYAN\Desktop\Projects\ins\project-mineria\evaluacion\results\2026-10-19\perf\medio_r2\preload_reports.input.json)
+  $ docker compose -p exp-perf -f docker-compose.yml run --rm --no-deps -e ESCENARIO=medio -e RESULT_FILE=/results/2026-10-19/perf/medio_r2/k6_summary.json --entrypoint k6 k6 run --quiet -e ESCENARIO=medio -e RESULT_FILE=/results/2026-10-19/perf/medio_r2/k6_summary.json /k6/load_test_v2.js
+
+[k6] escenario=medio iteraciones=58808
+  $ docker compose -p exp-perf -f docker-compose.yml down -v --remove-orphans
+
+=== perf alto repetición 2 ===
+  $ docker compose -p exp-perf -f docker-compose.yml down -v --remove-orphans
+  $ docker compose -p exp-perf -f docker-compose.yml up -d --build zookeeper kafka mongo postgres-audit mining-users mining-management mining-audit-notifications
+  entorno listo en 18s
+adapter cdmb_open_data: HTTP 201
+adapter corponor_report: HTTP 201
+measurements: 1000/1000 correctos (C:\Users\BRAYAN\Desktop\Projects\ins\project-mineria\evaluacion\results\2026-10-19\perf\alto_r2\preload_measurements.input.json)
+measurements: 345/345 correctos (C:\Users\BRAYAN\Desktop\Projects\ins\project-mineria\evaluacion\results\2026-10-19\perf\alto_r2\preload_real.input.json)
+reports: 500/500 correctos (C:\Users\BRAYAN\Desktop\Projects\ins\project-mineria\evaluacion\results\2026-10-19\perf\alto_r2\preload_reports.input.json)
+  $ docker compose -p exp-perf -f docker-compose.yml run --rm --no-deps -e ESCENARIO=alto -e RESULT_FILE=/results/2026-10-19/perf/alto_r2/k6_summary.json --entrypoint k6 k6 run --quiet -e ESCENARIO=alto -e RESULT_FILE=/results/2026-10-19/perf/alto_r2/k6_summary.json /k6/load_test_v2.js
+
+[k6] escenario=alto iteraciones=150910
+  $ docker compose -p exp-perf -f docker-compose.yml down -v --remove-orphans
+
+=== perf bajo repetición 3 ===
+  $ docker compose -p exp-perf -f docker-compose.yml down -v --remove-orphans
+  $ docker compose -p exp-perf -f docker-compose.yml up -d --build zookeeper kafka mongo postgres-audit mining-users mining-management mining-audit-notifications
+  entorno listo en 22s
+adapter cdmb_open_data: HTTP 201
+adapter corponor_report: HTTP 201
+measurements: 1000/1000 correctos (C:\Users\BRAYAN\Desktop\Projects\ins\project-mineria\evaluacion\results\2026-10-19\perf\bajo_r3\preload_measurements.input.json)
+measurements: 345/345 correctos (C:\Users\BRAYAN\Desktop\Projects\ins\project-mineria\evaluacion\results\2026-10-19\perf\bajo_r3\preload_real.input.json)
+reports: 500/500 correctos (C:\Users\BRAYAN\Desktop\Projects\ins\project-mineria\evaluacion\results\2026-10-19\perf\bajo_r3\preload_reports.input.json)
+  $ docker compose -p exp-perf -f docker-compose.yml run --rm --no-deps -e ESCENARIO=bajo -e RESULT_FILE=/results/2026-10-19/perf/bajo_r3/k6_summary.json --entrypoint k6 k6 run --quiet -e ESCENARIO=bajo -e RESULT_FILE=/results/2026-10-19/perf/bajo_r3/k6_summary.json /k6/load_test_v2.js
+
+[k6] escenario=bajo iteraciones=2952
+  $ docker compose -p exp-perf -f docker-compose.yml down -v --remove-orphans
+
+=== perf medio repetición 3 ===
+  $ docker compose -p exp-perf -f docker-compose.yml down -v --remove-orphans
+  $ docker compose -p exp-perf -f docker-compose.yml up -d --build zookeeper kafka mongo postgres-audit mining-users mining-management mining-audit-notifications
+  entorno listo en 22s
+adapter cdmb_open_data: HTTP 201
+adapter corponor_report: HTTP 201
+measurements: 1000/1000 correctos (C:\Users\BRAYAN\Desktop\Projects\ins\project-mineria\evaluacion\results\2026-10-19\perf\medio_r3\preload_measurements.input.json)
+measurements: 345/345 correctos (C:\Users\BRAYAN\Desktop\Projects\ins\project-mineria\evaluacion\results\2026-10-19\perf\medio_r3\preload_real.input.json)
+reports: 500/500 correctos (C:\Users\BRAYAN\Desktop\Projects\ins\project-mineria\evaluacion\results\2026-10-19\perf\medio_r3\preload_reports.input.json)
+  $ docker compose -p exp-perf -f docker-compose.yml run --rm --no-deps -e ESCENARIO=medio -e RESULT_FILE=/results/2026-10-19/perf/medio_r3/k6_summary.json --entrypoint k6 k6 run --quiet -e ESCENARIO=medio -e RESULT_FILE=/results/2026-10-19/perf/medio_r3/k6_summary.json /k6/load_test_v2.js
+
+[k6] escenario=medio iteraciones=58762
+  $ docker compose -p exp-perf -f docker-compose.yml down -v --remove-orphans
+
+=== perf alto repetición 3 ===
+  $ docker compose -p exp-perf -f docker-compose.yml down -v --remove-orphans
+  $ docker compose -p exp-perf -f docker-compose.yml up -d --build zookeeper kafka mongo postgres-audit mining-users mining-management mining-audit-notifications
+  entorno listo en 22s
+adapter cdmb_open_data: HTTP 201
+adapter corponor_report: HTTP 201
+measurements: 1000/1000 correctos (C:\Users\BRAYAN\Desktop\Projects\ins\project-mineria\evaluacion\results\2026-10-19\perf\alto_r3\preload_measurements.input.json)
+measurements: 345/345 correctos (C:\Users\BRAYAN\Desktop\Projects\ins\project-mineria\evaluacion\results\2026-10-19\perf\alto_r3\preload_real.input.json)
+reports: 500/500 correctos (C:\Users\BRAYAN\Desktop\Projects\ins\project-mineria\evaluacion\results\2026-10-19\perf\alto_r3\preload_reports.input.json)
+  $ docker compose -p exp-perf -f docker-compose.yml run --rm --no-deps -e ESCENARIO=alto -e RESULT_FILE=/results/2026-10-19/perf/alto_r3/k6_summary.json --entrypoint k6 k6 run --quiet -e ESCENARIO=alto -e RESULT_FILE=/results/2026-10-19/perf/alto_r3/k6_summary.json /k6/load_test_v2.js
+
+[k6] escenario=alto iteraciones=151466
+  $ docker compose -p exp-perf -f docker-compose.yml down -v --remove-orphans

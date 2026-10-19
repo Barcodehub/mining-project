@@ -1,0 +1,8 @@
+{
+ "scenario": "bajo",
+ "rep": 2,
+ "k6_seconds": 122.11517333984375,
+ "alerts_published_total": 259.0,
+ "alerts_consumed_total": 259.0,
+ "drain_seconds": 0.3833174705505371
+}
