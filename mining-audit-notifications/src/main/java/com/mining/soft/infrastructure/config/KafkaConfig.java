@@ -12,4 +12,11 @@ public class KafkaConfig {
                 .replicas(1)
                 .build();
     }
+    @Bean
+    public NewTopic environmentalAlertsTopic() {
+        return TopicBuilder.name("environmental-alerts")
+                .partitions(3)
+                .replicas(1)
+                .build();
+    }
 }

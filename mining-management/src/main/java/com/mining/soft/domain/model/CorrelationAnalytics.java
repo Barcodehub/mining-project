@@ -10,6 +10,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CorrelationAnalytics {
-    private double spearmanCoefficient;
-    private Double pValue;
+    private double spearmanCoefficient;   // con corrección por empates
+    private Double pValue;                // bilateral, por permutación
+    private int clusters;                 // n
+    private boolean exactPermutation;     // true si se enumeraron todas las permutaciones
+    private long permutations;
 }

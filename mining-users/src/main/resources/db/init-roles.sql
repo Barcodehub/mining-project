@@ -25,3 +25,6 @@ INSERT INTO users (
 ) ON CONFLICT (email) DO NOTHING;
 
 SELECT setval('roles_id_seq', 4, true);
+
+-- Avanza la secuencia de usuarios tras insertar el admin con id explícito (evita choque de PK en registros nuevos)
+SELECT setval('users_id_seq', (SELECT COALESCE(MAX(id), 1) FROM users), true);

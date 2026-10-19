@@ -11,10 +11,11 @@ import org.springframework.stereotype.Service;
 public class StorageUseCase {
 
     private final StoragePort storagePort;
+    private final com.mining.soft.application.spi.IImageSanitizerPort imageSanitizer;
 
     public String uploadFile(String fileName, byte[] content, String contentType) {
         log.info("Uploading file: {}", fileName);
-        return storagePort.upload(fileName, content, contentType);
+        return storagePort.upload(fileName, imageSanitizer.stripMetadata(content, contentType), contentType);
     }
 
     public byte[] downloadFile(String key) {
@@ -38,6 +39,7 @@ public class StorageUseCase {
 
     public String uploadWithMiniature(String fileName, byte[] content, String contentType) {
         log.info("Uploading file with miniature: {}", fileName);
+        content = imageSanitizer.stripMetadata(content, contentType);
         String mainKey = storagePort.upload(fileName, content, contentType);
 
         if (contentType != null && contentType.startsWith("image/")) {

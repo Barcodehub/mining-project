@@ -2,6 +2,7 @@ package com.mining.soft.application.usecase;
 
 import com.mining.soft.application.api.IPostServicePort;
 import com.mining.soft.application.spi.IPostPersistencePort;
+import com.mining.soft.application.spi.IPseudonymizerPort;
 import com.mining.soft.application.spi.IPublishEventPort;
 import com.mining.soft.domain.enums.ReportStatus;
 import com.mining.soft.domain.model.Post;
@@ -16,10 +17,13 @@ public class PostUseCase implements IPostServicePort {
 
     private final IPostPersistencePort postPersistencePort;
     private final IPublishEventPort publishEventPort;
+    private final IPseudonymizerPort pseudonymizer;
 
-    public PostUseCase(IPostPersistencePort postPersistencePort, IPublishEventPort publishEventPort) {
+    public PostUseCase(IPostPersistencePort postPersistencePort, IPublishEventPort publishEventPort,
+                       IPseudonymizerPort pseudonymizer) {
         this.postPersistencePort = postPersistencePort;
         this.publishEventPort = publishEventPort;
+        this.pseudonymizer = pseudonymizer;
     }
 
     @Override
@@ -28,7 +32,11 @@ public class PostUseCase implements IPostServicePort {
         Post savedPost = postPersistencePort.savePost(post);
 
         if (savedPost instanceof Report report) {
-            publishEventPort.publish("REPORT_CREATED", report.getId(), report.getUserId(), null, report.getCreatedAt(), java.util.Map.of("title", report.getTitle()));
+            // Minimización de identidad: la traza de auditoría registra al autor solo por seudónimo.
+            java.util.Map<String, Object> metadata = new java.util.HashMap<>();
+            metadata.put("title", report.getTitle());
+            metadata.put("reporterPseudonym", pseudonymizer.pseudonym(report.getUserId()));
+            publishEventPort.publish("REPORT_CREATED", report.getId(), null, null, report.getCreatedAt(), metadata);
         }
         return savedPost;
     }

@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: mining-management
   config:
     import: optional:classpath:config-ambiental.yaml
   datasource:
@@ -46,13 +48,13 @@ aws:
     accessKeyId: TU_ACCESS_KEY
     secretAccessKey: TU_SECRET_KEY
 
-
-  # Actuator & Prometheus Configuration
-  endpoint:
-    prometheus:
-      enabled: true
-    health:
-      show-details: always
+# Protección del reportante
+privacidad:
+  seudonimo:
+    secreto: ${PSEUDONYM_SECRET:change-me-in-production}
+  reportes:
+    cuadricula-grados: ${REPORT_GRID_DEGREES:0.01}
+    roles-precisos: ADMINISTRADOR,MODERADOR
 management:
   endpoints:
     web:

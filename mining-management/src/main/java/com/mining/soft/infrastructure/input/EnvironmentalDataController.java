@@ -21,9 +21,18 @@ import java.util.List;
 public class EnvironmentalDataController {
 
     private final IEnvironmentalDataServicePort servicePort;
+    private final boolean cacheEvictOnWrite;
 
-    public EnvironmentalDataController(IEnvironmentalDataServicePort servicePort) {
+    public EnvironmentalDataController(IEnvironmentalDataServicePort servicePort,
+                                       @org.springframework.beans.factory.annotation.Value("${cache.evict-on-write:true}")
+                                       boolean cacheEvictOnWrite) {
         this.servicePort = servicePort;
+        this.cacheEvictOnWrite = cacheEvictOnWrite;
+    }
+
+    /** Usado por la condición SpEL de @CacheEvict: invalida las cachés de lectura al ingerir. */
+    public boolean isCacheEvictOnWrite() {
+        return cacheEvictOnWrite;
     }
 
     @PostMapping

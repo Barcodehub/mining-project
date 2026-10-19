@@ -25,13 +25,14 @@ public class BeanConfiguration {
     private final IPostEntityMapper postEntityMapper;
     private final ICommentEntityMapper commentEntityMapper;
     private final IPublishEventPort publishEventPort;
+    private final com.mining.soft.application.spi.IPseudonymizerPort pseudonymizer;
     @Bean
     public IPostPersistencePort postPersistence() {
         return new PostJpaAdapter(postRepository, reportRepository, postEntityMapper);
     }
     @Bean
     public IPostServicePort postServicePort() {
-        return new PostUseCase(postPersistence(), publishEventPort);
+        return new PostUseCase(postPersistence(), publishEventPort, pseudonymizer);
     }
     @Bean
     public ICommentPersistencePort commentPersistence() {

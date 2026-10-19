@@ -1,67 +1,166 @@
 # ─────────────────────────────────────────────────────────────────────────────
-# CONFIGURACIÓN DE PARÁMETROS AMBIENTALES - ESTÁNDAR REGIONAL
-# Región: Norte de Santander, Colombia
-# Marco legal: Decreto 1076/2015, IDEAM, OMS 2022
-# Cambiar estos valores adapta TODO el sistema de alertas sin recompilar.
+# CONFIGURACIÓN DEL MODELO DE ALERTA AMBIENTAL (v2)
+# Región: nororiente de Colombia (Santander y Norte de Santander)
+#
+# Cada umbral cita su fuente normativa o científica. La tabla completa con la
+# verificación de cada valor está en el manuscrito (Tabla 1). Cambiar estos
+# valores adapta todo el sistema de alertas sin recompilar.
+#
+# Convenciones:
+#  - "Superación" = valor estrictamente mayor que el umbral (dirección MAYOR) o
+#    estrictamente menor (dirección MENOR), como se lee un "valor máximo
+#    aceptable" en la Res. 2115/2007.
+#  - Unidades canónicas: Hg en agua µg/L; CN y As en agua mg/L; Hg en sedimento
+#    mg/kg peso seco; Hg en pescado mg/kg peso húmedo; OD mg/L; Eh mV (vs. SHE).
 # ─────────────────────────────────────────────────────────────────────────────
 ambiental:
-  region: "Norte de Santander - Colombia"
-  version: "1.0.0"
+  region: "Nororiente de Colombia (Santander y Norte de Santander)"
+  version: "2.0.0"
 
-  # ── MERCURIO EN AGUA (µg/L) ─────────────────────────────────────────────
-  hg-disuelto:
-    alerta: 1.0       # OMS agua potable: 1 µg/L
-    critico: 2.0      # IDEAM cuerpos de agua: 2 µg/L
+  # Puntaje de un factor: 0 si no supera, puntaje-alerta si supera el umbral de
+  # ALERTA, puntaje-critico si supera el de CRÍTICO.
+  puntaje-alerta: 0.5
+  puntaje-critico: 1.0
 
-  hg-total:
-    alerta: 1.0
-    critico: 2.0
+  factores:
+    # ── Dimensión HUMANA (consumo de agua y pescado) ────────────────────────
+    - id: hg-agua-humano
+      parametro: hg_total
+      proxy: hg_dissolved      # Hg disuelto ≤ Hg total: solo concluye cuando supera
+      dimension: HUMANA
+      tipo: CONTAMINANTE
+      direccion: MAYOR
+      alerta: 1.0              # Res. 2115/2007, art. 5: Hg 0.001 mg/L
+      critico: 2.0             # Decreto 1076/2015, art. 2.2.3.3.9.3: Hg 0.002 mg/L
+    - id: cn-agua-humano
+      parametro: cyanide
+      dimension: HUMANA
+      tipo: CONTAMINANTE
+      direccion: MAYOR
+      alerta: 0.05             # Res. 2115/2007, art. 5: cianuro libre y disociable 0.05 mg/L
+      critico: 0.2             # Decreto 1076/2015, art. 2.2.3.3.9.3: CN- 0.2 mg/L
+    - id: as-agua-humano
+      parametro: arsenic
+      dimension: HUMANA
+      tipo: CONTAMINANTE
+      direccion: MAYOR
+      alerta: 0.01             # Res. 2115/2007, art. 5: As 0.01 mg/L
+      critico: 0.05            # Decreto 1076/2015, art. 2.2.3.3.9.3: As 0.05 mg/L
+    - id: hg-pescado
+      parametro: hg_fish
+      dimension: HUMANA
+      tipo: CONTAMINANTE
+      direccion: MAYOR
+      alerta: 0.3              # US EPA (2001), EPA-823-R-01-001: MeHg en tejido 0.3 mg/kg
+      critico: 0.5             # Res. 122/2012 MinSalud, tabla 3, núm. 12
+      critico-predador: 1.0    # Res. 122/2012, tabla 3, núm. 13 (especies predadoras)
 
-  metilmercurio:
-    alerta: 0.5       # EPA criterion: 0.5 µg/L
-    critico: 1.0
+    # ── Dimensión ECOLÓGICA (biota acuática y sedimento) ────────────────────
+    - id: hg-agua-ecologico
+      parametro: hg_total
+      proxy: hg_dissolved
+      dimension: ECOLOGICA
+      tipo: CONTAMINANTE
+      direccion: MAYOR
+      alerta: 0.77             # US EPA, criterio de vida acuática CCC 0.77 µg/L
+      critico: 1.4             # US EPA, CMC 1.4 µg/L
+    - id: cn-agua-ecologico
+      parametro: cyanide
+      dimension: ECOLOGICA
+      tipo: CONTAMINANTE
+      direccion: MAYOR
+      alerta: 0.0052           # US EPA, cianuro libre CCC 5.2 µg/L
+      critico: 0.022           # US EPA, CMC 22 µg/L
+    - id: as-agua-ecologico
+      parametro: arsenic
+      dimension: ECOLOGICA
+      tipo: CONTAMINANTE
+      direccion: MAYOR
+      alerta: 0.150            # US EPA, CCC 150 µg/L
+      critico: 0.340           # US EPA, CMC 340 µg/L
+    - id: hg-sedimento
+      parametro: hg_sediment
+      dimension: ECOLOGICA
+      tipo: CONTAMINANTE
+      direccion: MAYOR
+      alerta: 0.17             # CCME, ISQG en agua dulce 170 µg/kg
+      critico: 0.486           # CCME, PEL en agua dulce 486 µg/kg
+    - id: oxigeno-disuelto
+      parametro: dissolved_oxygen
+      dimension: ECOLOGICA
+      tipo: CONDICION
+      direccion: MENOR
+      alerta-fria: 5.0         # Decreto 1076/2015, art. 2.2.3.3.9.10: agua dulce fría
+      alerta-calida: 4.0       # Decreto 1076/2015, art. 2.2.3.3.9.10: agua dulce cálida
+      critico: 2.0             # Hipoxia < 2 mg/L (Breitburg et al., 2018)
 
-  # ── MERCURIO EN SEDIMENTO (mg/kg peso seco) ──────────────────────────────
-  hg-sedimento:
-    tel: 0.17         # Threshold Effect Level (CCME)
-    pel: 0.48         # Probable Effect Level (CCME)
+    # ── Dimensión GEOQUÍMICA (condiciones de metilación y movilización) ─────
+    - id: ph-bajo
+      parametro: ph
+      dimension: GEOQUIMICA
+      tipo: CONDICION
+      direccion: MENOR
+      alerta: 6.5              # Res. 2115/2007, art. 4; Decreto 1076, art. 2.2.3.3.9.10 (agua fría)
+      critico: 5.0             # Decreto 1076/2015, art. 2.2.3.3.9.3 (5.0–9.0)
+    - id: redox-bajo
+      parametro: redox
+      dimension: GEOQUIMICA
+      tipo: CONDICION
+      direccion: MENOR
+      alerta: 200              # Clase "moderadamente reductora" (Mansfeldt 2003, en Barczok et al. 2023)
+      critico: -100            # Clase "fuertemente reductora"
 
-  # ── MERCURIO EN PECES (mg/kg peso húmedo) ────────────────────────────────
-  hg-peces:
-    alerta: 0.3       # FDA advisory
-    critico: 0.5      # FDA action level / OMS
+  # Pesos por dimensión (parámetros de política, no de norma; se renormalizan
+  # sobre las dimensiones que tienen al menos un factor concluyente).
+  pesos:
+    HUMANA: 0.45
+    ECOLOGICA: 0.35
+    GEOQUIMICA: 0.20
 
-  # ── VARIABLES GEOQUÍMICAS ────────────────────────────────────────────────
-  ph:
-    minimo: 6.5       # Rango óptimo ecosistemas acuáticos
-    optimo-min: 6.5
-    optimo-max: 8.5
-    critico-bajo: 5.5 # Umbral metilación acelerada
+  # Cortes del puntaje compuesto (parámetros de política).
+  niveles:
+    precaucion: 0.25
+    alerta: 0.50
+    critico: 0.75
 
-  redox:
-    critico-bajo: 0   # mV — por debajo: ambiente reductor (metilación activa)
-    alerta-bajo: 100  # mV
+  # Piso normativo: ninguna superación legal queda oculta por el promedio.
+  escalamiento:
+    humano-critico: ALERTA     # un factor HUMANO en CRÍTICO garantiza al menos ALERTA
+    cualquier-alerta: PRECAUCION
 
-  oxigeno-disuelto:
-    critico: 2.0      # mg/L — hipoxia severa
-    alerta: 4.0       # mg/L — estrés para biota
+  # Perfil térmico del cuerpo de agua (Decreto 1076, art. 2.2.3.3.9.10).
+  perfil-termico:
+    altitud-fria-min: 2000     # m s. n. m. (pisos frío y páramo)
+    por-defecto: CALIDA
 
-  carbono-organico:
-    alto: 5.0         # % — favorece metilación bacteriana
+  # Rangos físicamente plausibles: fuera de ellos, el valor no se usa y se marca.
+  plausibilidad:
+    ph: [0.0, 14.0]
+    temperature: [-5.0, 45.0]
+    turbidity: [0.0, 4000.0]
+    "[dissolved_oxygen]": [0.0, 20.0]
+    redox: [-600.0, 900.0]
+    "[hg_total]": [0.0, 1000.0]
+    "[hg_dissolved]": [0.0, 1000.0]
+    cyanide: [0.0, 100.0]
+    arsenic: [0.0, 10.0]
+    "[hg_sediment]": [0.0, 1000.0]
+    "[hg_fish]": [0.0, 100.0]
+    methylmercury: [0.0, 100.0]
+    "[organic_carbon]": [0.0, 100.0]
+    latitude: [-4.3, 13.5]     # territorio continental de Colombia
+    longitude: [-82.0, -66.8]
 
-  turbidez:
-    alerta: 50.0      # NTU
-    critico: 100.0    # NTU
+  # Valores centinela que la fuente usa para "no analizado" (p. ej., CDMB: -999).
+  valores-ausentes: [-999.0]
 
-  temperatura:
-    alerta: 30.0      # °C
-    critico: 35.0     # °C
+  # Parámetros que mide una sonda in situ; el resto se clasifica como laboratorio.
+  parametros-in-situ: [ph, temperature, turbidity, dissolved_oxygen, redox]
 
-  # ── PESOS PARA SCORE TOTAL (deben sumar 1.0) ────────────────────────────
-  pesos-score:
-    riesgo-humano: 0.45
-    riesgo-ecologico: 0.35
-    riesgo-geoquimico: 0.20
+  # Publicación de alertas por eventos (Kafka).
+  alertas:
+    topico: environmental-alerts
+    niveles-publicados: [ALERTA, CRITICO]
 
-  # ── FACTOR DE BIOACUMULACIÓN (BAF) ──────────────────────────────────────
-  baf: 100000.0       # 10^5 — valor típico para peces piscívoros
+  # Factor de bioacumulación usado solo por el generador de datos sintéticos.
+  baf: 100000.0

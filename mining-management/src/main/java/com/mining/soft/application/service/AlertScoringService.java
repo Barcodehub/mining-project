@@ -2,231 +2,203 @@ package com.mining.soft.application.service;
 
 import com.mining.soft.domain.model.EnvironmentalData;
 import com.mining.soft.infrastructure.configuration.AmbientalConfig;
+import com.mining.soft.infrastructure.configuration.AmbientalConfig.Dimension;
+import com.mining.soft.infrastructure.configuration.AmbientalConfig.Direccion;
+import com.mining.soft.infrastructure.configuration.AmbientalConfig.Factor;
+import com.mining.soft.infrastructure.configuration.AmbientalConfig.PerfilTermico;
+import com.mining.soft.infrastructure.configuration.AmbientalConfig.TipoFactor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
- * Sistema de puntuación de riesgo ambiental DEFENSIVO.
+ * Modelo de alerta v2: clasifica cada medición al momento de la ingesta.
  *
- * FILOSOFÍA:
- * - Solo usa campos PRESENTES (no null)
- * - NO inventa datos faltantes
- * - Distingue entre IMPACTO (evidencia directa) y RIESGO (condiciones peligrosas)
- * - Calcula completitud de datos para transparencia
- *
- * Todos los umbrales se leen desde AmbientalConfig (config-ambiental.yaml).
+ * 1. Cada factor (parámetro + umbrales con fuente) se evalúa solo si es concluyente:
+ *    valor medido y plausible, o valor censurado con LD ≤ umbral de alerta. Un proxy
+ *    (cota inferior, p. ej. Hg disuelto para Hg total) solo concluye cuando supera.
+ * 2. Puntaje del factor: 0, puntaje-alerta o puntaje-critico. El de la dimensión es el
+ *    máximo de sus factores concluyentes.
+ * 3. Puntaje compuesto = Σ wᵢ·sᵢ / Σ wᵢ sobre las dimensiones evaluadas (sin dilución
+ *    por dimensiones sin datos).
+ * 4. Nivel = max(nivel por puntaje, piso normativo): un factor HUMANO en CRÍTICO
+ *    garantiza al menos ALERTA y cualquier superación, al menos PRECAUCION.
+ * 5. Tipo: IMPACTO (supera un contaminante), RIESGO (supera una condición), MIXTO,
+ *    NINGUNO (concluyente sin superaciones) o DESCONOCIDO (nada concluyente).
  */
 @Service
 @RequiredArgsConstructor
 public class AlertScoringService {
 
+    static final List<String> LEVELS = List.of("INDETERMINADO", "NORMAL", "PRECAUCION", "ALERTA", "CRITICO");
+
     private final AmbientalConfig cfg;
 
-    /**
-     * Calcula y asigna todos los scores, tipo de alerta y metadatos de calidad.
-     */
     public void calculateAndAssign(EnvironmentalData d) {
-        // 1. Calcular completitud de datos
-        calculateDataCompleteness(d);
+        PerfilTermico perfil = resolveProfile(d);
+        d.setThermalProfile(perfil.name());
+        boolean predador = Boolean.TRUE.equals(d.getFishPredatory());
 
-        // 2. Calcular scores por dimensión (solo con campos presentes)
-        double human = humanRisk(d);
-        double eco   = ecologicalRisk(d);
-        double geo   = geochemicalRisk(d);
+        Map<Dimension, Double> dimScore = new EnumMap<>(Dimension.class);
+        List<String> exceedances = new ArrayList<>();
+        Set<String> inconclusive = new LinkedHashSet<>();
+        Set<String> missing = new LinkedHashSet<>();
+        int conclusive = 0;
+        boolean contaminantExceeded = false;
+        boolean conditionExceeded = false;
+        boolean humanCritical = false;
 
-        d.setHumanRiskScore(round(human));
-        d.setEcologicalRiskScore(round(eco));
-        d.setGeochemicalRiskScore(round(geo));
+        for (Factor f : cfg.getFactores()) {
+            Evaluation e = evaluate(f, d, perfil, predador);
+            switch (e.status) {
+                case ABSENT -> missing.add(f.getParametro());
+                case INCONCLUSIVE -> inconclusive.add(f.getId());
+                case CONCLUSIVE -> {
+                    conclusive++;
+                    dimScore.merge(f.getDimension(), e.score, Math::max);
+                    if (e.score > 0) {
+                        String level = e.score >= cfg.getPuntajeCritico() ? "CRITICO" : "ALERTA";
+                        exceedances.add(f.getId() + ":" + level);
+                        if (f.getTipo() == TipoFactor.CONTAMINANTE) contaminantExceeded = true;
+                        else conditionExceeded = true;
+                        if (f.getDimension() == Dimension.HUMANA && "CRITICO".equals(level)) humanCritical = true;
+                    }
+                }
+            }
+        }
 
-        // 3. Score total ponderado
-        double total = cfg.getPesosScore().getRiesgoHumano()    * human
-                     + cfg.getPesosScore().getRiesgoEcologico() * eco
-                     + cfg.getPesosScore().getRiesgoGeoquimico() * geo;
+        d.setHumanRiskScore(round(dimScore.get(Dimension.HUMANA)));
+        d.setEcologicalRiskScore(round(dimScore.get(Dimension.ECOLOGICA)));
+        d.setGeochemicalRiskScore(round(dimScore.get(Dimension.GEOQUIMICA)));
 
-        d.setTotalRiskScore(round(total));
+        if (conclusive == 0) {
+            d.setTotalRiskScore(null);
+            d.setAlertLevel("INDETERMINADO");
+            d.setAlertType("DESCONOCIDO");
+            d.setLevelBasis("PUNTAJE");
+        } else {
+            double num = 0, den = 0;
+            for (Map.Entry<Dimension, Double> en : dimScore.entrySet()) {
+                double w = cfg.pesoDe(en.getKey());
+                num += w * en.getValue();
+                den += w;
+            }
+            double total = den > 0 ? num / den : 0.0;
+            d.setTotalRiskScore(round(total));
 
-        // 4. Determinar nivel y tipo de alerta
-        d.setAlertLevel(resolveLevel(total));
-        d.setAlertType(resolveAlertType(d));
+            String byScore = levelFromScore(total);
+            String floor = "NORMAL";
+            if (humanCritical) floor = max(floor, cfg.getEscalamiento().getHumanoCritico());
+            if (!exceedances.isEmpty()) floor = max(floor, cfg.getEscalamiento().getCualquierAlerta());
+            String level = max(byScore, floor);
+            d.setAlertLevel(level);
+            d.setLevelBasis(level.equals(byScore) ? "PUNTAJE" : "NORMATIVO");
+            d.setAlertType(contaminantExceeded && conditionExceeded ? "MIXTO"
+                    : contaminantExceeded ? "IMPACTO"
+                    : conditionExceeded ? "RIESGO" : "NINGUNO");
+        }
+
+        long totalFactors = cfg.getFactores().size();
+        d.setDataCompleteness(totalFactors == 0 ? 0.0 : round((double) conclusive / totalFactors));
+        d.setExceedances(exceedances.isEmpty() ? null : String.join(",", exceedances));
+        d.setInconclusiveFields(inconclusive.isEmpty() ? null : String.join(",", inconclusive));
+        d.setMissingFields(missing.isEmpty() ? null : String.join(",", missing));
+        d.setDataSource(resolveSource(d));
     }
 
-    // ══════════════════════════════════════════════════════════════════════
-    // RIESGO HUMANO (Ingesta de agua y peces)
-    // ══════════════════════════════════════════════════════════════════════
-    private double humanRisk(EnvironmentalData d) {
-        double score = 0.0;
-        int factorsEvaluated = 0;
+    // ── Evaluación de un factor ────────────────────────────────────────────
+    enum Status { ABSENT, INCONCLUSIVE, CONCLUSIVE }
 
-        // Hg en peces (evidencia DIRECTA de riesgo por ingesta)
-        if (d.getHgFish() != null) {
-            factorsEvaluated++;
-            if (d.getHgFish() >= cfg.getHgPeces().getCritico())      score = Math.max(score, 1.0);
-            else if (d.getHgFish() >= cfg.getHgPeces().getAlerta())  score = Math.max(score, 0.6);
-        }
-
-        // Hg disuelto en agua (riesgo por consumo directo)
-        if (d.getHgDissolved() != null) {
-            factorsEvaluated++;
-            if (d.getHgDissolved() >= cfg.getHgDisuelto().getCritico())     score = Math.max(score, 1.0);
-            else if (d.getHgDissolved() >= cfg.getHgDisuelto().getAlerta()) score = Math.max(score, 0.5);
-        }
-
-        // Metilmercurio (forma más tóxica)
-        if (d.getMethylmercury() != null) {
-            factorsEvaluated++;
-            if (d.getMethylmercury() >= cfg.getMetilmercurio().getCritico())     score = Math.max(score, 0.9);
-            else if (d.getMethylmercury() >= cfg.getMetilmercurio().getAlerta()) score = Math.max(score, 0.5);
-        }
-
-        // Si no hay NINGÚN dato de mercurio, retornar 0 (riesgo desconocido)
-        return factorsEvaluated > 0 ? score : 0.0;
+    record Evaluation(Status status, double score) {
+        static final Evaluation ABSENT = new Evaluation(Status.ABSENT, 0);
+        static final Evaluation INCONCLUSIVE = new Evaluation(Status.INCONCLUSIVE, 0);
+        static Evaluation of(double s) { return new Evaluation(Status.CONCLUSIVE, s); }
     }
 
-    // ══════════════════════════════════════════════════════════════════════
-    // RIESGO ECOLÓGICO (Biota acuática y sedimento)
-    // ══════════════════════════════════════════════════════════════════════
-    private double ecologicalRisk(EnvironmentalData d) {
-        double score = 0.0;
-        int factorsEvaluated = 0;
+    Evaluation evaluate(Factor f, EnvironmentalData d, PerfilTermico perfil, boolean predador) {
+        double alerta = f.alertaPara(perfil);
+        double critico = f.criticoPara(predador);
+        String p = f.getParametro();
 
-        // Hg en sedimento (impacto en bentos)
-        if (d.getHgSediment() != null) {
-            factorsEvaluated++;
-            if (d.getHgSediment() >= cfg.getHgSedimento().getPel())      score = Math.max(score, 1.0);
-            else if (d.getHgSediment() >= cfg.getHgSedimento().getTel()) score = Math.max(score, 0.5);
+        if (d.isImplausible(p)) return Evaluation.INCONCLUSIVE;
+
+        Double v = d.valueOf(p);
+        if (v != null) return Evaluation.of(score(f.getDireccion(), v, alerta, critico));
+
+        if (d.isCensored(p)) {
+            double lod = d.getCensoredLimits().get(p);
+            // "< LD": el valor real es menor que LD.
+            if (f.getDireccion() == Direccion.MAYOR) {
+                return lod <= alerta ? Evaluation.of(0.0) : Evaluation.INCONCLUSIVE;
+            }
+            // Límite inferior: "< LD" con LD < crítico implica superación crítica.
+            if (lod <= critico) return Evaluation.of(cfg.getPuntajeCritico());
+            return lod <= alerta ? Evaluation.of(cfg.getPuntajeAlerta()) : Evaluation.INCONCLUSIVE;
         }
 
-        // Hg total en agua (impacto en columna de agua)
-        if (d.getHgTotal() != null) {
-            factorsEvaluated++;
-            if (d.getHgTotal() >= cfg.getHgTotal().getCritico())     score = Math.max(score, 0.8);
-            else if (d.getHgTotal() >= cfg.getHgTotal().getAlerta()) score = Math.max(score, 0.4);
+        if (f.getProxy() != null && !d.isImplausible(f.getProxy())) {
+            Double proxy = d.valueOf(f.getProxy());
+            if (proxy != null) {
+                double s = score(f.getDireccion(), proxy, alerta, critico);
+                // El proxy es cota inferior: solo concluye si ya supera.
+                return s > 0 ? Evaluation.of(s) : Evaluation.INCONCLUSIVE;
+            }
+            if (d.isCensored(f.getProxy())) return Evaluation.INCONCLUSIVE;
         }
-
-        // Oxígeno disuelto (estrés para biota)
-        if (d.getDissolvedOxygen() != null) {
-            factorsEvaluated++;
-            if (d.getDissolvedOxygen() <= cfg.getOxigenoDisuelto().getCritico())     score = Math.max(score, 0.7);
-            else if (d.getDissolvedOxygen() <= cfg.getOxigenoDisuelto().getAlerta()) score = Math.max(score, 0.3);
-        }
-
-        return factorsEvaluated > 0 ? score : 0.0;
+        return Evaluation.ABSENT;
     }
 
-    // ══════════════════════════════════════════════════════════════════════
-    // RIESGO GEOQUÍMICO (Potencial de metilación futura - "Bomba de tiempo")
-    // ══════════════════════════════════════════════════════════════════════
-    private double geochemicalRisk(EnvironmentalData d) {
-        double score = 0.0;
-
-        // Condiciones críticas para metilación
-        boolean phCritico  = d.getPh() != null && d.getPh() < cfg.getPh().getCriticoBajo();
-        boolean redoxBajo  = d.getRedox() != null && d.getRedox() < cfg.getRedox().getCriticoBajo();
-        boolean redoxAlerta = d.getRedox() != null && d.getRedox() < cfg.getRedox().getAlertaBajo();
-        boolean cocAlto    = d.getOrganicCarbon() != null && d.getOrganicCarbon() > cfg.getCarbonoOrganico();
-
-        // Combinación pH ácido + ambiente reductor = máximo riesgo de metilación
-        if (phCritico && redoxBajo)          score = Math.max(score, 1.0);
-        else if (phCritico || redoxBajo)     score = Math.max(score, 0.7);
-        else if (redoxAlerta)                score = Math.max(score, 0.4);
-
-        // Carbono orgánico alto amplifica el riesgo
-        if (cocAlto) score = Math.min(1.0, score + 0.2);
-
-        // Si no tenemos pH ni redox, no podemos evaluar riesgo geoquímico
-        if (d.getPh() == null && d.getRedox() == null) return 0.0;
-
-        return score;
+    private double score(Direccion dir, double v, double alerta, double critico) {
+        boolean crit = dir == Direccion.MAYOR ? v > critico : v < critico;
+        if (crit) return cfg.getPuntajeCritico();
+        boolean alert = dir == Direccion.MAYOR ? v > alerta : v < alerta;
+        return alert ? cfg.getPuntajeAlerta() : 0.0;
     }
 
-    // ══════════════════════════════════════════════════════════════════════
-    // DETERMINACIÓN DE NIVEL DE ALERTA
-    // ══════════════════════════════════════════════════════════════════════
-    private String resolveLevel(double total) {
-        if (total >= 0.75) return "CRITICO";
-        if (total >= 0.50) return "ALERTA";
-        if (total >= 0.25) return "PRECAUCION";
+    // ── Auxiliares ─────────────────────────────────────────────────────────
+    PerfilTermico resolveProfile(EnvironmentalData d) {
+        if (d.getThermalProfile() != null) {
+            try { return PerfilTermico.valueOf(d.getThermalProfile().trim().toUpperCase()); }
+            catch (IllegalArgumentException ignored) { /* se resuelve por altitud */ }
+        }
+        if (d.getAltitude() != null) {
+            return d.getAltitude() >= cfg.getPerfilTermico().getAltitudFriaMin()
+                    ? PerfilTermico.FRIA : PerfilTermico.CALIDA;
+        }
+        return cfg.getPerfilTermico().getPorDefecto();
+    }
+
+    private String levelFromScore(double total) {
+        AmbientalConfig.Niveles n = cfg.getNiveles();
+        if (total >= n.getCritico()) return "CRITICO";
+        if (total >= n.getAlerta()) return "ALERTA";
+        if (total >= n.getPrecaucion()) return "PRECAUCION";
         return "NORMAL";
     }
 
-    // ══════════════════════════════════════════════════════════════════════
-    // DETERMINACIÓN DE TIPO DE ALERTA
-    // ══════════════════════════════════════════════════════════════════════
-    /**
-     * IMPACTO: Evidencia directa de contaminación (Hg medido supera norma)
-     * RIESGO: Condiciones ambientales peligrosas (pH bajo, redox bajo, etc.)
-     * MIXTO: Ambos tipos presentes
-     * DESCONOCIDO: Datos insuficientes para determinar
-     */
-    private String resolveAlertType(EnvironmentalData d) {
-        boolean hasImpact = hasDirectImpact(d);
-        boolean hasRisk   = hasGeochemicalRisk(d);
+    static String max(String a, String b) {
+        return LEVELS.indexOf(a) >= LEVELS.indexOf(b) ? a : b;
+    }
 
-        if (hasImpact && hasRisk)  return "MIXTO";
-        if (hasImpact)             return "IMPACTO";
-        if (hasRisk)               return "RIESGO";
+    private String resolveSource(EnvironmentalData d) {
+        boolean inSitu = false, lab = false;
+        for (String p : EnvironmentalData.PARAMETERS) {
+            if (d.valueOf(p) == null && !d.isCensored(p)) continue;
+            if (cfg.getParametrosInSitu().contains(p)) inSitu = true; else lab = true;
+        }
+        if (inSitu && lab) return "MIXTO";
+        if (lab) return "LABORATORIO";
+        if (inSitu) return "SENSOR";
         return "DESCONOCIDO";
     }
 
-    private boolean hasDirectImpact(EnvironmentalData d) {
-        // Evidencia directa: mercurio medido supera umbrales
-        if (d.getHgDissolved() != null && d.getHgDissolved() >= cfg.getHgDisuelto().getAlerta()) return true;
-        if (d.getHgTotal() != null && d.getHgTotal() >= cfg.getHgTotal().getAlerta()) return true;
-        if (d.getHgSediment() != null && d.getHgSediment() >= cfg.getHgSedimento().getTel()) return true;
-        if (d.getHgFish() != null && d.getHgFish() >= cfg.getHgPeces().getAlerta()) return true;
-        if (d.getMethylmercury() != null && d.getMethylmercury() >= cfg.getMetilmercurio().getAlerta()) return true;
-        return false;
-    }
-
-    private boolean hasGeochemicalRisk(EnvironmentalData d) {
-        // Condiciones peligrosas: ambiente propicio para metilación
-        boolean phCritico = d.getPh() != null && d.getPh() < cfg.getPh().getCriticoBajo();
-        boolean redoxBajo = d.getRedox() != null && d.getRedox() < cfg.getRedox().getAlertaBajo();
-        boolean oxigenoBajo = d.getDissolvedOxygen() != null && d.getDissolvedOxygen() <= cfg.getOxigenoDisuelto().getAlerta();
-        
-        return phCritico || redoxBajo || oxigenoBajo;
-    }
-
-    // ══════════════════════════════════════════════════════════════════════
-    // CÁLCULO DE COMPLETITUD DE DATOS
-    // ══════════════════════════════════════════════════════════════════════
-    private void calculateDataCompleteness(EnvironmentalData d) {
-        int totalOptionalFields = 8; // redox, DO, COT, hgSediment, hgFish, MeHg, hgDissolved, hgTotal
-        int presentFields = 0;
-        List<String> missing = new ArrayList<>();
-
-        // Campos opcionales avanzados
-        if (d.getRedox() != null) presentFields++; else missing.add("redox");
-        if (d.getDissolvedOxygen() != null) presentFields++; else missing.add("dissolved_oxygen");
-        if (d.getOrganicCarbon() != null) presentFields++; else missing.add("organic_carbon");
-        if (d.getHgSediment() != null) presentFields++; else missing.add("hg_sediment");
-        if (d.getHgFish() != null) presentFields++; else missing.add("hg_fish");
-        if (d.getMethylmercury() != null) presentFields++; else missing.add("methylmercury");
-
-        // Mercurio en agua (al menos uno debe estar presente)
-        if (d.getHgDissolved() != null) presentFields++;
-        if (d.getHgTotal() != null) presentFields++;
-        if (d.getHgDissolved() == null && d.getHgTotal() == null) {
-            missing.add("hg_dissolved_OR_hg_total");
-        }
-
-        d.setDataCompleteness(round((double) presentFields / totalOptionalFields));
-        d.setMissingFields(missing.isEmpty() ? null : String.join(",", missing));
-
-        // Determinar fuente de datos
-        boolean hasLabData = d.getHgSediment() != null || d.getHgFish() != null || d.getMethylmercury() != null;
-        boolean hasSensorData = d.getPh() != null && d.getTemperature() != null && d.getTurbidity() != null;
-        
-        if (hasLabData && hasSensorData) d.setDataSource("MIXTO");
-        else if (hasLabData) d.setDataSource("LABORATORIO");
-        else if (hasSensorData) d.setDataSource("SENSOR");
-        else d.setDataSource("DESCONOCIDO");
-    }
-
-    private double round(double v) {
-        return Math.round(v * 1000.0) / 1000.0;
+    private static Double round(Double v) {
+        return v == null ? null : Math.round(v * 1000.0) / 1000.0;
     }
 }

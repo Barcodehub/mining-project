@@ -22,7 +22,7 @@ public interface IPostRepository extends JpaRepository<PostEntity, Long> {
            "COUNT(r), " +
            "SUM(CASE WHEN r.status = 'VALIDADO' THEN 1.0 " +
                 "WHEN r.status = 'PENDIENTE' THEN 0.5 " +
-                "WHEN r.status = 'RECHAZADO' THEN 0.1 " +
+                "WHEN r.status = 'SIN_VALIDAR' THEN 0.25 " +
                 "ELSE 0.0 END)) " +
            "FROM ReportEntity r " +
            "WHERE r.clusterId IS NOT NULL " +

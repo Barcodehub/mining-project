@@ -5,6 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Índice de reportes ciudadanos (CRI) de un clúster: media ponderada por estado de
+ * validación (VALIDADO 1.0, PENDIENTE 0.5, SIN_VALIDAR 0.25, RECHAZADO 0.0).
+ */
 @Getter
 @Setter
 @NoArgsConstructor

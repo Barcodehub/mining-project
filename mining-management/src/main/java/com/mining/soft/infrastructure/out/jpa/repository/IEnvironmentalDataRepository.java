@@ -13,15 +13,15 @@ public interface IEnvironmentalDataRepository
         extends JpaRepository<EnvironmentalDataEntity, Long>, EnvironmentalDataRepositoryCustom {
 
     /**
-     * ClusterAnalytics: cuenta mediciones totales y alertas críticas por cluster.
-     * "Crítico" = alertLevel = 'CRITICO' (calculado por AlertScoringService).
+     * SAI por clúster: mediciones clasificadas (excluye INDETERMINADO), en ALERTA+CRITICO y en CRITICO.
      */
     @Query("SELECT new com.mining.soft.domain.model.ClusterAnalytics(" +
            "e.clusterId, " +
            "COUNT(e), " +
+           "SUM(CASE WHEN e.alertLevel IN ('ALERTA', 'CRITICO') THEN 1L ELSE 0L END), " +
            "SUM(CASE WHEN e.alertLevel = 'CRITICO' THEN 1L ELSE 0L END)) " +
            "FROM EnvironmentalDataEntity e " +
-           "WHERE e.clusterId IS NOT NULL " +
+           "WHERE e.clusterId IS NOT NULL AND e.alertLevel <> 'INDETERMINADO' " +
            "GROUP BY e.clusterId")
     List<ClusterAnalytics> getClusterAnalytics();
 }

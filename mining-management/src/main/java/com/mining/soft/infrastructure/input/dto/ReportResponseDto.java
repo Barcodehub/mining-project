@@ -12,4 +12,6 @@ public class ReportResponseDto extends PostResponseDto {
     private boolean validationRequested;
     private Long validatedBy;
     private LocalDateTime validatedAt;
+    /** EXACT para roles de validación; GRID_<grados>_DEG si la ubicación fue generalizada. */
+    private String locationPrecision;
 }

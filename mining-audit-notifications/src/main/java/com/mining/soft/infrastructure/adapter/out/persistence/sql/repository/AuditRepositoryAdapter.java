@@ -23,6 +23,10 @@ public class AuditRepositoryAdapter implements AuditRepositoryPort {
         return mapper.toDomain(entity);
     }
     @Override
+    public boolean exists(String entity, Long entityId, String action) {
+        return repository.existsByEntityAndEntityIdAndAction(entity, entityId, action);
+    }
+    @Override
     public List<AuditLog> findByFilters(Long userId, String action, LocalDateTime startDate, LocalDateTime endDate) {
         Specification<AuditLogEntity> spec = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();

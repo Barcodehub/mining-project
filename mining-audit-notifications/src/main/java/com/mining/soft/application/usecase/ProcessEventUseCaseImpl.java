@@ -23,7 +23,7 @@ public class ProcessEventUseCaseImpl implements ProcessEventUseCase {
         AuditLog auditLog = AuditLog.builder()
                 .userId(event.getUserId())
                 .action(event.getEventType())
-                .entity("REPORT_OR_COMMENT") // Genérico, puede ajustarse por tipo de evento
+                .entity("REPORT_OR_COMMENT") // GenÃ©rico, puede ajustarse por tipo de evento
                 .entityId(event.getEntityId())
                 .timestamp(event.getTimestamp() != null ? event.getTimestamp() : LocalDateTime.now())
                 .metadata(event.getMetadata())

@@ -3,4 +3,5 @@ import com.mining.soft.infrastructure.adapter.out.persistence.sql.entity.AuditLo
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 public interface SpringDataAuditRepository extends JpaRepository<AuditLogEntity, Long>, JpaSpecificationExecutor<AuditLogEntity> {
+    boolean existsByEntityAndEntityIdAndAction(String entity, Long entityId, String action);
 }

@@ -6,5 +6,6 @@ import java.util.Map;
 @Getter @Setter
 public class AdapterRequestDto {
     private String sensorType;
-    private Map<String, String> mapping;
+    /** Ruta (String) o {"path": ..., "factor": ...} para convertir unidades. */
+    private Map<String, Object> mapping;
 }

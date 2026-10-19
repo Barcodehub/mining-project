@@ -20,7 +20,8 @@ import java.time.LocalDateTime;
     @Index(name = "idx_env_alert_type",   columnList = "alert_type"),
     @Index(name = "idx_env_ph",           columnList = "ph"),
     @Index(name = "idx_env_redox",        columnList = "redox"),
-    @Index(name = "idx_env_data_source",  columnList = "data_source")
+    @Index(name = "idx_env_data_source",  columnList = "data_source"),
+    @Index(name = "idx_env_cyanide",      columnList = "cyanide")
 })
 @Getter @Setter
 public class EnvironmentalDataEntity {
@@ -42,13 +43,19 @@ public class EnvironmentalDataEntity {
     private String clusterId;
 
     // ── Fisicoquímicas básicas (OBLIGATORIAS) ──────────────────────────────
-    @Column(nullable = false)
+    private Double altitude;
+
+    @Column(name = "thermal_profile", length = 10)
+    private String thermalProfile;
+
+    @Column(name = "fish_predatory")
+    private Boolean fishPredatory;
+
+    // ── Fisicoquímicas in situ (opcionales: se guarda solo lo medido) ──────
     private Double ph;
 
-    @Column(nullable = false)
     private Double turbidity;
 
-    @Column(nullable = false)
     private Double temperature;
 
     // ── Geoquímicas avanzadas (OPCIONALES) ─────────────────────────────────
@@ -77,6 +84,10 @@ public class EnvironmentalDataEntity {
     @Column(name = "methylmercury")
     private Double methylmercury;
 
+    private Double cyanide;
+
+    private Double arsenic;
+
     // ── Scores de riesgo ────────────────────────────────────────────────────
     @Column(name = "human_risk_score")
     private Double humanRiskScore;
@@ -96,6 +107,12 @@ public class EnvironmentalDataEntity {
     @Column(name = "alert_type", length = 20)
     private String alertType;
 
+    @Column(name = "level_basis", length = 20)
+    private String levelBasis;
+
+    @Column(length = 500)
+    private String exceedances;
+
     // ── Metadatos de calidad de datos ──────────────────────────────────────
     @Column(name = "data_completeness")
     private Double dataCompleteness;
@@ -103,9 +120,21 @@ public class EnvironmentalDataEntity {
     @Column(name = "missing_fields", length = 500)
     private String missingFields;
 
+    @Column(name = "censored_fields", length = 500)
+    private String censoredFields;
+
+    @Column(name = "inconclusive_fields", length = 500)
+    private String inconclusiveFields;
+
+    @Column(name = "quality_flags", length = 1000)
+    private String qualityFlags;
+
     @Column(name = "data_source", length = 20)
     private String dataSource;
 
     @Column(nullable = false)
     private LocalDateTime timestamp;
+
+    @Column(name = "ingested_at")
+    private LocalDateTime ingestedAt;
 }

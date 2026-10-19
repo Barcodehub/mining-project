@@ -5,6 +5,7 @@ import com.mining.soft.domain.enums.ReportStatus;
 import com.mining.soft.infrastructure.input.dto.ReportResponseDto;
 import com.mining.soft.infrastructure.input.dto.ReportStatusRequestDto;
 import com.mining.soft.infrastructure.input.mapper.IPostDtoMapper;
+import com.mining.soft.infrastructure.privacy.ReportPrivacyFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -22,11 +23,12 @@ public class ReportController {
 
     private final IPostServicePort postServicePort;
     private final IPostDtoMapper postDtoMapper;
+    private final ReportPrivacyFilter reportPrivacy;
 
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     // Cache only when no filters are provided to avoid creating many cache keys for different filter combinations
-    @Cacheable(value = "reports", key = "'reports_all'", condition = "#status==null && #startDate==null && #endDate==null && #minLat==null && #maxLat==null && #minLng==null && #maxLng==null")
+    @Cacheable(value = "reports", key = "'reports_all_' + @reportPrivacy.privileged()", condition = "#status==null && #startDate==null && #endDate==null && #minLat==null && #maxLat==null && #minLng==null && #maxLng==null")
     public ResponseEntity<List<ReportResponseDto>> filterReports(
             @RequestParam(required = false) ReportStatus status,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
@@ -35,28 +37,28 @@ public class ReportController {
             @RequestParam(required = false) Double maxLat,
             @RequestParam(required = false) Double minLng,
             @RequestParam(required = false) Double maxLng) {
-        return ResponseEntity.ok(postDtoMapper.toReportResponseDtoList(
+        return ResponseEntity.ok(reportPrivacy.apply(postDtoMapper.toReportResponseDtoList(
                 postServicePort.filterReports(status, startDate, endDate, minLat, maxLat, minLng, maxLng)
-        ));
+        )));
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ReportResponseDto> getReportById(@PathVariable Long id) {
-        return ResponseEntity.ok(postDtoMapper.toReportResponseDto(postServicePort.getReportById(id)));
+        return ResponseEntity.ok(reportPrivacy.apply(postDtoMapper.toReportResponseDto(postServicePort.getReportById(id))));
     }
 
     @PatchMapping("/{id}/request-validation")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ReportResponseDto> requestValidation(@PathVariable Long id) {
-        return ResponseEntity.ok(postDtoMapper.toReportResponseDto(postServicePort.requestValidation(id)));
+        return ResponseEntity.ok(reportPrivacy.apply(postDtoMapper.toReportResponseDto(postServicePort.requestValidation(id))));
     }
 
     @PatchMapping("/{id}/status")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ReportResponseDto> changeStatus(@PathVariable Long id, @RequestBody ReportStatusRequestDto request) {
-        return ResponseEntity.ok(postDtoMapper.toReportResponseDto(
+        return ResponseEntity.ok(reportPrivacy.apply(postDtoMapper.toReportResponseDto(
                 postServicePort.changeReportStatus(id, request.getStatus(), request.getValidatorId())
-        ));
+        )));
     }
 }

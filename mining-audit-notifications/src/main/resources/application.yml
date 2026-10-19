@@ -37,6 +37,12 @@ spring:
       enabled: true
     health:
       show-details: always
+# Alertas ambientales: tópico, grupo de consumidores y usuarios de rol autoridad a notificar
+alertas:
+  topico: environmental-alerts
+  grupo: audit-notifications-alerts
+  concurrencia: 3
+  destinatarios: ${ALERT_RECIPIENTS:1}
 management:
   endpoints:
     web:
