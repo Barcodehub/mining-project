@@ -21,7 +21,7 @@ OUT = ROOT / "evaluacion/data/v2/inyeccion_eventos.json"
 
 # parámetro → valores inyectados (unidades canónicas), alrededor de los umbrales de la Tabla 1
 TARGETS = {
-    "hg_total": [0.5, 0.9, 1.1, 1.9, 2.1, 5.0, 20.0, 163.0],        # µg/L; 163 = máximo reportado en el Suratá (2022, prensa)
+    "hg_total": [0.5, 0.9, 1.1, 1.9, 2.1, 5.0, 20.0, 163.0],        # µg/L; 20 y 163 = valores de estrés sintéticos (no documentados)
     "cyanide": [0.03, 0.045, 0.055, 0.19, 0.21, 1.0, 3.14],          # mg/L; 3.14 = máximo real CDMB (La Baja)
     "arsenic": [0.005, 0.009, 0.011, 0.049, 0.051, 0.2],             # mg/L
     "ph": [7.0, 6.6, 6.4, 5.1, 4.9, 3.5, 2.78],                      # 2.78 = agua de mina en La Baja (Rincon-Vasquez 2025)
