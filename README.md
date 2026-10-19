@@ -10,6 +10,10 @@ classifies every measurement **at ingestion** against Colombian legal limits and
 criteria, and delivers Alert/Critical events through Apache Kafka to an idempotent audit-and-notification
 service that records the end-to-end latency.
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23485438.svg)](https://doi.org/10.5281/zenodo.23485438)
+
+Archived snapshot of tag `v2-paper`: [doi:10.5281/zenodo.23485438](https://doi.org/10.5281/zenodo.23485438) (all versions: [10.5281/zenodo.23485437](https://doi.org/10.5281/zenodo.23485437)).
+
 | Git tag | State |
 |---|---|
 | `v2-paper` | System and results reported in the article (this branch) |

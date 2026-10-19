@@ -4,6 +4,14 @@ title: "Event-driven early warning middleware for mining-related water contamina
 version: v2-paper
 date-released: 2026-10-19
 license: MIT
+doi: "10.5281/zenodo.23485438"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.23485438"
+    description: "Archived snapshot of tag v2-paper (version DOI)"
+  - type: doi
+    value: "10.5281/zenodo.23485437"
+    description: "All versions (concept DOI)"
 repository-code: "https://github.com/Barcodehub/mining-project"
 authors:
   - family-names: "Barco Cardenas"
