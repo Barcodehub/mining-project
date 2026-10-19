@@ -198,7 +198,7 @@ def fig_map(raw, canon, cat):
     ax.set_xlabel("Longitude (°)")
     ax.set_ylabel("Latitude (°)")
     ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.13), ncol=4, frameon=False, columnspacing=0.8,
-              handletextpad=0.2, title="Worst alert level per station (CDMB 2024–2025, CORPONOR 2025)",
+              handletextpad=0.2, title="Worst alert level per station (CDMB and CORPONOR, 2025)",
               title_fontsize=7)
     ax.text(-72.86, 7.43, "California–Vetas\nmining district", fontsize=6, color="#c51b8a")
     save_fig(fig, "F2_mapa_estaciones")
@@ -239,7 +239,7 @@ def v2_injection(R, pol):
         left = np.zeros(len(targets))
         for o in outcomes:
             vals = np.array([res[sysn][t].get(o, 0) / max(1, sum(res[sysn][t].values())) for t in targets]) * 100
-            ax.barh(labels, vals, left=left, color=colors[o], label=o.replace("_", " ").lower())
+            ax.barh(labels, vals, left=left, color=colors[o], label={"OK": "Correct", "MASKED": "Masked", "FLOOR_VIOLATION": "Floor violation", "FALSE_ALARM": "False alarm", "REJECTED": "Rejected"}[o])
             left += vals
         ax.set_title(f"System {sysn}")
         ax.set_xlim(0, 100)
@@ -337,7 +337,7 @@ def v3_montecarlo(pol, n_rep, cache=None):
     keys = list(out.keys())
     data = [np.array(out[k]["rho"], dtype=float)[~np.isnan(np.array(out[k]["rho"], dtype=float))] for k in keys]
     ax.boxplot(data, tick_labels=["Aligned", "Null", "Noise\n10%", "Noise\n20%", "Noise\n30%", "Noise\n50%"],
-               showfliers=False, widths=0.6)
+               showfliers=False, widths=0.6, medianprops={"color": "k", "linewidth": 1.2})
     ax.axhline(0, color="k", lw=0.5, ls=":")
     ax.set_ylabel("Spearman ρ (SAI vs CRI)")
     ax.set_ylim(-1.05, 1.05)
