@@ -42,7 +42,10 @@ public class JwtTokenValidator {
         List<GrantedAuthority> authorities = Collections.singletonList(
                 new SimpleGrantedAuthority("ROLE_" + role));
 
-        return new UsernamePasswordAuthenticationToken(email, null, authorities);
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(email, null, authorities);
+        // El id del usuario firmado en el token identifica al validador sin depender del cuerpo de la petición
+        authentication.setDetails(claims.get("userId", Long.class));
+        return authentication;
     }
 
     private SecretKey getSigningKey() {

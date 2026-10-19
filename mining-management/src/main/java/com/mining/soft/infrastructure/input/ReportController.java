@@ -11,6 +11,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -55,10 +56,13 @@ public class ReportController {
     }
 
     @PatchMapping("/{id}/status")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ReportResponseDto> changeStatus(@PathVariable Long id, @RequestBody ReportStatusRequestDto request) {
+    // Solo los roles validadores deciden VALIDADO/RECHAZADO (los mismos que ven la ubicación exacta)
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','MODERADOR')")
+    public ResponseEntity<ReportResponseDto> changeStatus(@PathVariable Long id, @RequestBody ReportStatusRequestDto request,
+                                                          Authentication authentication) {
+        Long validatorId = authentication.getDetails() instanceof Long tokenUserId ? tokenUserId : request.getValidatorId();
         return ResponseEntity.ok(reportPrivacy.apply(postDtoMapper.toReportResponseDto(
-                postServicePort.changeReportStatus(id, request.getStatus(), request.getValidatorId())
+                postServicePort.changeReportStatus(id, request.getStatus(), validatorId)
         )));
     }
 }

@@ -2,10 +2,10 @@
 
 -- Roles del sistema
 INSERT INTO roles (id, name, description) VALUES
-(1, 'ADMINISTRADOR', 'Administrador de la plataforma de plazoleta de comidas'),
-(2, 'INGENIERO', 'Propietario de un restaurante'),
-(3, 'MODERADOR', 'Empleado de un restaurante'),
-(4, 'CLIENTE', 'Cliente de la plazoleta de comidas')
+(1, 'ADMINISTRADOR', 'Administrador de la plataforma'),
+(2, 'INGENIERO', 'Ingeniero o técnico ambiental (sensores y adaptadores)'),
+(3, 'MODERADOR', 'Validador de reportes ciudadanos'),
+(4, 'CLIENTE', 'Ciudadano que reporta')
 ON CONFLICT (name) DO NOTHING;
 
 -- Crear usuario administrador inicial

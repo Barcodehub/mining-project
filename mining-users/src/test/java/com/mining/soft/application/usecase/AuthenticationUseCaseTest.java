@@ -1,4 +1,4 @@
-package com.mining.soft.domain.usecase;
+package com.mining.soft.application.usecase;
 
 import com.mining.soft.domain.model.RoleModel;
 import com.mining.soft.domain.model.auth.AuthResponse;

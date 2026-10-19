@@ -11,6 +11,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -36,6 +37,8 @@ public class EnvironmentalDataController {
     }
 
     @PostMapping
+    // Ingesta: cuentas de pasarela de sensores / laboratorio (rol INGENIERO) y administradores
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','INGENIERO')")
     @CacheEvict(value = {"environmental-data", "environmental-data-aggregate"}, allEntries = true,
             condition = "#root.target.cacheEvictOnWrite")
     public ResponseEntity<EnvironmentalData> processSensorData(@RequestBody SensorDataRequestDto request) {

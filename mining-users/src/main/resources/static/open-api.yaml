@@ -338,9 +338,6 @@ components:
           type: string
           description: Descripción del objeto
           example: "email@email.com"
-        restaurantWorkId:
-          type: integer
-          format: int64
         phoneNumber:
           type: string
           description: Número de teléfono del usuario

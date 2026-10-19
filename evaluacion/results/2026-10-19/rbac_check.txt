@@ -1,0 +1,14 @@
+CLIENTE ve ubicación: 7.335 -72.945 | validatorId en respuesta: None
+OK   CLIENTE crea reporte: HTTP 201 (esperado 201)
+OK   CLIENTE solicita validación: HTTP 200 (esperado 200)
+OK   CLIENTE valida (debe negarse): HTTP 403 (esperado 403)
+OK   INGENIERO valida (debe negarse): HTTP 403 (esperado 403)
+OK   MODERADOR valida: HTTP 200 (esperado 200)
+OK   CLIENTE ingiere medición (debe negarse): HTTP 403 (esperado 403)
+OK   INGENIERO ingiere medición: HTTP 201 (esperado 201)
+OK   CLIENTE registra adapter (debe negarse): HTTP 403 (esperado 403)
+OK   INGENIERO registra adapter: HTTP 201 (esperado 201)
+OK   MODERADOR consulta auditoría (debe negarse): HTTP 403 (esperado 403)
+OK   ADMINISTRADOR consulta auditoría: HTTP 200 (esperado 200)
+OK   validated_by = id del token del MODERADOR (3), no el 999 del cuerpo: HTTP 3 (esperado 3)
+todas OK

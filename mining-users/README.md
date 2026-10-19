@@ -2,7 +2,7 @@
 <div align="center">
 <h3 align="center">Mining Project - USERS MICROSERVICE</h3>
   <p align="center">
-    Microservicio de gestión de usuarios y autenticación para el sistema de plazoleta de comidas. Maneja la creación de usuarios con diferentes roles, autenticación JWT y validaciones de permisos.
+    Microservicio de identidad y autenticación del middleware de alerta temprana de contaminación hídrica por minería. Maneja usuarios con roles, emisión de JWT y validaciones de permisos.
   </p>
 </div>
 
@@ -17,17 +17,19 @@
 
 ## Descripción General
 
-Este microservicio es el núcleo de autenticación y autorización del [sistema de plazoleta de comidas]((https://github.com/Barcodehub/foodcourt)). Es responsable de:
+Este microservicio es el núcleo de identidad del middleware (ver el [README raíz](../README.md)). Es responsable de:
 
 - **Gestión de usuarios**: Creación, consulta y listado de usuarios con validaciones de negocio
 - **Autenticación**: Login con JWT (JSON Web Tokens) para sesiones seguras
 - **Autorización**: Validación de roles y permisos jerárquicos
 - **Validación de identidad**: Verificación de documentos únicos, emails válidos y mayoría de edad
 - **Roles soportados**:
-  - `ADMINISTRADOR`: Puede crear usuarios INGENIERO
-  - `INGENIERO`: Puede crear usuarios MODERADOR  
-  - `MODERADOR`: Personal de restaurantes
-  - `CLIENTE`: Usuarios finales que realizan pedidos
+  - `ADMINISTRADOR`: administra la plataforma, consulta la auditoría y crea usuarios INGENIERO
+  - `INGENIERO`: registra adapters e ingiere mediciones (pasarelas de sensores y laboratorio); crea usuarios MODERADOR
+  - `MODERADOR`: valida o rechaza reportes ciudadanos y ve su ubicación exacta
+  - `CLIENTE`: ciudadano que se registra por `/users/public` y crea reportes
+
+  La autorización de cada operación la aplica `mining-management` a partir del rol y el `userId` firmados en el token.
 
 ### Arquitectura
 
@@ -53,7 +55,7 @@ src/
 
 ### Microservicio Principal
 
-[FoodCourt](https://github.com/Barcodehub/foodcourt)
+[`mining-management`](../mining-management/README.md)
 
 
 ## Endpoints Implementados
@@ -66,7 +68,7 @@ Iniciar sesión y obtener token JWT.
 **Request Body:**
 ```json
 {
-  "email": "admin@foodcourt.com",
+  "email": "admin@admin.com",
   "password": "admin123"
 }
 ```
@@ -77,7 +79,7 @@ Iniciar sesión y obtener token JWT.
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
   "userId": 1,
   "role": "ADMINISTRADOR",
-  "email": "admin@foodcourt.com"
+  "email": "admin@admin.com"
 }
 ```
 
@@ -147,7 +149,7 @@ Listar usuarios (paginado).
       "id": 1,
       "name": "Admin",
       "lastName": "User",
-      "email": "admin@foodcourt.com",
+      "email": "admin@admin.com",
       "role": "ADMINISTRADOR"
     }
   ],
@@ -174,7 +176,7 @@ Obtener usuario por ID.
     "lastName": "User",
     "documentNumber": "1234567890",
     "phoneNumber": "+573001234567",
-    "email": "admin@foodcourt.com",
+    "email": "admin@admin.com",
     "role": "ADMINISTRADOR"
   }
 }
@@ -242,7 +244,7 @@ start build/reports/jacoco/test/html/index.html
 1. **Clonar el repositorio**
    ```bash
    git clone <repository-url>
-   cd foodCourt-users
+   cd mining-project/mining-users
    ```
 
 2. **Crear base de datos en PostgreSQL**
@@ -294,10 +296,10 @@ start build/reports/jacoco/test/html/index.html
 - Ejecutar el archivo **init-roles.sql** en tu base de datos para crear los roles iniciales y autoinsertar el usuario administrador
 ```sql
 INSERT INTO roles (id, name, description) VALUES
-                                              (1, 'ADMINISTRADOR', 'Administrador de la plataforma de plazoleta de comidas'),
-                                              (2, 'INGENIERO', 'Propietario de un restaurante'),
-                                              (3, 'MODERADOR', 'Empleado de un restaurante'),
-                                              (4, 'CLIENTE', 'Cliente de la plazoleta de comidas')
+                                              (1, 'ADMINISTRADOR', 'Administrador de la plataforma'),
+                                              (2, 'INGENIERO', 'Ingeniero o técnico ambiental (sensores y adaptadores)'),
+                                              (3, 'MODERADOR', 'Validador de reportes ciudadanos'),
+                                              (4, 'CLIENTE', 'Ciudadano que reporta')
     ON CONFLICT (name) DO NOTHING;
 
 -- Crear usuario administrador inicial
@@ -323,6 +325,8 @@ SELECT setval('roles_id_seq', 4, true);
 - Email: admin@admin.com
 - Contraseña: Admin123
 
+Solo para uso local: cambie esta contraseña y el secreto JWT antes de cualquier despliegue real.
+
 ---
 
 ### Seguridad
@@ -347,7 +351,7 @@ El microservicio usa JWT para autenticación y autorización:
 
 ## Autor
 
-**Brayan Barco**
+**Brayan Alexander Barco Cardenas** — [ORCID 0009-0006-0332-7625](https://orcid.org/0009-0006-0332-7625)
 
 
 

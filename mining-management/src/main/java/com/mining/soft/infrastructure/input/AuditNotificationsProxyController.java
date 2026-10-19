@@ -68,7 +68,7 @@ public class AuditNotificationsProxyController {
     }
 
     @GetMapping("/audit")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     public ResponseEntity<Object> getAuditLogs(@RequestParam Map<String, String> params,
                                                @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorization) {
         return withAuthorization(restClient.get()
