@@ -1,0 +1,10 @@
+T1 umbrales
+V1 reales
+F2 mapa
+V2 inyección
+H3 fidelidad
+Rendimiento
+Sensibilidad
+Contraste externo
+V3 Monte Carlo (1000)
+listo
