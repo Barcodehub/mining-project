@@ -25,27 +25,43 @@ El dataset fue generado mediante un modelo de **clusters geográficos con distri
 | N2  | Cuenca Alta Río Zulia         | Normal      | (8.42, -72.38)       | 100       |
 | N3  | Zona Rural Pamplona           | Normal      | (7.55, -72.20)       | 70        |
 
-#### Variables generadas
+#### Variables generadas (modelo científico fraccionado)
 
-| Campo          | Zonas Contaminadas | Zonas Normales   |
-|----------------|-------------------|-----------------|
-| `mercurio_ppm` | 0.65 – 1.50       | 0.00 – 0.28     |
-| `ph`           | 4.0 – 6.0         | 6.2 – 7.8       |
-| `turbidez_ntu` | 30 – 120          | 1 – 20          |
-| `temperatura`  | 24 – 32 °C        | 14 – 25 °C      |
+| Campo (unidad)               | Descripción breve                                         |
+|-----------------------------|-----------------------------------------------------------|
+| `hg_dissolved` (µg/L)       | Mercurio disuelto en columna de agua                      |
+| `hg_total` (µg/L)           | Mercurio total medido en el agua (dissolved + particulado)|
+| `hg_sediment` (mg/kg)       | Mercurio en sedimento (peso seco)                         |
+| `hg_fish` (mg/kg)           | Mercurio en tejido de peces (peso húmedo)                |
+| `methylmercury` (µg/L)      | Fracción metilada en agua (MeHg)                          |
+| `ph` (unidades)             | Acidez/alkalinidad del agua                               |
+| `redox` (mV)                | Potencial redox (Eh) — indicador de condiciones reductoras|
+| `organic_carbon` (%)        | Carbono orgánico total — favorece actividad microbiana     |
+| `dissolved_oxygen` (mg/L)   | Oxígeno disuelto — respuesta de estrés para la biota      |
+| `turbidity` (NTU)           | Turbidez — material particulado en suspensión             |
+| `temperature` (°C)          | Temperatura del agua                                       |
 
+Estas variables se generan de forma correlacionada (no independientes): el generador aplica heurísticas de partición agua–sedimento, una fórmula de metilación dependiente de pH, Eh y carbono orgánico, y una regla de biomagnificación para estimar Hg en peces a partir de MeHg en agua.
 #### Metodología de generación
 
 Cada variable se generó con distribución normal truncada `N(μ, σ)` donde `μ = (min + max) / 2` y `σ = (max - min) / 4`, lo que garantiza que el 95 % de los valores quede dentro del rango biológicamente plausible. Se aplicó la función **Fisher-Yates** para mezclar los registros y eliminar artefactos de ordenación.
 
-**Niveles de alerta derivados:**
+**Sistema de alertas (scoring multidimensional)**
 
-```
-CRITICO   → mercurio > 0.8  AND  pH < 6.0
-ALERTA    → mercurio > 0.5  OR   pH < 6.5
-PRECAUCION→ mercurio > 0.3  OR   pH < 7.0
-NORMAL    → resto de casos
-```
+En lugar de reglas binarias simples, el sistema implementa un *scoring* multidimensional que calcula tres índices normalizados en [0.0, 1.0]:
+
+- Riesgo Humano — evalúa exposición por ingestión (Hg en peces mg/kg, Hg disuelto µg/L, MeHg µg/L).
+- Riesgo Ecológico — evalúa impacto sobre biota y sedimentos (Hg en sedimento mg/kg, Hg total, oxígeno disuelto).
+- Riesgo Geoquímico — evalúa potencial futuro de metilación (pH, redox, carbono orgánico).
+
+Cada índice se calcula comparando las variables contra umbrales leídos desde `config-ambiental.yaml` (no constants hardcodeadas). El score total es la suma ponderada de los tres índices usando `pesos-score` en la configuración. El resultado final se mapea a niveles discretos:
+
+- CRITICO: total >= 0.75
+- ALERTA: total >= 0.50
+- PRECAUCION: total >= 0.25
+- NORMAL: total < 0.25
+
+Los umbrales por variable (ej.: `hg_dissolved.alerta`, `hg_fish.critico`, `hg_sediment.pel`) están en `config-ambiental.yaml` y pueden actualizarse por región sin recompilar.
 
 **Resultado estadístico:**
 
@@ -133,27 +149,48 @@ Ambos flujos requieren autenticación JWT previa contra `mining-users` (puerto 8
     "deviceId": "SENSOR-C1-001",
     "latitude": 8.076432,
     "longitude": -72.821957,
-    "ph": 4.87,
-    "mercury": 1.2341,
+    "clusterId": "C1",
+    "ph": 5.12,
+    "hg_dissolved": 2.345678,
+    "hg_total": 25.4321,
+    "hg_sediment": 0.8123,
+    "methylmercury": 0.003456,
+    "hg_fish": 0.3456,
     "turbidity": 87.3,
     "temperature": 28.4,
+    "redox": -85.0,
+    "dissolved_oxygen": 2.14,
+    "organic_carbon": 3.45,
     "timestamp": "2026-04-19T14:32:00Z"
   }
 }
 ```
 
-**Respuesta 201 Created:**
+**Respuesta 201 Created (ejemplo):**
 ```json
 {
   "id": 1042,
   "deviceId": "SENSOR-C1-001",
   "latitude": 8.076432,
   "longitude": -72.821957,
-  "ph": 4.87,
-  "mercury": 1.2341,
+  "clusterId": "C1",
+  "ph": 5.12,
+  "hgDissolved": 2.345678,
+  "hgTotal": 25.4321,
+  "hgSediment": 0.8123,
+  "methylmercury": 0.003456,
+  "hgFish": 0.3456,
   "turbidity": 87.3,
   "temperature": 28.4,
-  "timestamp": "2026-04-19T14:32:00Z"
+  "redox": -85.0,
+  "dissolvedOxygen": 2.14,
+  "organicCarbon": 3.45,
+  "humanRiskScore": 0.86,
+  "ecologicalRiskScore": 0.92,
+  "geochemicalRiskScore": 0.80,
+  "totalRiskScore": 0.87,
+  "alertLevel": "CRITICO",
+  "timestamp": "2026-04-19T14:32:00"
 }
 ```
 
@@ -576,6 +613,155 @@ La correlación estadística entre denuncias ciudadanas y mediciones instrumenta
 Las limitaciones identificadas (escalabilidad horizontal, ausencia de caché, correlación no causal) no invalidan los hallazgos; al contrario, definen una agenda de investigación clara para trabajos futuros, que incluyen la integración de análisis de clustering geoespacial (DBSCAN/K-Means) sobre datos de mediciones, la incorporación de modelos predictivos para detección de zonas de riesgo, y el diseño de mecanismos de protección de identidad para denunciantes en zonas de alto conflicto.
 
 Este sistema representa un **paso inicial y técnicamente fundamentado** hacia la construcción de infraestructura digital de gobernanza ambiental en territorios afectados por minería ilegal, con potencial de replicación en otras regiones del país bajo el marco del Sistema Nacional de Información Ambiental (SNIA) del IDEAM.
+
+---
+
+## 9. CONFIGURACIÓN Y LÓGICA DE ALERTAS — DOCUMENTACIÓN TÉCNICA
+
+En esta sección se documenta con detalle cómo funciona `config-ambiental.yaml`, cómo se mapea a Java, qué hace exactamente `AlertScoringService`, cómo probar cambios y recomendaciones de calibración científica.
+
+### 9.1 Estructura y significado de `config-ambiental.yaml`
+
+Ubicación: `mining-management/src/main/resources/config-ambiental.yaml`
+
+- `ambiental.region` / `version`: metadatos.
+- Umbrales por variable (ejemplos y unidades en el archivo):
+  - `hg-disuelto` (µg/L): `alerta`, `critico`.
+  - `hg-total` (µg/L): `alerta`, `critico`.
+  - `metilmercurio` (µg/L): `alerta`, `critico`.
+  - `hg-sedimento`: `tel`, `pel` (mg/kg).
+  - `hg-peces` (mg/kg): `alerta`, `critico`.
+  - `ph`: `minimo`, `optimo-min`, `optimo-max`, `critico-bajo`.
+  - `redox`: `critico-bajo` (mV), `alerta-bajo` (mV).
+  - `oxigeno-disuelto` (mg/L): `alerta`, `critico`.
+  - `carbono-organico` (%): `alto` — umbral que incrementa metilación.
+  - `turbidez`, `temperatura` con sus umbrales.
+- `pesos-score`: pesos que deben sumar 1.0 para combinar los índices (riesgo humano, ecológico, geoquímico).
+- `baf`: factor de bioacumulación (BAF) por defecto usado para conversión MeHg→Hg en peces.
+
+Notas prácticas:
+- Las unidades en YAML son la fuente de verdad. Asegúrese de editar valores con las mismas unidades.
+- Cambiar estos valores requiere reiniciar la aplicación si no está implementada la recarga dinámica.
+
+### 9.2 Mapeo en Java: `AmbientalConfig` (binding Spring Boot)
+
+Clase: `com.mining.soft.infrastructure.configuration.AmbientalConfig`
+
+- Se carga automáticamente desde YAML con `@ConfigurationProperties(prefix = "ambiental")`.
+- Contiene clases internas `Threshold`, `SedimentoThreshold`, `PhThreshold`, `RedoxThreshold`, `PesosScore` que exponen los valores al resto de la aplicación.
+- `AlertScoringService` inyecta `AmbientalConfig` para leer umbrales en tiempo de ejecución.
+
+Limitación actual:
+- Lectura desde YAML requiere reinicio para aplicar cambios. La migración crea una tabla `config_parametros` (ver migración V2) que puede usarse como alternativa para parámetros dinámicos, pero la aplicación no recarga esa tabla automáticamente a menos que se implemente lógica adicional.
+
+### 9.3 Cómo probar y cambiar umbrales (pasos prácticos)
+
+1) Editar YAML y reiniciar (desarrollo):
+
+```powershell
+cd C:\Users\BRAYAN\Desktop\ins\project-mineria\mining-management
+.\gradlew bootRun
+# editar mining-management/src/main/resources/config-ambiental.yaml
+# reiniciar la app para que los nuevos umbrales sean efectivos
+```
+
+2) Usar la tabla SQL `config_parametros` (alternativa):
+
+La migración `V2__environmental_data_scientific_model.sql` crea `config_parametros`. Para cambiar desde SQL:
+
+```sql
+UPDATE config_parametros
+SET valor_alerta = 1.2, valor_critico = 2.5, updated_at = now()
+WHERE region = 'Norte de Santander' AND parametro = 'hg_dissolved';
+```
+
+Nota: para que la app use esos valores en tiempo de ejecución es necesario implementar: a) lecturas periódicas desde DB, o b) endpoint admin `/admin/config/refresh` que recargue configuración y rehidrate `AmbientalConfig`.
+
+3) Probar ingestión con `curl` (ejemplo):
+
+```bash
+TOKEN=$(curl -s -X POST http://localhost:8082/api/v1/auth/login -H 'Content-Type: application/json' -d '{"email":"sensor_system@mining.co","password":"SensorPass123!"}' | jq -r '.token')
+
+curl -s -X POST http://localhost:8081/api/v1/environmental-data \
+  -H "Authorization: Bearer $TOKEN" \
+  -H 'Content-Type: application/json' \
+  -d @payload.json
+
+# donde payload.json contiene el body de ejemplo del §2.3
+```
+
+### 9.4 Detalle técnico de `AlertScoringService` (algoritmo)
+
+Archivo: `mining-management/src/main/java/.../AlertScoringService.java`
+
+Resumen: calcula tres scores en [0,1] y combina con pesos configurables.
+
+- Riesgo Humano (`humanRisk`): enfocado en ingestión (peces y agua).
+  - Si `hgFish >= cfg.hgPeces.critico` → score = 1.0
+  - else if `hgFish >= cfg.hgPeces.alerta` → score = 0.6
+  - Si `hgDissolved >= cfg.hgDisuelto.critico` → score = 1.0 (se prioriza max)
+  - else if `hgDissolved >= cfg.hgDisuelto.alerta` → score = 0.5
+  - Si `methylmercury >= cfg.metilmercurio.critico` → score = 0.9
+  - else if `methylmercury >= cfg.metilmercurio.alerta` → score = 0.5
+  - Se retorna el máximo entre las condiciones (Math.max) para reflejar el peor indicador.
+
+- Riesgo Ecológico (`ecologicalRisk`): foco en sedimento, total y DO.
+  - Si `hgSediment >= cfg.hgSedimento.pel` → score = 1.0
+  - else if `hgSediment >= cfg.hgSedimento.tel` → score = 0.5
+  - Si `hgTotal >= cfg.hgTotal.critico` → score = max(score, 0.8)
+  - else if `hgTotal >= cfg.hgTotal.alerta` → score = max(score, 0.4)
+  - Si `dissolvedOxygen <= cfg.oxigenoDisuelto.critico` → score = max(score, 0.7)
+  - else if `dissolvedOxygen <= cfg.oxigenoDisuelto.alerta` → score = max(score, 0.3)
+
+- Riesgo Geoquímico (`geochemicalRisk`): potencial de metilación futura.
+  - `phCritico = d.ph < cfg.ph.criticoBajo`
+  - `redoxBajo = d.redox < cfg.redox.criticoBajo`
+  - `redoxAlerta = d.redox < cfg.redox.alertaBajo`
+  - `cocAlto = d.organicCarbon > cfg.carbonoOrganico`
+  - Si `phCritico && redoxBajo` → score = 1.0
+  - else if `phCritico || redoxBajo` → score = 0.7
+  - else if `redoxAlerta` → score = 0.4
+  - Si `cocAlto` → score = min(1.0, score + 0.2)
+
+- Score total y nivel discreto:
+  - `total = pesoHumano*human + pesoEcologico*eco + pesoGeo*geo`
+  - `CRITICO` si total >= 0.75; `ALERTA` si >= 0.50; `PRECAUCION` si >= 0.25; `NORMAL` si < 0.25
+
+### 9.5 Ejemplo numérico (rápido)
+
+Datos de ejemplo:
+- `hgFish = 0.35 mg/kg` (cfg alerta=0.3, critico=0.5) → contribuye 0.6 al humanRisk
+- `hgDissolved = 1.2 µg/L` (cfg alerta=1.0, critico=2.0) → contribuye 0.5 al humanRisk
+- `methylmercury = 0.8 µg/L` (alerta=0.5, critico=1.0) → contribuye 0.5
+=> `humanRisk = max(0.6,0.5,0.5) = 0.6`
+
+- `hgSediment = 0.20 mg/kg` (TEL=0.17,PEL=0.48) → eco >= 0.5
+- `dissolvedOxygen = 3.0 mg/L` (alerta=4.0,critico=2.0) → eco = max(0.5,0.3) = 0.5
+=> `ecologicalRisk = 0.5`
+
+- `pH = 5.2` (critico-bajo=5.5) y `redox = -50 mV` (critico-bajo=0) → geo = 1.0
+
+Pesos por defecto: humano 0.45, ecologico 0.35, geo 0.20
+`total = 0.45*0.6 + 0.35*0.5 + 0.20*1.0 = 0.645` → `ALERTA` (0.5 ≤ total < 0.75)
+
+### 9.6 Realismo científico: qué es fiable y qué requiere calibración
+
+- Relaciones cualitativas implementadas (pH↓ → MeHg↑, Eh negativo → MeHg↑, C_org↑ → MeHg↑, mayor partición a sedimento) son consistentes con la literatura.
+- Limitaciones cuantitativas:
+  - Constantes empíricas (`baseCoef` para MeHg, `sedimentNorm`, `BAF`) requieren calibración con datos de la región para producir magnitudes realistas.
+  - Conversión entre µg/L (agua) y mg/kg (sedimento) es aproximada; en estudios reales se usa conocimiento de concentración de sólidos suspendidos, densidad de sedimento y fracción orgánica para estimar Kd.
+
+Recomendaciones científicas:
+1. Recolectar muestras empíricas (agua, sedimento, peces) y calcular relaciones Hg_total⇄Hg_sediment y BAF locales.
+2. Ajustar `baseCoef`, `sedimentNorm` y `baf` en `config-ambiental.yaml` o en un archivo de calibración y documentar la fuente y la fecha.
+3. Añadir incertidumbre (bandas, desviaciones) en datos sintéticos si se usarán en publicaciones.
+
+### 9.7 Pasos recomendados (prioritarios)
+
+1. Mover el cálculo de `methylmercury` y `hg_fish` al backend (Service Layer) para uniformidad y control: así el backend calcula MeHg a partir de `hg_total`, `ph`, `redox`, `organic_carbon` y `baf` (desde config) y garantiza consistencia entre ingestas.
+2. Añadir validaciones en el controlador para comprobar coherencia (ej.: `hg_dissolved <= hg_total`, rangos plausibles) y devolver errores 422 cuando no concuerden.
+3. Exponer endpoint admin para recargar parámetros desde DB o YAML (`/admin/config/refresh`) y/o implementar lectura periódica de `config_parametros`.
+4. Parametrizar constantes del generador (`baseCoef`, `sedimentNorm`, `BAF`) en un archivo `evaluacion/config/generator-config.json` para permitir pruebas de sensibilidad.
 
 ---
 

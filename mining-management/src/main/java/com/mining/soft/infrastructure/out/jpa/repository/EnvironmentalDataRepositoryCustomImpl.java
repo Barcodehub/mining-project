@@ -1,7 +1,7 @@
 package com.mining.soft.infrastructure.out.jpa.repository;
 
-import com.mining.soft.domain.model.EnvironmentalDataFilter;
 import com.mining.soft.domain.model.EnvironmentalAggregate;
+import com.mining.soft.domain.model.EnvironmentalDataFilter;
 import com.mining.soft.infrastructure.out.jpa.entity.EnvironmentalDataEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -18,59 +18,102 @@ import java.util.List;
 public class EnvironmentalDataRepositoryCustomImpl implements EnvironmentalDataRepositoryCustom {
 
     @PersistenceContext
-    private EntityManager entityManager;
+    private EntityManager em;
 
-    private List<Predicate> buildPredicates(CriteriaBuilder cb, Root<EnvironmentalDataEntity> root, EnvironmentalDataFilter filter) {
-        List<Predicate> predicates = new ArrayList<>();
-        if (filter.getStartDate() != null) predicates.add(cb.greaterThanOrEqualTo(root.get("timestamp"), filter.getStartDate()));
-        if (filter.getEndDate() != null) predicates.add(cb.lessThanOrEqualTo(root.get("timestamp"), filter.getEndDate()));
-        if (filter.getMinLat() != null) predicates.add(cb.greaterThanOrEqualTo(root.get("latitude"), filter.getMinLat()));
-        if (filter.getMaxLat() != null) predicates.add(cb.lessThanOrEqualTo(root.get("latitude"), filter.getMaxLat()));
-        if (filter.getMinLng() != null) predicates.add(cb.greaterThanOrEqualTo(root.get("longitude"), filter.getMinLng()));
-        if (filter.getMaxLng() != null) predicates.add(cb.lessThanOrEqualTo(root.get("longitude"), filter.getMaxLng()));
-        if (filter.getPhMin() != null) predicates.add(cb.greaterThanOrEqualTo(root.get("ph"), filter.getPhMin()));
-        if (filter.getPhMax() != null) predicates.add(cb.lessThanOrEqualTo(root.get("ph"), filter.getPhMax()));
-        if (filter.getTurbidityMin() != null) predicates.add(cb.greaterThanOrEqualTo(root.get("turbidity"), filter.getTurbidityMin()));
-        if (filter.getTurbidityMax() != null) predicates.add(cb.lessThanOrEqualTo(root.get("turbidity"), filter.getTurbidityMax()));
-        if (filter.getTemperatureMin() != null) predicates.add(cb.greaterThanOrEqualTo(root.get("temperature"), filter.getTemperatureMin()));
-        if (filter.getTemperatureMax() != null) predicates.add(cb.lessThanOrEqualTo(root.get("temperature"), filter.getTemperatureMax()));
-        if (filter.getMercuryMin() != null) predicates.add(cb.greaterThanOrEqualTo(root.get("mercury"), filter.getMercuryMin()));
-        if (filter.getMercuryMax() != null) predicates.add(cb.lessThanOrEqualTo(root.get("mercury"), filter.getMercuryMax()));
-        return predicates;
+    private List<Predicate> buildPredicates(CriteriaBuilder cb,
+                                            Root<EnvironmentalDataEntity> root,
+                                            EnvironmentalDataFilter f) {
+        List<Predicate> p = new ArrayList<>();
+
+        if (f.getStartDate() != null)         p.add(cb.greaterThanOrEqualTo(root.get("timestamp"), f.getStartDate()));
+        if (f.getEndDate() != null)           p.add(cb.lessThanOrEqualTo(root.get("timestamp"), f.getEndDate()));
+        if (f.getMinLat() != null)            p.add(cb.greaterThanOrEqualTo(root.get("latitude"), f.getMinLat()));
+        if (f.getMaxLat() != null)            p.add(cb.lessThanOrEqualTo(root.get("latitude"), f.getMaxLat()));
+        if (f.getMinLng() != null)            p.add(cb.greaterThanOrEqualTo(root.get("longitude"), f.getMinLng()));
+        if (f.getMaxLng() != null)            p.add(cb.lessThanOrEqualTo(root.get("longitude"), f.getMaxLng()));
+        if (f.getPhMin() != null)             p.add(cb.greaterThanOrEqualTo(root.get("ph"), f.getPhMin()));
+        if (f.getPhMax() != null)             p.add(cb.lessThanOrEqualTo(root.get("ph"), f.getPhMax()));
+        if (f.getTurbidityMin() != null)      p.add(cb.greaterThanOrEqualTo(root.get("turbidity"), f.getTurbidityMin()));
+        if (f.getTurbidityMax() != null)      p.add(cb.lessThanOrEqualTo(root.get("turbidity"), f.getTurbidityMax()));
+        if (f.getTemperatureMin() != null)    p.add(cb.greaterThanOrEqualTo(root.get("temperature"), f.getTemperatureMin()));
+        if (f.getTemperatureMax() != null)    p.add(cb.lessThanOrEqualTo(root.get("temperature"), f.getTemperatureMax()));
+        if (f.getRedoxMin() != null)          p.add(cb.greaterThanOrEqualTo(root.get("redox"), f.getRedoxMin()));
+        if (f.getRedoxMax() != null)          p.add(cb.lessThanOrEqualTo(root.get("redox"), f.getRedoxMax()));
+        if (f.getDissolvedOxygenMin() != null) p.add(cb.greaterThanOrEqualTo(root.get("dissolvedOxygen"), f.getDissolvedOxygenMin()));
+        if (f.getOrganicCarbonMin() != null)  p.add(cb.greaterThanOrEqualTo(root.get("organicCarbon"), f.getOrganicCarbonMin()));
+        if (f.getHgDisssolvedMin() != null)   p.add(cb.greaterThanOrEqualTo(root.get("hgDissolved"), f.getHgDisssolvedMin()));
+        if (f.getHgTotalMin() != null)        p.add(cb.greaterThanOrEqualTo(root.get("hgTotal"), f.getHgTotalMin()));
+        if (f.getHgSedimentMin() != null)     p.add(cb.greaterThanOrEqualTo(root.get("hgSediment"), f.getHgSedimentMin()));
+        if (f.getHgFishMin() != null)         p.add(cb.greaterThanOrEqualTo(root.get("hgFish"), f.getHgFishMin()));
+        if (f.getMethylmercuryMin() != null)  p.add(cb.greaterThanOrEqualTo(root.get("methylmercury"), f.getMethylmercuryMin()));
+        if (f.getAlertLevel() != null)        p.add(cb.equal(root.get("alertLevel"), f.getAlertLevel()));
+        if (f.getAlertType() != null)         p.add(cb.equal(root.get("alertType"), f.getAlertType()));
+
+        return p;
     }
 
     @Override
     public List<EnvironmentalDataEntity> findFiltered(EnvironmentalDataFilter filter) {
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<EnvironmentalDataEntity> query = cb.createQuery(EnvironmentalDataEntity.class);
-        Root<EnvironmentalDataEntity> root = query.from(EnvironmentalDataEntity.class);
-
-        query.where(buildPredicates(cb, root, filter).toArray(new Predicate[0]));
-        query.orderBy(cb.desc(root.get("timestamp")));
-        return entityManager.createQuery(query).setMaxResults(100).getResultList();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<EnvironmentalDataEntity> q = cb.createQuery(EnvironmentalDataEntity.class);
+        Root<EnvironmentalDataEntity> root = q.from(EnvironmentalDataEntity.class);
+        q.where(buildPredicates(cb, root, filter).toArray(new Predicate[0]));
+        q.orderBy(cb.desc(root.get("timestamp")));
+        return em.createQuery(q).setMaxResults(10).getResultList();
     }
 
     @Override
     public EnvironmentalAggregate getAggregated(EnvironmentalDataFilter filter) {
-        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Tuple> query = cb.createTupleQuery();
-        Root<EnvironmentalDataEntity> root = query.from(EnvironmentalDataEntity.class);
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Tuple> q = cb.createTupleQuery();
+        Root<EnvironmentalDataEntity> root = q.from(EnvironmentalDataEntity.class);
+        q.where(buildPredicates(cb, root, filter).toArray(new Predicate[0]));
 
-        query.where(buildPredicates(cb, root, filter).toArray(new Predicate[0]));
-
-        query.multiselect(
-                cb.avg(root.get("ph")), cb.min(root.get("ph")), cb.max(root.get("ph")),
-                cb.avg(root.get("turbidity")), cb.min(root.get("turbidity")), cb.max(root.get("turbidity")),
-                cb.avg(root.get("temperature")), cb.min(root.get("temperature")), cb.max(root.get("temperature")),
-                cb.avg(root.get("mercury")), cb.min(root.get("mercury")), cb.max(root.get("mercury"))
+        q.multiselect(
+            // pH
+            cb.avg(root.get("ph")), cb.min(root.get("ph")), cb.max(root.get("ph")),
+            // turbidity
+            cb.avg(root.get("turbidity")), cb.min(root.get("turbidity")), cb.max(root.get("turbidity")),
+            // temperature
+            cb.avg(root.get("temperature")), cb.min(root.get("temperature")), cb.max(root.get("temperature")),
+            // redox
+            cb.avg(root.get("redox")), cb.min(root.get("redox")), cb.max(root.get("redox")),
+            // dissolved oxygen
+            cb.avg(root.get("dissolvedOxygen")), cb.min(root.get("dissolvedOxygen")), cb.max(root.get("dissolvedOxygen")),
+            // hg dissolved
+            cb.avg(root.get("hgDissolved")), cb.min(root.get("hgDissolved")), cb.max(root.get("hgDissolved")),
+            // hg total
+            cb.avg(root.get("hgTotal")), cb.min(root.get("hgTotal")), cb.max(root.get("hgTotal")),
+            // hg sediment
+            cb.avg(root.get("hgSediment")), cb.min(root.get("hgSediment")), cb.max(root.get("hgSediment")),
+            // hg fish
+            cb.avg(root.get("hgFish")), cb.min(root.get("hgFish")), cb.max(root.get("hgFish")),
+            // methylmercury
+            cb.avg(root.get("methylmercury")), cb.min(root.get("methylmercury")), cb.max(root.get("methylmercury")),
+            // scores
+            cb.avg(root.get("totalRiskScore")),
+            cb.sum(cb.<Long>selectCase()
+                .when(cb.equal(root.get("alertLevel"), "CRITICO"), 1L).otherwise(0L)),
+            cb.sum(cb.<Long>selectCase()
+                .when(cb.equal(root.get("alertLevel"), "ALERTA"), 1L).otherwise(0L))
         );
 
-        Tuple tuple = entityManager.createQuery(query).getSingleResult();
+        Tuple t = em.createQuery(q).getSingleResult();
+        int i = 0;
         return new EnvironmentalAggregate(
-                tuple.get(0, Double.class), tuple.get(1, Double.class), tuple.get(2, Double.class),
-                tuple.get(3, Double.class), tuple.get(4, Double.class), tuple.get(5, Double.class),
-                tuple.get(6, Double.class), tuple.get(7, Double.class), tuple.get(8, Double.class),
-                tuple.get(9, Double.class), tuple.get(10, Double.class), tuple.get(11, Double.class)
+            t.get(i++, Double.class), t.get(i++, Double.class), t.get(i++, Double.class),
+            t.get(i++, Double.class), t.get(i++, Double.class), t.get(i++, Double.class),
+            t.get(i++, Double.class), t.get(i++, Double.class), t.get(i++, Double.class),
+            t.get(i++, Double.class), t.get(i++, Double.class), t.get(i++, Double.class),
+            t.get(i++, Double.class), t.get(i++, Double.class), t.get(i++, Double.class),
+            t.get(i++, Double.class), t.get(i++, Double.class), t.get(i++, Double.class),
+            t.get(i++, Double.class), t.get(i++, Double.class), t.get(i++, Double.class),
+            t.get(i++, Double.class), t.get(i++, Double.class), t.get(i++, Double.class),
+            t.get(i++, Double.class), t.get(i++, Double.class), t.get(i++, Double.class),
+            t.get(i++, Double.class), t.get(i++, Double.class), t.get(i++, Double.class),
+            t.get(i++, Double.class),
+            t.get(i++, Long.class),
+            t.get(i, Long.class)
         );
     }
 }

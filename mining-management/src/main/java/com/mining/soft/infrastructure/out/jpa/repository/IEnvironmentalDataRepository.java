@@ -9,12 +9,17 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface IEnvironmentalDataRepository extends JpaRepository<EnvironmentalDataEntity, Long>, EnvironmentalDataRepositoryCustom {
+public interface IEnvironmentalDataRepository
+        extends JpaRepository<EnvironmentalDataEntity, Long>, EnvironmentalDataRepositoryCustom {
 
+    /**
+     * ClusterAnalytics: cuenta mediciones totales y alertas críticas por cluster.
+     * "Crítico" = alertLevel = 'CRITICO' (calculado por AlertScoringService).
+     */
     @Query("SELECT new com.mining.soft.domain.model.ClusterAnalytics(" +
            "e.clusterId, " +
            "COUNT(e), " +
-           "SUM(CASE WHEN e.mercury > 0.3 AND e.ph < 7.0 THEN 1 ELSE 0 END)) " +
+           "SUM(CASE WHEN e.alertLevel = 'CRITICO' THEN 1L ELSE 0L END)) " +
            "FROM EnvironmentalDataEntity e " +
            "WHERE e.clusterId IS NOT NULL " +
            "GROUP BY e.clusterId")

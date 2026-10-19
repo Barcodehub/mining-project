@@ -23,7 +23,7 @@ public class AuditNotificationsProxyController {
 
     public AuditNotificationsProxyController(
             RestClient.Builder restClientBuilder,
-            @Value("${mining.audit-notifications.url:http://localhost:8082}") String auditNotificationsServiceUrl) {
+            @Value("${mining.audit-notifications.url:http://:8082}") String auditNotificationsServiceUrl) {
         this.restClient = restClientBuilder.baseUrl(auditNotificationsServiceUrl).build();
     }
 

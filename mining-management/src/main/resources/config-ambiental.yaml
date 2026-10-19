@@ -1,0 +1,67 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# CONFIGURACIÓN DE PARÁMETROS AMBIENTALES - ESTÁNDAR REGIONAL
+# Región: Norte de Santander, Colombia
+# Marco legal: Decreto 1076/2015, IDEAM, OMS 2022
+# Cambiar estos valores adapta TODO el sistema de alertas sin recompilar.
+# ─────────────────────────────────────────────────────────────────────────────
+ambiental:
+  region: "Norte de Santander - Colombia"
+  version: "1.0.0"
+
+  # ── MERCURIO EN AGUA (µg/L) ─────────────────────────────────────────────
+  hg-disuelto:
+    alerta: 1.0       # OMS agua potable: 1 µg/L
+    critico: 2.0      # IDEAM cuerpos de agua: 2 µg/L
+
+  hg-total:
+    alerta: 1.0
+    critico: 2.0
+
+  metilmercurio:
+    alerta: 0.5       # EPA criterion: 0.5 µg/L
+    critico: 1.0
+
+  # ── MERCURIO EN SEDIMENTO (mg/kg peso seco) ──────────────────────────────
+  hg-sedimento:
+    tel: 0.17         # Threshold Effect Level (CCME)
+    pel: 0.48         # Probable Effect Level (CCME)
+
+  # ── MERCURIO EN PECES (mg/kg peso húmedo) ────────────────────────────────
+  hg-peces:
+    alerta: 0.3       # FDA advisory
+    critico: 0.5      # FDA action level / OMS
+
+  # ── VARIABLES GEOQUÍMICAS ────────────────────────────────────────────────
+  ph:
+    minimo: 6.5       # Rango óptimo ecosistemas acuáticos
+    optimo-min: 6.5
+    optimo-max: 8.5
+    critico-bajo: 5.5 # Umbral metilación acelerada
+
+  redox:
+    critico-bajo: 0   # mV — por debajo: ambiente reductor (metilación activa)
+    alerta-bajo: 100  # mV
+
+  oxigeno-disuelto:
+    critico: 2.0      # mg/L — hipoxia severa
+    alerta: 4.0       # mg/L — estrés para biota
+
+  carbono-organico:
+    alto: 5.0         # % — favorece metilación bacteriana
+
+  turbidez:
+    alerta: 50.0      # NTU
+    critico: 100.0    # NTU
+
+  temperatura:
+    alerta: 30.0      # °C
+    critico: 35.0     # °C
+
+  # ── PESOS PARA SCORE TOTAL (deben sumar 1.0) ────────────────────────────
+  pesos-score:
+    riesgo-humano: 0.45
+    riesgo-ecologico: 0.35
+    riesgo-geoquimico: 0.20
+
+  # ── FACTOR DE BIOACUMULACIÓN (BAF) ──────────────────────────────────────
+  baf: 100000.0       # 10^5 — valor típico para peces piscívoros

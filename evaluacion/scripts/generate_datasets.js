@@ -1,7 +1,14 @@
 /**
- * GENERADOR DE DATASETS SIMULADOS
+ * GENERADOR DE DATASETS SIMULADOS - VERSIÓN CIENTÍFICAMENTE HONESTA
  * Sistema de Monitoreo Ambiental y Denuncias de Minería Ilegal
  * Norte de Santander, Colombia
+ *
+ * FILOSOFÍA:
+ * - Solo generamos datos que un sensor o laboratorio MEDIRÍA
+ * - NO inventamos metilmercurio ni mercurio en peces
+ * - Campos opcionales (hg_sediment, methylmercury, hg_fish) solo en 30% de registros
+ *   de zonas contaminadas (simulando análisis de laboratorio)
+ * - Correlaciones realistas entre variables medibles
  *
  * Genera:
  *  - 1000 mediciones ambientales con clusters geográficos realistas
@@ -18,92 +25,90 @@ const DEFAULT_SENSOR_TYPE = 'multi_parameter_sensor';
 // Basado en zonas reales de Norte de Santander con actividad minera ilegal
 // ─────────────────────────────────────────────────────────────────────────────
 const CLUSTERS = [
-  // ── ZONAS CONTAMINADAS (Alta actividad minera ilegal) ──────────────────────
+  // Contaminated
   {
-    id: 'C1',
-    nombre: 'Cuenca Río Catatumbo',
-    tipo: 'contaminada',
-    lat: 8.08, lng: -72.82,
-    radio: 0.18,           // ~20 km de radio
-    peso: 220,             // número de mediciones en este cluster
-    mercurio: { min: 0.82, max: 1.50 },
-    ph:       { min: 4.0,  max: 5.5  },
+    id: 'C1', nombre: 'Cuenca Río Catatumbo', tipo: 'contaminada', lat: 8.08, lng: -72.82,
+    radio: 0.18, peso: 220,
+    hg_total: { min: 10, max: 80 },        // µg/L
+    ph:       { min: 4.5,  max: 6.0  },
     turbidez: { min: 45,   max: 120  },
     temp:     { min: 26,   max: 32   },
+    redox:    { min: -150, max: 50 },     // mV
+    organic_carbon: { min: 2.5, max: 6.0 }, // %
+    dissolved_oxygen: { min: 0.5, max: 4.0 }, // mg/L
+    labAnalysisProb: 0.35  // 35% de registros tienen datos de laboratorio
   },
   {
-    id: 'C2',
-    nombre: 'Serranía del Perijá Sur',
-    tipo: 'contaminada',
-    lat: 7.72, lng: -72.65,
-    radio: 0.14,
-    peso: 180,
-    mercurio: { min: 0.75, max: 1.30 },
-    ph:       { min: 4.3,  max: 5.8  },
+    id: 'C2', nombre: 'Serranía del Perijá Sur', tipo: 'contaminada', lat: 7.72, lng: -72.65,
+    radio: 0.14, peso: 180,
+    hg_total: { min: 8, max: 60 },
+    ph:       { min: 4.8,  max: 6.0  },
     turbidez: { min: 38,   max: 95   },
     temp:     { min: 24,   max: 30   },
+    redox:    { min: -120, max: 80 },
+    organic_carbon: { min: 2.0, max: 5.0 },
+    dissolved_oxygen: { min: 1.0, max: 5.0 },
+    labAnalysisProb: 0.30
   },
   {
-    id: 'C3',
-    nombre: 'Zona Minera Tibú-El Tarra',
-    tipo: 'contaminada',
-    lat: 8.35, lng: -72.72,
-    radio: 0.12,
-    peso: 150,
-    mercurio: { min: 0.65, max: 1.20 },
-    ph:       { min: 4.5,  max: 6.0  },
+    id: 'C3', nombre: 'Zona Minera Tibú-El Tarra', tipo: 'contaminada', lat: 8.35, lng: -72.72,
+    radio: 0.12, peso: 150,
+    hg_total: { min: 5, max: 40 },
+    ph:       { min: 4.8,  max: 6.2  },
     turbidez: { min: 30,   max: 80   },
     temp:     { min: 25,   max: 31   },
+    redox:    { min: -100, max: 100 },
+    organic_carbon: { min: 1.5, max: 4.5 },
+    dissolved_oxygen: { min: 1.5, max: 5.5 },
+    labAnalysisProb: 0.25
   },
-  // ── ZONA DE TRANSICIÓN (Contaminación moderada) ────────────────────────────
-  {
-    id: 'T1',
-    nombre: 'Área Periurbana Cúcuta Norte',
-    tipo: 'transicion',
-    lat: 7.93, lng: -72.51,
-    radio: 0.10,
-    peso: 120,
-    mercurio: { min: 0.28, max: 0.65 },
-    ph:       { min: 5.8,  max: 6.8  },
+
+  // Transition
+  { id: 'T1', nombre: 'Área Periurbana Cúcuta Norte', tipo: 'transicion', lat: 7.93, lng: -72.51,
+    radio: 0.10, peso: 120,
+    hg_total: { min: 1.0, max: 8.0 },
+    ph:       { min: 5.5,  max: 7.0  },
     turbidez: { min: 15,   max: 45   },
     temp:     { min: 22,   max: 28   },
+    redox:    { min: -50,  max: 150 },
+    organic_carbon: { min: 1.0, max: 3.0 },
+    dissolved_oxygen: { min: 2.0, max: 6.0 },
+    labAnalysisProb: 0.15
   },
-  // ── ZONAS NORMALES (Sin actividad minera significativa) ────────────────────
-  {
-    id: 'N1',
-    nombre: 'Reserva Natural Salazar de las Palmas',
-    tipo: 'normal',
-    lat: 7.77, lng: -72.30,
-    radio: 0.15,
-    peso: 160,
-    mercurio: { min: 0.00, max: 0.18 },
+
+  // Normal
+  { id: 'N1', nombre: 'Reserva Natural Salazar de las Palmas', tipo: 'normal', lat: 7.77, lng: -72.30,
+    radio: 0.15, peso: 160,
+    hg_total: { min: 0.01, max: 0.5 },
     ph:       { min: 6.5,  max: 7.8  },
     turbidez: { min: 2,    max: 18   },
     temp:     { min: 18,   max: 25   },
+    redox:    { min: 100,  max: 300 },
+    organic_carbon: { min: 0.2, max: 1.5 },
+    dissolved_oxygen: { min: 6.0, max: 9.0 },
+    labAnalysisProb: 0.05
   },
-  {
-    id: 'N2',
-    nombre: 'Cuenca Alta Río Zulia',
-    tipo: 'normal',
-    lat: 8.42, lng: -72.38,
-    radio: 0.13,
-    peso: 100,
-    mercurio: { min: 0.00, max: 0.22 },
+  { id: 'N2', nombre: 'Cuenca Alta Río Zulia', tipo: 'normal', lat: 8.42, lng: -72.38,
+    radio: 0.13, peso: 100,
+    hg_total: { min: 0.01, max: 0.8 },
     ph:       { min: 6.8,  max: 7.5  },
     turbidez: { min: 1,    max: 12   },
     temp:     { min: 17,   max: 23   },
+    redox:    { min: 100,  max: 350 },
+    organic_carbon: { min: 0.3, max: 1.8 },
+    dissolved_oxygen: { min: 6.0, max: 8.5 },
+    labAnalysisProb: 0.05
   },
-  {
-    id: 'N3',
-    nombre: 'Zona Rural Pamplona',
-    tipo: 'normal',
-    lat: 7.55, lng: -72.20,
-    radio: 0.10,
-    peso: 70,
-    mercurio: { min: 0.00, max: 0.28 },
+  { id: 'N3', nombre: 'Zona Rural Pamplona', tipo: 'normal', lat: 7.55, lng: -72.20,
+    radio: 0.10, peso: 70,
+    hg_total: { min: 0.01, max: 1.2 },
     ph:       { min: 6.2,  max: 7.6  },
     turbidez: { min: 3,    max: 20   },
     temp:     { min: 14,   max: 20   },
+    redox:    { min: 80,   max: 300 },
+    organic_carbon: { min: 0.4, max: 2.0 },
+    dissolved_oxygen: { min: 5.5, max: 8.0 },
+    labAnalysisProb: 0.05
   },
 ];
 
@@ -111,7 +116,6 @@ const CLUSTERS = [
 // UTILIDADES
 // ─────────────────────────────────────────────────────────────────────────────
 
-/** Número aleatorio dentro del rango [min, max] con distribución gaussiana truncada */
 function gaussianRand(mean, std) {
   let u = 0, v = 0;
   while (u === 0) u = Math.random();
@@ -131,7 +135,6 @@ function round(val, decimals) {
   return parseFloat(val.toFixed(decimals));
 }
 
-/** Fecha aleatoria dentro de los últimos 6 meses */
 function randomDate() {
   const now   = new Date('2026-04-19T00:00:00');
   const sixMo = new Date(now);
@@ -140,7 +143,6 @@ function randomDate() {
   return new Date(ts).toISOString();
 }
 
-/** Genera una posición dentro del radio del cluster usando distribución normal */
 function positionInCluster(cluster) {
   const stdLat = cluster.radio * 0.5;
   const stdLng = cluster.radio * 0.5;
@@ -161,41 +163,75 @@ function generateMediciones() {
   for (const cluster of CLUSTERS) {
     for (let i = 0; i < cluster.peso; i++) {
       const pos = positionInCluster(cluster);
+      const hasLabData = Math.random() < cluster.labAnalysisProb;
 
-      // Valores químicos con leve correlación intra-cluster (misma fuente hídrica)
-      const mercurio = round(clamp(
-        gaussianRand(
-          (cluster.mercurio.min + cluster.mercurio.max) / 2,
-          (cluster.mercurio.max - cluster.mercurio.min) / 4
-        ), cluster.mercurio.min, cluster.mercurio.max
-      ), 4);
+      // Fisicoquímicas y geoquímica con correlaciones (no independientes)
+      const hgTotal = round(clamp(
+        gaussianRand((cluster.hg_total.min + cluster.hg_total.max) / 2,
+          (cluster.hg_total.max - cluster.hg_total.min) / 4),
+        cluster.hg_total.min, cluster.hg_total.max), 4); // µg/L
 
       const ph = round(clamp(
-        gaussianRand(
-          (cluster.ph.min + cluster.ph.max) / 2,
-          (cluster.ph.max - cluster.ph.min) / 4
-        ), cluster.ph.min, cluster.ph.max
-      ), 2);
+        gaussianRand((cluster.ph.min + cluster.ph.max) / 2,
+          (cluster.ph.max - cluster.ph.min) / 4),
+        cluster.ph.min, cluster.ph.max), 2);
 
       const turbidez = round(clamp(
-        gaussianRand(
-          (cluster.turbidez.min + cluster.turbidez.max) / 2,
-          (cluster.turbidez.max - cluster.turbidez.min) / 4
-        ), cluster.turbidez.min, cluster.turbidez.max
-      ), 1);
+        gaussianRand((cluster.turbidez.min + cluster.turbidez.max) / 2,
+          (cluster.turbidez.max - cluster.turbidez.min) / 4),
+        cluster.turbidez.min, cluster.turbidez.max), 1);
 
       const temperatura = round(clamp(
-        gaussianRand(
-          (cluster.temp.min + cluster.temp.max) / 2,
-          (cluster.temp.max - cluster.temp.min) / 4
-        ), cluster.temp.min, cluster.temp.max
-      ), 1);
+        gaussianRand((cluster.temp.min + cluster.temp.max) / 2,
+          (cluster.temp.max - cluster.temp.min) / 4),
+        cluster.temp.min, cluster.temp.max), 1);
 
-      // Nivel de alerta derivado
-      let nivelAlerta = 'NORMAL';
-      if (mercurio > 0.8 && ph < 6.0)        nivelAlerta = 'CRITICO';
-      else if (mercurio > 0.5 || ph < 6.5)   nivelAlerta = 'ALERTA';
-      else if (mercurio > 0.3 || ph < 7.0)   nivelAlerta = 'PRECAUCION';
+      const redox = round(clamp(
+        gaussianRand((cluster.redox.min + cluster.redox.max) / 2,
+          (cluster.redox.max - cluster.redox.min) / 4),
+        cluster.redox.min, cluster.redox.max), 1); // mV
+
+      const organicCarbon = round(clamp(
+        gaussianRand((cluster.organic_carbon.min + cluster.organic_carbon.max) / 2,
+          (cluster.organic_carbon.max - cluster.organic_carbon.min) / 4),
+        cluster.organic_carbon.min, cluster.organic_carbon.max), 3); // %
+
+      const dissolvedOxygen = round(clamp(
+        gaussianRand((cluster.dissolved_oxygen.min + cluster.dissolved_oxygen.max) / 2,
+          (cluster.dissolved_oxygen.max - cluster.dissolved_oxygen.min) / 4),
+        cluster.dissolved_oxygen.min, cluster.dissolved_oxygen.max), 2); // mg/L
+
+      // Partición agua-sedimento: en zonas contaminadas más Hg va al sedimento
+      let fractionSediment = cluster.tipo === 'contaminada' ? randInRange(0.8, 0.95)
+                            : cluster.tipo === 'transicion' ? randInRange(0.6, 0.8)
+                            : randInRange(0.4, 0.65);
+
+      // Hg disuelto en agua (µg/L) - SIEMPRE se mide
+      const hgDissolved = round(Math.max(0, hgTotal * (1 - fractionSediment)), 6);
+
+      // Datos de laboratorio (OPCIONALES - solo si hasLabData = true)
+      let hgSediment = null;
+      let methylmercury = null;
+      let hgFish = null;
+
+      if (hasLabData) {
+        // Hg en sedimento (mg/kg)
+        const sedimentNorm = cluster.tipo === 'contaminada' ? 0.02 : cluster.tipo === 'transicion' ? 0.01 : 0.005;
+        hgSediment = round(hgTotal * fractionSediment * sedimentNorm, 4);
+
+        // Metilmercurio (µg/L) - medido por laboratorio
+        const phFactor = 1 + Math.max(0, (5.5 - ph)) * 0.25;
+        const redoxFactor = 1 + Math.max(0, -redox) / 200;
+        const baseCoef = 0.00001;
+        methylmercury = round(baseCoef * hgTotal * organicCarbon * phFactor * redoxFactor, 6);
+
+        // Hg en peces (mg/kg) - medido por laboratorio
+        const BAF = 100000;
+        hgFish = round(methylmercury * BAF / 1000.0, 4);
+      }
+
+      // Determinar fuente de datos
+      const dataSource = hasLabData ? 'MIXTO' : 'SENSOR';
 
       mediciones.push({
         id,
@@ -205,25 +241,34 @@ function generateMediciones() {
         tipo_zona: cluster.tipo,
         latitud: pos.lat,
         longitud: pos.lng,
+        // Fisicoquímicas básicas (SIEMPRE presentes)
         ph,
-        mercurio_ppm: mercurio,
         turbidez_ntu: turbidez,
         temperatura_c: temperatura,
-        nivel_alerta: nivelAlerta,
+        // Geoquímicas avanzadas (SIEMPRE presentes en este generador)
+        redox,
+        dissolved_oxygen: dissolvedOxygen,
+        organic_carbon: organicCarbon,
+        // Mercurio en agua (SIEMPRE presentes)
+        hg_dissolved: hgDissolved,
+        hg_total: hgTotal,
+        // Mercurio en otros compartimentos (OPCIONALES - solo laboratorio)
+        hg_sediment: hgSediment,
+        methylmercury: methylmercury,
+        hg_fish: hgFish,
+        // Metadatos
+        data_source: dataSource,
         fecha: randomDate(),
       });
       id++;
     }
   }
 
-  // Mezcla los registros para que no queden agrupados por cluster
   return shuffleArray(mediciones);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 2. GENERACIÓN DE DENUNCIAS (500 registros)
-// Más denuncias en zonas contaminadas, menos en zonas limpias.
-// Correlación espacial pero no perfecta (ruido realista).
 // ─────────────────────────────────────────────────────────────────────────────
 
 const DESCRIPCIONES_CONTAMINADA = [
@@ -247,13 +292,9 @@ const DESCRIPCIONES_NORMAL = [
   'Construcción sin permiso cerca a cuerpo de agua.',
 ];
 
-const ESTADOS = ['SIN_VALIDAR', 'PENDIENTE', 'VALIDADO', 'RECHAZADO'];
-
-// Distribución de estados según tipo de zona
 function randomEstado(tipo) {
   const r = Math.random();
   if (tipo === 'contaminada') {
-    // Más validados y pendientes en zonas contaminadas (evidencia más clara)
     if (r < 0.35) return 'VALIDADO';
     if (r < 0.60) return 'PENDIENTE';
     if (r < 0.85) return 'SIN_VALIDAR';
@@ -264,7 +305,6 @@ function randomEstado(tipo) {
     if (r < 0.75) return 'SIN_VALIDAR';
     return 'RECHAZADO';
   } else {
-    // Zonas normales: más rechazados y sin validar (menos evidencia)
     if (r < 0.10) return 'VALIDADO';
     if (r < 0.25) return 'PENDIENTE';
     if (r < 0.60) return 'SIN_VALIDAR';
@@ -272,15 +312,8 @@ function randomEstado(tipo) {
   }
 }
 
-// Distribución de denuncias por cluster (peso relativo)
 const DENUNCIAS_POR_CLUSTER = {
-  'C1': 130,   // zona más contaminada → más denuncias
-  'C2': 110,
-  'C3':  90,
-  'T1':  60,   // transición → moderado
-  'N1':  55,
-  'N2':  35,
-  'N3':  20,
+  'C1': 130, 'C2': 110, 'C3': 90, 'T1': 60, 'N1': 55, 'N2': 35, 'N3': 20,
 };
 
 function generateDenuncias() {
@@ -291,7 +324,6 @@ function generateDenuncias() {
     const cantidad = DENUNCIAS_POR_CLUSTER[cluster.id];
 
     for (let i = 0; i < cantidad; i++) {
-      // Posición: cerca al cluster pero con mayor dispersión que mediciones
       const clusterExpandido = { ...cluster, radio: cluster.radio * 1.3 };
       const pos = positionInCluster(clusterExpandido);
 
@@ -339,19 +371,26 @@ function toMedicionesApi(mediciones) {
       deviceId: m.device_id,
       latitude: m.latitud,
       longitude: m.longitud,
+      clusterId: m.cluster_id,
       ph: m.ph,
-      mercury: m.mercurio_ppm,
+      hg_dissolved: m.hg_dissolved,
+      hg_total: m.hg_total,
+      hg_sediment: m.hg_sediment,
+      methylmercury: m.methylmercury,
+      hg_fish: m.hg_fish,
       turbidity: m.turbidez_ntu,
       temperature: m.temperatura_c,
+      redox: m.redox,
+      dissolved_oxygen: m.dissolved_oxygen,
+      organic_carbon: m.organic_carbon,
       timestamp: m.fecha,
-      clusterId: m.cluster_id,
     },
     meta: {
       sourceId: m.id,
       clusterId: m.cluster_id,
       zonaNombre: m.zona_nombre,
       tipoZona: m.tipo_zona,
-      nivelAlerta: m.nivel_alerta,
+      dataSource: m.data_source,
     },
   }));
 }
@@ -383,9 +422,6 @@ function toDenunciasApi(denuncias) {
   }));
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// UTILIDAD: Mezcla aleatoria (Fisher-Yates)
-// ─────────────────────────────────────────────────────────────────────────────
 function shuffleArray(arr) {
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -395,54 +431,40 @@ function shuffleArray(arr) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// ESTADÍSTICAS DE VALIDACIÓN
+// ESTADÍSTICAS
 // ─────────────────────────────────────────────────────────────────────────────
 function printStats(mediciones, denuncias) {
   console.log('\n══════════════════════════════════════════════════');
   console.log('  ESTADÍSTICAS DE DATASETS GENERADOS');
   console.log('══════════════════════════════════════════════════');
 
-  // Mediciones por tipo
   const porTipo = {};
-  const alertas = {};
+  const porFuente = {};
   for (const m of mediciones) {
-    porTipo[m.tipo_zona]    = (porTipo[m.tipo_zona] || 0) + 1;
-    alertas[m.nivel_alerta] = (alertas[m.nivel_alerta] || 0) + 1;
+    porTipo[m.tipo_zona] = (porTipo[m.tipo_zona] || 0) + 1;
+    porFuente[m.data_source] = (porFuente[m.data_source] || 0) + 1;
   }
 
   console.log(`\n[MEDICIONES AMBIENTALES] Total: ${mediciones.length}`);
   console.log('  Por tipo de zona:');
   for (const [t, c] of Object.entries(porTipo)) console.log(`    ${t.padEnd(12)}: ${c}`);
-  console.log('  Por nivel de alerta:');
-  for (const [a, c] of Object.entries(alertas)) console.log(`    ${a.padEnd(12)}: ${c}`);
+  console.log('  Por fuente de datos:');
+  for (const [f, c] of Object.entries(porFuente)) console.log(`    ${f.padEnd(12)}: ${c}`);
 
-  const mercAvg = mediciones.reduce((s, m) => s + m.mercurio_ppm, 0) / mediciones.length;
-  const phAvg   = mediciones.reduce((s, m) => s + m.ph,          0) / mediciones.length;
-  console.log(`  Mercurio promedio : ${mercAvg.toFixed(4)} ppm`);
+  const conLabData = mediciones.filter(m => m.data_source === 'MIXTO').length;
+  console.log(`  Con datos de laboratorio: ${conLabData} (${((conLabData/mediciones.length)*100).toFixed(1)}%)`);
+
+  const hgTotalAvg = mediciones.reduce((s, m) => s + (m.hg_total || 0), 0) / mediciones.length;
+  const phAvg = mediciones.reduce((s, m) => s + m.ph, 0) / mediciones.length;
+  console.log(`  Hg total promedio : ${hgTotalAvg.toFixed(4)} µg/L`);
   console.log(`  pH promedio       : ${phAvg.toFixed(2)}`);
 
-  // Denuncias por estado
   const porEstado = {};
-  const denPorTipo = {};
-  for (const d of denuncias) {
-    porEstado[d.estado]       = (porEstado[d.estado] || 0) + 1;
-    denPorTipo[d.tipo_zona]   = (denPorTipo[d.tipo_zona] || 0) + 1;
-  }
+  for (const d of denuncias) porEstado[d.estado] = (porEstado[d.estado] || 0) + 1;
 
   console.log(`\n[DENUNCIAS] Total: ${denuncias.length}`);
   console.log('  Por estado:');
   for (const [e, c] of Object.entries(porEstado)) console.log(`    ${e.padEnd(12)}: ${c}`);
-  console.log('  Por tipo de zona:');
-  for (const [t, c] of Object.entries(denPorTipo)) console.log(`    ${t.padEnd(12)}: ${c}`);
-
-  // Correlación simple
-  const contDen = denuncias.filter(d => d.tipo_zona === 'contaminada').length;
-  const contPct = ((contDen / denuncias.length) * 100).toFixed(1);
-  const contMed = mediciones.filter(m => m.tipo_zona === 'contaminada').length;
-  console.log(`\n[CORRELACIÓN]`);
-  console.log(`  % denuncias en zonas contaminadas  : ${contPct}%`);
-  console.log(`  % mediciones en zonas contaminadas : ${((contMed / mediciones.length) * 100).toFixed(1)}%`);
-  console.log(`  Ratio denuncias/mediciones (cont.) : ${(contDen / contMed).toFixed(2)}`);
   console.log('══════════════════════════════════════════════════\n');
 }
 

@@ -10,7 +10,6 @@ import com.mining.soft.infrastructure.input.dto.PostRequestDto;
 import com.mining.soft.infrastructure.input.dto.PostResponseDto;
 import com.mining.soft.infrastructure.input.mapper.ICommentDtoMapper;
 import com.mining.soft.infrastructure.input.mapper.IPostDtoMapper;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
@@ -23,13 +22,19 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/api/v1/posts")
-@RequiredArgsConstructor
 public class PostController {
 
     private final IPostServicePort postServicePort;
     private final ICommentServicePort commentServicePort;
     private final IPostDtoMapper postDtoMapper;
     private final ICommentDtoMapper commentDtoMapper;
+
+    public PostController(IPostServicePort postServicePort, ICommentServicePort commentServicePort, IPostDtoMapper postDtoMapper, ICommentDtoMapper commentDtoMapper) {
+        this.postServicePort = postServicePort;
+        this.commentServicePort = commentServicePort;
+        this.postDtoMapper = postDtoMapper;
+        this.commentDtoMapper = commentDtoMapper;
+    }
 
     @PostMapping
     @PreAuthorize("isAuthenticated()")

@@ -1,11 +1,11 @@
 server:
-  port: 8082
+  port: 8083
 spring:
   application:
     name: mining-audit-notifications
   # Kafka Configuration
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: kafka:9092
     consumer:
       group-id: audit-notifications-group
       auto-offset-reset: earliest
@@ -16,10 +16,10 @@ spring:
   # MongoDB Configuration
   data:
     mongodb:
-      uri: mongodb://localhost:27017/mining_notifications
+      uri: mongodb://mongo:27017/mining_notifications
   # PostgreSQL Configuration
   datasource:
-    url: jdbc:postgresql://localhost:5432/mining_audit
+    url: jdbc:postgresql://postgres-audit:5432/mining_audit
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver

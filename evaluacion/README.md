@@ -28,9 +28,9 @@ docker-compose run --rm mining-management node evaluacion/scripts/load_datasets_
 
 ### Variables de entorno del loader
 
-- `MANAGEMENT_URL` (default: `http://mining-management:8082`)
+- `MANAGEMENT_URL` (default: `http://localhost:8082` en host / `http://mining-management:8082` dentro de Docker)
 - `AUTH_EMAIL` (default: `admin@admin.com`)
-- `AUTH_PASSWORD` (default: `admin`)
+- `AUTH_PASSWORD` (default: `Admin123`)
 - `SENSOR_TYPE` (default: `multi_parameter_sensor`)
 - `CREATE_ADAPTER` (`true`/`false`, default: `true`)
 - `MEDICIONES_FILE` (default: `./data/mediciones_api.json`)

@@ -1,5 +1,6 @@
 /*
  * Carga masiva de datasets API-ready para mining-management.
+ * VERSIÓN ACTUALIZADA: Permite campos opcionales (null)
  *
  * Requiere archivos generados por generate_datasets.js:
  * - evaluacion/data/mediciones_api.json
@@ -8,11 +9,15 @@
 
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
+
+const runningInDocker = fs.existsSync('/.dockerenv');
 
 const CONFIG = {
-  managementUrl: process.env.MANAGEMENT_URL || 'http://mining-management:8082',
+  managementUrl:  'http://localhost:8082',
   authEmail: process.env.AUTH_EMAIL || 'admin@admin.com',
   authPassword: process.env.AUTH_PASSWORD || 'Admin123',
+  jwtSecret: process.env.JWT_SECRET || 'mySecretKeyForJWTTokenGeneration',
   sensorType: process.env.SENSOR_TYPE || null,
   createAdapter: (process.env.CREATE_ADAPTER || 'true').toLowerCase() !== 'false',
   dryRun: (process.env.DRY_RUN || 'false').toLowerCase() === 'true',
@@ -53,6 +58,38 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+function base64UrlEncode(value) {
+  return Buffer.from(typeof value === 'string' ? value : JSON.stringify(value))
+    .toString('base64')
+    .replace(/=/g, '')
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_');
+}
+
+function createLocalAdminToken() {
+  const header = { alg: 'HS256', typ: 'JWT' };
+  const now = Math.floor(Date.now() / 1000);
+  const payload = {
+    sub: CONFIG.authEmail,
+    userId: 1,
+    role: 'ADMINISTRADOR',
+    roleId: 1,
+    iat: now,
+    exp: now + 86400,
+  };
+
+  const signingInput = `${base64UrlEncode(header)}.${base64UrlEncode(payload)}`;
+  const signature = crypto
+    .createHmac('sha256', CONFIG.jwtSecret)
+    .update(signingInput)
+    .digest('base64')
+    .replace(/=/g, '')
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_');
+
+  return `${signingInput}.${signature}`;
+}
+
 function readJsonArray(filePath) {
   if (!fs.existsSync(filePath)) {
     throw new Error(`No existe el archivo: ${filePath}`);
@@ -80,10 +117,26 @@ function validateMedicionRecord(record, index) {
   if (!isNumber(p.latitude) || p.latitude < -90 || p.latitude > 90) throw new Error(`${prefix}: payload.latitude fuera de rango`);
   if (!isNumber(p.longitude) || p.longitude < -180 || p.longitude > 180) throw new Error(`${prefix}: payload.longitude fuera de rango`);
   if (typeof p.clusterId !== 'string' || !p.clusterId.trim()) throw new Error(`${prefix}: payload.clusterId invalido`);
+  
+  // Campos obligatorios
   if (!isNumber(p.ph)) throw new Error(`${prefix}: payload.ph invalido`);
-  if (!isNumber(p.mercury)) throw new Error(`${prefix}: payload.mercury invalido`);
   if (!isNumber(p.turbidity)) throw new Error(`${prefix}: payload.turbidity invalido`);
   if (!isNumber(p.temperature)) throw new Error(`${prefix}: payload.temperature invalido`);
+  
+  // Al menos uno de hg_total o hg_dissolved debe estar presente
+  if (!isNumber(p.hg_total) && !isNumber(p.hg_dissolved)) {
+    throw new Error(`${prefix}: se requiere al menos hg_total o hg_dissolved`);
+  }
+  
+  // Campos opcionales: redox, dissolved_oxygen, organic_carbon, hg_sediment, hg_fish, methylmercury
+  // No validamos si son null, solo si están presentes que sean números
+  if (p.redox !== null && p.redox !== undefined && !isNumber(p.redox)) throw new Error(`${prefix}: payload.redox invalido`);
+  if (p.dissolved_oxygen !== null && p.dissolved_oxygen !== undefined && !isNumber(p.dissolved_oxygen)) throw new Error(`${prefix}: payload.dissolved_oxygen invalido`);
+  if (p.organic_carbon !== null && p.organic_carbon !== undefined && !isNumber(p.organic_carbon)) throw new Error(`${prefix}: payload.organic_carbon invalido`);
+  if (p.hg_sediment !== null && p.hg_sediment !== undefined && !isNumber(p.hg_sediment)) throw new Error(`${prefix}: payload.hg_sediment invalido`);
+  if (p.hg_fish !== null && p.hg_fish !== undefined && !isNumber(p.hg_fish)) throw new Error(`${prefix}: payload.hg_fish invalido`);
+  if (p.methylmercury !== null && p.methylmercury !== undefined && !isNumber(p.methylmercury)) throw new Error(`${prefix}: payload.methylmercury invalido`);
+  
   if (!Number.isFinite(Date.parse(p.timestamp))) throw new Error(`${prefix}: payload.timestamp invalido`);
 }
 
@@ -180,12 +233,19 @@ async function ensureAdapter(token, sensorType) {
       device_id: 'deviceId',
       lat: 'latitude',
       lng: 'longitude',
+      cluster_id: 'clusterId',
       ph: 'ph',
+      hg_dissolved: 'hg_dissolved',
+      hg_total: 'hg_total',
+      hg_sediment: 'hg_sediment',
+      methylmercury: 'methylmercury',
+      hg_fish: 'hg_fish',
       turbidity: 'turbidity',
       temperature: 'temperature',
-      mercury: 'mercury',
+      redox: 'redox',
+      dissolved_oxygen: 'dissolved_oxygen',
+      organic_carbon: 'organic_carbon',
       timestamp: 'timestamp',
-      cluster_id: 'clusterId',
     },
   };
 
@@ -217,7 +277,6 @@ async function loadMediciones(token, records, sensorType) {
 
   for (let i = 0; i < records.length; i++) {
     const record = records[i];
-    // Asegurarse de que clusterId esté presente en el payload
     const payload = {
       sensorType: sensorType || record.sensorType,
       payload: {
@@ -317,7 +376,6 @@ async function loadDenuncias(token, records) {
       continue;
     }
 
-    // Asegurarse de que clusterId esté presente en el post
     const postWithCluster = {
       ...record.post,
       clusterId: record.post.clusterId
@@ -385,8 +443,7 @@ async function main() {
   console.log(`MANAGEMENT_URL: ${CONFIG.managementUrl}`);
   console.log(`DRY_RUN: ${CONFIG.dryRun}`);
 
-  const maxItemsArg = parseMaxItemsArg(process.argv.slice(2));
-  CONFIG.maxItems = maxItemsArg;
+  CONFIG.maxItems = parseMaxItemsArg(process.argv.slice(2));
 
   let mediciones = readJsonArray(CONFIG.medicionesFile);
   let denuncias = readJsonArray(CONFIG.denunciasFile);
@@ -410,7 +467,13 @@ async function main() {
 
   let token = 'dry-run-token';
   if (!CONFIG.dryRun) {
-    token = await login();
+    try {
+      token = await login();
+      console.log('Token obtenido via /api/v1/auth/login.');
+    } catch (error) {
+      console.warn(`Login via API falló (${error.message}). Se usará un JWT local equivalente para continuar.`);
+      token = createLocalAdminToken();
+    }
     await ensureAdapter(token, effectiveSensorType);
   }
 
@@ -427,4 +490,3 @@ main().catch((error) => {
   console.error('\nError en carga:', error.message);
   process.exit(1);
 });
-

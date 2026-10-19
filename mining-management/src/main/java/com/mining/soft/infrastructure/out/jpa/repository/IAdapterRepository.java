@@ -7,4 +7,5 @@ import java.util.Optional;
 @Repository
 public interface IAdapterRepository extends JpaRepository<AdapterEntity, Long> {
     Optional<AdapterEntity> findBySensorType(String sensorType);
+    Optional<AdapterEntity> findFirstBySensorTypeOrderByCreatedAtDesc(String sensorType);
 }

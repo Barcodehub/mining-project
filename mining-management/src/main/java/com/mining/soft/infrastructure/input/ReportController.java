@@ -25,7 +25,8 @@ public class ReportController {
 
     @GetMapping
     @PreAuthorize("isAuthenticated()")
-    @Cacheable(value = "reports", key = "{#status, #startDate, #endDate, #minLat, #maxLat, #minLng, #maxLng}")
+    // Cache only when no filters are provided to avoid creating many cache keys for different filter combinations
+    @Cacheable(value = "reports", key = "'reports_all'", condition = "#status==null && #startDate==null && #endDate==null && #minLat==null && #maxLat==null && #minLng==null && #maxLng==null")
     public ResponseEntity<List<ReportResponseDto>> filterReports(
             @RequestParam(required = false) ReportStatus status,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,

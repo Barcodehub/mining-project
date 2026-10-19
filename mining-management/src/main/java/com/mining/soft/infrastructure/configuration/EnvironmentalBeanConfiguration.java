@@ -1,6 +1,7 @@
 package com.mining.soft.infrastructure.configuration;
 
 import com.mining.soft.application.api.IEnvironmentalDataServicePort;
+import com.mining.soft.application.service.AlertScoringService;
 import com.mining.soft.application.spi.IEnvironmentalDataPersistencePort;
 import com.mining.soft.application.usecase.EnvironmentalDataUseCase;
 import com.mining.soft.infrastructure.out.jpa.adapter.EnvironmentalDataJpaAdapter;
@@ -18,6 +19,7 @@ public class EnvironmentalBeanConfiguration {
     private final IEnvironmentalDataRepository dataRepository;
     private final IAdapterRepository adapterRepository;
     private final IEnvironmentalEntityMapper entityMapper;
+    private final AlertScoringService alertScoringService;
 
     @Bean
     public IEnvironmentalDataPersistencePort environmentalDataPersistencePort() {
@@ -26,6 +28,6 @@ public class EnvironmentalBeanConfiguration {
 
     @Bean
     public IEnvironmentalDataServicePort environmentalDataServicePort() {
-        return new EnvironmentalDataUseCase(environmentalDataPersistencePort());
+        return new EnvironmentalDataUseCase(environmentalDataPersistencePort(), alertScoringService);
     }
 }

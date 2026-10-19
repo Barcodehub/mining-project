@@ -59,6 +59,6 @@ public class ReportRepositoryCustomImpl implements ReportRepositoryCustom {
         query.where(predicates.toArray(new Predicate[0]));
         query.orderBy(cb.desc(root.get("createdAt")));
 
-        return entityManager.createQuery(query).setMaxResults(100).getResultList();
+        return entityManager.createQuery(query).setMaxResults(10).getResultList();
     }
 }

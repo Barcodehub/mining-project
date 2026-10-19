@@ -1,21 +1,13 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * SCRIPT DE PRUEBAS DE RENDIMIENTO - k6
+ * SCRIPT DE PRUEBAS DE RENDIMIENTO - k6 (VERSIÓN ACTUALIZADA)
  * Sistema de Monitoreo Ambiental y Denuncias de Minería Ilegal
  * Norte de Santander, Colombia
  *
- * Microservicio evaluado : mining-management (puerto 8081)
- * Microservicio de auth  : mining-users     (puerto 8082)
- *
- * Ejecutar:
- *   k6 run load_test.js
- *   k6 run --out influxdb=http://localhost:8086/k6 load_test.js   (con InfluxDB)
- *   k6 run --out json=results.json load_test.js                   (exportar JSON)
- *
- * Escenarios disponibles (cambiar ESCENARIO abajo):
- *   'bajo'  → 50 VU,  60s
- *   'medio' → 200 VU, 120s con ramp-up
- *   'alto'  → 500 VU, 180s con ramp-up + peak
+ * CAMBIOS:
+ * - Payloads realistas: 70% sensor básico, 30% con datos de laboratorio
+ * - Filtros por alertType (IMPACTO, RIESGO, MIXTO)
+ * - Contador de alertas usa alertLevel en vez de mercury
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
@@ -27,10 +19,11 @@ import { SharedArray } from 'k6/data';
 // ─────────────────────────────────────────────────────────────────────────────
 // CONFIGURACIÓN DE ENTORNO
 // ─────────────────────────────────────────────────────────────────────────────
-const BASE_URL_MANAGEMENT = __ENV.MANAGEMENT_URL || 'http://localhost:8080';
-const BASE_URL_AUTH       = __ENV.AUTH_URL       || 'http://localhost:8082';
-const ESCENARIO           = __ENV.ESCENARIO      || 'medio';  // bajo | medio | alto
+const BASE_URL_MANAGEMENT = __ENV.MANAGEMENT_URL || 'http://localhost:8082';
+const BASE_URL_AUTH       = __ENV.AUTH_URL       || 'http://localhost:8081';
+const ESCENARIO           = __ENV.ESCENARIO      || 'medio';
 const SENSOR_TYPE_ENV     = __ENV.SENSOR_TYPE    || 'multi_parameter_sensor';
+const CREATE_ADAPTER      = (__ENV.CREATE_ADAPTER || 'true').toLowerCase() !== 'false';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // MÉTRICAS PERSONALIZADAS
@@ -44,6 +37,8 @@ const postMedicionDur    = new Trend('post_medicion_duration_ms', true);
 const reportesCreados    = new Counter('reportes_creados_total');
 const medicionesCreadas  = new Counter('mediciones_creadas_total');
 const alertasCriticas    = new Counter('alertas_criticas_detectadas');
+const alertasImpacto     = new Counter('alertas_tipo_impacto');
+const alertasRiesgo      = new Counter('alertas_tipo_riesgo');
 
 // ─────────────────────────────────────────────────────────────────────────────
 // PERFILES DE CARGA POR ESCENARIO
@@ -196,6 +191,42 @@ function authHeaders(token) {
   return { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` };
 }
 
+function ensureAdapter(token) {
+  if (!CREATE_ADAPTER) return;
+
+  const mapping = {
+    device_id: 'deviceId',
+    lat: 'latitude',
+    lng: 'longitude',
+    cluster_id: 'clusterId',
+    ph: 'ph',
+    turbidity: 'turbidity',
+    temperature: 'temperature',
+    redox: 'redox',
+    dissolved_oxygen: 'dissolved_oxygen',
+    organic_carbon: 'organic_carbon',
+    hg_dissolved: 'hg_dissolved',
+    hg_total: 'hg_total',
+    hg_sediment: 'hg_sediment',
+    hg_fish: 'hg_fish',
+    methylmercury: 'methylmercury',
+    timestamp: 'timestamp',
+  };
+
+  const payload = JSON.stringify({ sensorType: SENSOR_TYPE_ENV, mapping });
+  const res = http.post(`${BASE_URL_MANAGEMENT}/api/v1/adapters`, payload, {
+    headers: authHeaders(token),
+    tags: { endpoint: 'POST /api/v1/adapters' },
+    timeout: '10s',
+  });
+
+  if (res.status !== 201) {
+    console.warn(`[SETUP] No se pudo crear adapter (${SENSOR_TYPE_ENV}). status=${res.status}`);
+  } else {
+    console.log(`[SETUP] Adapter creado para sensorType=${SENSOR_TYPE_ENV}`);
+  }
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // FLUJOS
 // ─────────────────────────────────────────────────────────────────────────────
@@ -208,16 +239,16 @@ function crearReporte(token) {
     type     : 'REPORT',
     latitude : randomFloat(coord.lat - 0.05, coord.lat + 0.05, 6),
     longitude: randomFloat(coord.lng - 0.05, coord.lng + 0.05, 6),
+    clusterId: coord.zona,
     images   : [],
   });
 
   const res = http.post(`${BASE_URL_MANAGEMENT}/api/v1/posts`, payload, {
     headers: authHeaders(token),
-    tags   : { endpoint: 'POST /api/v1/posts' },
-    timeout: '10s',   // falla rápido en vez de colgar la VU 60s
+    tags   : { endpoint: 'POST /api/v1/posts', name: 'POST /api/v1/posts' },
+    timeout: '10s',
   });
 
-  // res.error se llena cuando hay timeout u otro error de red
   if (res.error) {
     console.warn(`[crearReporte] Error de red: ${res.error}`);
     errorRate.add(1);
@@ -252,7 +283,7 @@ function obtenerReportes(token) {
   const filtro = randomItem(filtros);
   const res = http.get(
       `${BASE_URL_MANAGEMENT}/api/v1/reports${filtro}`,
-      { headers: authHeaders(token), tags: { endpoint: 'GET /api/v1/reports' } }
+      { headers: authHeaders(token), tags: { endpoint: 'GET /api/v1/reports', name: 'GET /api/v1/reports' } }
   );
 
   getReportsDuration.add(res.timings.duration);
@@ -271,16 +302,19 @@ function obtenerMediciones(token) {
   const filtros = [
     '',
     `?startDate=${isoDateBack(7)}&endDate=${isoNow()}`,
-    `?mercuryMin=0.8`,
+    `?hgDisssolvedMin=1.0`,
     `?minLat=8.0&maxLat=8.2&minLng=-73.0&maxLng=-72.6`,
     `?phMin=4.0&phMax=6.0`,
-    `?mercuryMin=0.5&phMax=6.5`,
+    `?hgTotalMin=1.0&phMax=6.5`,
+    `?alertLevel=CRITICO`,
+    `?alertType=IMPACTO`,
+    `?alertType=RIESGO`,
   ];
 
   const filtro = randomItem(filtros);
   const res = http.get(
       `${BASE_URL_MANAGEMENT}/api/v1/environmental-data${filtro}`,
-      { headers: authHeaders(token), tags: { endpoint: 'GET /api/v1/environmental-data' } }
+      { headers: authHeaders(token), tags: { endpoint: 'GET /api/v1/environmental-data', name: 'GET /api/v1/environmental-data' } }
   );
 
   getMedicionesDur.add(res.timings.duration);
@@ -294,8 +328,14 @@ function obtenerMediciones(token) {
   if (ok && res.body) {
     try {
       const data = JSON.parse(res.body);
-      const criticos = Array.isArray(data) ? data.filter(m => m.mercury > 0.8).length : 0;
-      if (criticos > 0) alertasCriticas.add(criticos);
+      if (Array.isArray(data)) {
+        const criticos = data.filter(m => m.alertLevel === 'CRITICO').length;
+        const impacto = data.filter(m => m.alertType === 'IMPACTO').length;
+        const riesgo = data.filter(m => m.alertType === 'RIESGO').length;
+        if (criticos > 0) alertasCriticas.add(criticos);
+        if (impacto > 0) alertasImpacto.add(impacto);
+        if (riesgo > 0) alertasRiesgo.add(riesgo);
+      }
     } catch (_) {}
   }
 }
@@ -304,25 +344,64 @@ function enviarMedicion(token) {
   const coord      = randomItem(COORDENADAS);
   const esContam   = ['C1', 'C2', 'C3'].includes(coord.zona);
   const sensorType = randomItem(SENSOR_TYPES);
+  
+  // 70% sensor básico, 30% con datos de laboratorio
+  const hasLabData = Math.random() < 0.30;
+
+  const hgTotalVal = esContam ? randomFloat(5.0, 60.0, 4) : randomFloat(0.01, 1.0, 4);
+  const fractionSed = esContam ? randomFloat(0.8, 0.95, 3) : randomFloat(0.4, 0.7, 3);
+  const hgDissVal = parseFloat((hgTotalVal * (1 - fractionSed)).toFixed(6));
+  const organicC = esContam ? randomFloat(1.5, 5.0, 3) : randomFloat(0.2, 1.8, 3);
+  const redoxVal = esContam ? randomFloat(-120, 80, 1) : randomFloat(80, 300, 1);
+  const phVal = esContam ? randomFloat(4.5, 6.0, 2) : randomFloat(6.2, 7.8, 2);
+
+  const basePayload = {
+    deviceId   : `SENSOR-${coord.zona}-${String(Math.floor(Math.random() * 99) + 1).padStart(3, '0')}`,
+    latitude   : randomFloat(coord.lat - 0.05, coord.lat + 0.05, 6),
+    longitude  : randomFloat(coord.lng - 0.05, coord.lng + 0.05, 6),
+    clusterId  : coord.zona,
+    ph         : phVal,
+    hg_total   : hgTotalVal,
+    hg_dissolved: hgDissVal,
+    turbidity  : esContam ? randomFloat(30, 120, 1)  : randomFloat(1, 18, 1),
+    temperature: randomFloat(18, 32, 1),
+    redox: redoxVal,
+    dissolved_oxygen: esContam ? randomFloat(0.5, 4.0, 2) : randomFloat(5.5, 9.0, 2),
+    organic_carbon: organicC,
+    timestamp  : isoNow(),
+  };
+
+  // Agregar datos de laboratorio si aplica
+  if (hasLabData) {
+    const phFactor = 1 + Math.max(0, (5.5 - phVal)) * 0.25;
+    const redoxFactor = 1 + Math.max(0, -redoxVal) / 200;
+    const baseCoef = 0.00001;
+    const methylVal = parseFloat((baseCoef * hgTotalVal * organicC * phFactor * redoxFactor).toFixed(6));
+    const BAF = 100000;
+    const hgFishVal = parseFloat((methylVal * BAF / 1000.0).toFixed(4));
+    const sedimentNorm = esContam ? 0.02 : 0.005;
+    const hgSedimentVal = parseFloat((hgTotalVal * fractionSed * sedimentNorm).toFixed(4));
+
+    basePayload.hg_sediment = hgSedimentVal;
+    basePayload.methylmercury = methylVal;
+    basePayload.hg_fish = hgFishVal;
+  }
 
   const payload = JSON.stringify({
     sensorType,
-    payload: {
-      deviceId   : `SENSOR-${coord.zona}-${String(Math.floor(Math.random() * 99) + 1).padStart(3, '0')}`,
-      latitude   : randomFloat(coord.lat - 0.05, coord.lat + 0.05, 6),
-      longitude  : randomFloat(coord.lng - 0.05, coord.lng + 0.05, 6),
-      ph         : esContam ? randomFloat(4.0, 5.8, 2) : randomFloat(6.5, 7.8, 2),
-      mercury    : esContam ? randomFloat(0.6, 1.5, 4) : randomFloat(0.0, 0.25, 4),
-      turbidity  : esContam ? randomFloat(30, 120, 1)  : randomFloat(1, 18, 1),
-      temperature: randomFloat(18, 32, 1),
-      timestamp  : isoNow(),
-    },
+    payload: basePayload,
   });
 
   const res = http.post(`${BASE_URL_MANAGEMENT}/api/v1/environmental-data`, payload, {
     headers: authHeaders(token),
-    tags   : { endpoint: 'POST /api/v1/environmental-data' },
+    tags   : { endpoint: 'POST /api/v1/environmental-data', name: 'POST /api/v1/environmental-data' },
   });
+
+  if (res.status !== 201) {
+    const body = (res.body || '').toString();
+    const snippet = body.length > 400 ? `${body.slice(0, 400)}...` : body;
+    console.warn(`[POST /environmental-data] status=${res.status} body=${snippet}`);
+  }
 
   postMedicionDur.add(res.timings.duration);
   errorRate.add(res.status !== 201);
@@ -342,7 +421,7 @@ function obtenerAgregados(token) {
   const res = http.get(
       `${BASE_URL_MANAGEMENT}/api/v1/environmental-data/aggregate?` +
       `startDate=${isoDateBack(30)}&endDate=${isoNow()}`,
-      { headers: authHeaders(token), tags: { endpoint: 'GET /api/v1/environmental-data/aggregate' } }
+      { headers: authHeaders(token), tags: { endpoint: 'GET /api/v1/environmental-data/aggregate', name: 'GET /api/v1/environmental-data/aggregate' } }
   );
 
   errorRate.add(res.status !== 200);
@@ -351,8 +430,28 @@ function obtenerAgregados(token) {
   });
 }
 
+function consultarAnalytics(token) {
+  const endpoints = [
+    '/api/v1/analytics/clusters',
+    '/api/v1/analytics/reports',
+    '/api/v1/analytics/fusion',
+    '/api/v1/analytics/correlation',
+  ];
+
+  const endpoint = randomItem(endpoints);
+  const res = http.get(
+      `${BASE_URL_MANAGEMENT}${endpoint}`,
+      { headers: authHeaders(token), tags: { endpoint: `GET ${endpoint}`, name: 'GET /api/v1/analytics' } }
+  );
+
+  errorRate.add(res.status !== 200);
+  check(res, {
+    'GET analytics status 200': (r) => r.status === 200,
+  });
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
-// SETUP: login UNA SOLA VEZ — el token se pasa a todas las VUs via data
+// SETUP
 // ─────────────────────────────────────────────────────────────────────────────
 export function setup() {
   console.log(`
@@ -365,16 +464,14 @@ export function setup() {
 ╚═══════════════════════════════════════════════════════════════╝
   `);
 
-  // Health check
   const health = http.get(`${BASE_URL_MANAGEMENT}/actuator/health`);
   console.log(`[HEALTH CHECK] management: ${health.status}`);
 
-  // 🔑 Login una sola vez
   const user = USERS[0];
   const res = http.post(
       `${BASE_URL_MANAGEMENT}/api/v1/auth/login`,
       JSON.stringify({ email: user.email, password: user.password }),
-      { headers: JSON_HEADERS }
+      { headers: JSON_HEADERS, tags: { name: 'POST /api/v1/auth/login' } }
   );
 
   loginDuration.add(res.timings.duration);
@@ -396,53 +493,54 @@ export function setup() {
     throw new Error('[SETUP] No se pudo obtener token — abortando prueba.');
   }
 
+  ensureAdapter(token);
+
   console.log('[SETUP] Token obtenido correctamente.');
   return { startTime: Date.now(), token };
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// DEFAULT: cada VU reutiliza el token obtenido en setup()
+// DEFAULT
 // ─────────────────────────────────────────────────────────────────────────────
 export default function (data) {
-  const token = data.token;   // ✅ token compartido, sin login por iteración
+  const token = data.token;
 
   if (!token) {
     sleep(1);
     return;
   }
 
-  // Distribución de acciones:
-  //   45% → leer reportes       (operación más frecuente)
-  //   30% → leer mediciones     (consulta de datos ambientales)
-  //   10% → crear reporte       (ciudadano denuncia) ← reducido: endpoint costoso
-  //   10% → enviar medición     (sensor automatizado)
-  //    5% → consultar agregados (dashboard)
   const r = Math.random();
 
-  if (r < 0.45) {
+  if (r < 0.40) {
     group('Consultar reportes', function () {
       obtenerReportes(token);
       sleep(randomFloat(0.5, 1.5, 2));
     });
-  } else if (r < 0.75) {
+  } else if (r < 0.70) {
     group('Consultar mediciones ambientales', function () {
       obtenerMediciones(token);
       sleep(randomFloat(0.5, 1.2, 2));
     });
-  } else if (r < 0.85) {
+  } else if (r < 0.80) {
     group('Crear reporte de denuncia', function () {
       crearReporte(token);
       sleep(randomFloat(1.0, 2.5, 2));
     });
-  } else if (r < 0.95) {
+  } else if (r < 0.90) {
     group('Enviar medición de sensor', function () {
       enviarMedicion(token);
       sleep(randomFloat(0.2, 0.8, 2));
     });
-  } else {
+  } else if (r < 0.95) {
     group('Consultar agregados (dashboard)', function () {
       obtenerAgregados(token);
       sleep(randomFloat(1.5, 3.0, 2));
+    });
+  } else {
+    group('Consultar analytics', function () {
+      consultarAnalytics(token);
+      sleep(randomFloat(1.0, 2.0, 2));
     });
   }
 }

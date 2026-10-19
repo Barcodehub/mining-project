@@ -15,7 +15,7 @@ public class AuthProxyController {
     private final RestClient restClient;
 
     public AuthProxyController(RestClient.Builder restClientBuilder,
-                               @Value("${mining.users.url:http://localhost:8081}") String authServiceUrl) {
+                               @Value("${mining.users.url:http://mining_users:8081}") String authServiceUrl) {
         this.restClient = restClientBuilder.baseUrl(authServiceUrl).build();
     }
 

@@ -1,24 +1,14 @@
-server:
-  port: ${SERVER_PORT:8080}
-
-mining:
-  users:
-    url: ${MINING_USERS_URL:http://localhost:8081}
-  audit-notifications:
-    url: ${MINING_AUDIT_NOTIFICATIONS_URL:http://localhost:8082}
-
-jwt:
-  secret: ${JWT_SECRET:mySecretKeyForJWTTokenGeneration}
-
 spring:
+  config:
+    import: optional:classpath:config-ambiental.yaml
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/mining-management}
+    url: ${DB_URL:jdbc:postgresql://postgres-audit:5432/mining_management}
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
     hikari:
-      maximum-pool-size: 30
-      minimum-idle: 5
+      maximum-pool-size: ${DB_POOL_MAX:50}
+      minimum-idle: ${DB_POOL_MIN:10}
       connection-timeout: 20000
       idle-timeout: 300000
       max-lifetime: 1200000
@@ -35,6 +25,19 @@ spring:
 
   cache:
     type: caffeine
+server:
+  port: ${SERVER_PORT:8082}
+
+
+mining:
+  users:
+    url: ${MINING_USERS_URL:http://mining-users:8081}
+  audit-notifications:
+    url: ${MINING_AUDIT_NOTIFICATIONS_URL:http://mining-audit-notifications:8083}
+
+jwt:
+  secret: ${JWT_SECRET:mySecretKeyForJWTTokenGeneration}
+
 
 aws:
   s3:

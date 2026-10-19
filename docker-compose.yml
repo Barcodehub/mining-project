@@ -3,6 +3,7 @@ volumes:
   prometheus_data: {}
   grafana_data: {}
   influxdb_data: {}
+  postgres_data: {}
 services:
   zookeeper:
     image: confluentinc/cp-zookeeper:7.4.0
@@ -20,7 +21,7 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
@@ -33,11 +34,12 @@ services:
   postgres-audit:
     image: postgres:15
     ports:
-      - "5432:5432"
+      - "15432:5432"
     environment:
-      POSTGRES_DB: mining_audit
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
   prometheus:
     image: prom/prometheus:v2.47.1
     ports:
@@ -73,20 +75,33 @@ services:
       context: ./mining-audit-notifications
     ports:
       - "8083:8083"
+    environment:
+      SERVER_PORT: 8083
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     depends_on:
+      - kafka
       - postgres-audit
   mining-management:
     build:
       context: ./mining-management
     ports:
       - "8082:8082"
+    environment:
+      SERVER_PORT: 8082
+      MINING_USERS_URL: http://mining-users:8081
+      MINING_AUDIT_NOTIFICATIONS_URL: http://mining-audit-notifications:8083
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SPRING_KAFKA_PRODUCER_PROPERTIES_MAX_BLOCK_MS: 5000
     depends_on:
+      - kafka
       - postgres-audit
   mining-users:
     build:
       context: ./mining-users
     ports:
       - "8081:8081"
+    environment:
+      SERVER_PORT: 8081
     depends_on:
       - postgres-audit
   k6:

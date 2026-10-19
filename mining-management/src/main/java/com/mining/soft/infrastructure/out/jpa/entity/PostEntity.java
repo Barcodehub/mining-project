@@ -16,7 +16,8 @@ import java.util.List;
 @Table(name = "posts", indexes = {
     @Index(name = "idx_post_created_at", columnList = "createdAt"),
     @Index(name = "idx_post_lat_lng", columnList = "latitude, longitude"),
-    @Index(name = "idx_post_type", columnList = "type")
+    @Index(name = "idx_post_type", columnList = "type"),
+    @Index(name = "idx_post_cluster", columnList = "cluster_id")
 })
 @Inheritance(strategy = InheritanceType.JOINED)
 @Getter
@@ -41,6 +42,10 @@ public class PostEntity {
     //  ubicación
     private Double latitude;
     private Double longitude;
+
+    // Cluster geoespacial asignado (nullable)
+    @Column(name = "cluster_id")
+    private String clusterId;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

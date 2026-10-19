@@ -7,7 +7,7 @@ info:
     name: Brayan Barco
 
 servers:
-  - url: http://localhost:8081
+  - url: http://mining-users:8081
     description: Servidor local de desarrollo
 
 

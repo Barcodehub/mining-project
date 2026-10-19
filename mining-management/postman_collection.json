@@ -222,11 +222,15 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
               }
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"sensorType\": \"sensorB\",\r\n  \"mapping\": {\r\n    \"device_id\": \"meta.id\",\r\n    \"ph\": \"phwater_ong\",\r\n    \"temperature\": \"temp_sensor\",\r\n    \"turbidity\": \"turb_val\",\r\n    \"timestamp\": \"time\"\r\n  }\r\n}"
+              "raw": "{\r\n  \"sensorType\": \"multi_parameter_sensor\",\r\n  \"mapping\": {\r\n    \"device_id\": \"deviceId\",\r\n    \"lat\": \"latitude\",\r\n    \"lng\": \"longitude\",\r\n    \"cluster_id\": \"clusterId\",\r\n    \"ph\": \"ph\",\r\n    \"hg_dissolved\": \"hg_dissolved\",\r\n    \"hg_total\": \"hg_total\",\r\n    \"hg_sediment\": \"hg_sediment\",\r\n    \"methylmercury\": \"methylmercury\",\r\n    \"hg_fish\": \"hg_fish\",\r\n    \"turbidity\": \"turbidity\",\r\n    \"temperature\": \"temperature\",\r\n    \"redox\": \"redox\",\r\n    \"dissolved_oxygen\": \"dissolved_oxygen\",\r\n    \"organic_carbon\": \"organic_carbon\",\r\n    \"timestamp\": \"timestamp\"\r\n  }\r\n}"
             },
             "url": {
               "raw": "http://localhost:8082/api/v1/adapters",
@@ -238,18 +242,22 @@
           }
         },
         {
-          "name": "Process Sensor Data",
+          "name": "Process Sensor Data - Básico",
           "request": {
             "method": "POST",
             "header": [
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
               }
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"sensorType\": \"sensorB\",\r\n  \"payload\": {\r\n    \"meta\": { \"id\": \"sensor_001\" },\r\n    \"phwater_ong\": 5.2,\r\n    \"temp_sensor\": 26.5,\r\n    \"turb_val\": 120,\r\n    \"time\": \"2026-04-19T13:00:00Z\"\r\n  }\r\n}"
+              "raw": "{\r\n  \"sensorType\": \"multi_parameter_sensor\",\r\n  \"payload\": {\r\n    \"deviceId\": \"SENSOR-C1-001\",\r\n    \"latitude\": 8.076432,\r\n    \"longitude\": -72.821957,\r\n    \"clusterId\": \"C1\",\r\n    \"ph\": 5.12,\r\n    \"hg_dissolved\": 2.345678,\r\n    \"hg_total\": 25.4321,\r\n    \"turbidity\": 87.3,\r\n    \"temperature\": 28.4,\r\n    \"redox\": -85.0,\r\n    \"dissolved_oxygen\": 2.14,\r\n    \"organic_carbon\": 3.45,\r\n    \"timestamp\": \"2026-04-19T14:32:00Z\"\r\n  }\r\n}"
             },
             "url": {
               "raw": "http://localhost:8082/api/v1/environmental-data",
@@ -261,17 +269,96 @@
           }
         },
         {
-          "name": "Get Filtered Data",
+          "name": "Process Sensor Data - Con Laboratorio",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"sensorType\": \"multi_parameter_sensor\",\r\n  \"payload\": {\r\n    \"deviceId\": \"SENSOR-C1-002\",\r\n    \"latitude\": 8.076432,\r\n    \"longitude\": -72.821957,\r\n    \"clusterId\": \"C1\",\r\n    \"ph\": 5.12,\r\n    \"hg_dissolved\": 2.345678,\r\n    \"hg_total\": 25.4321,\r\n    \"hg_sediment\": 0.8123,\r\n    \"methylmercury\": 0.003456,\r\n    \"hg_fish\": 0.3456,\r\n    \"turbidity\": 87.3,\r\n    \"temperature\": 28.4,\r\n    \"redox\": -85.0,\r\n    \"dissolved_oxygen\": 2.14,\r\n    \"organic_carbon\": 3.45,\r\n    \"timestamp\": \"2026-04-19T14:32:00Z\"\r\n  }\r\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8082/api/v1/environmental-data",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8082",
+              "path": ["api", "v1", "environmental-data"]
+            }
+          }
+        },
+        {
+          "name": "Get Filtered Data - Zona Crítica",
           "request": {
             "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
             "url": {
-              "raw": "http://localhost:8082/api/v1/environmental-data?phMin=5.0",
+              "raw": "http://localhost:8082/api/v1/environmental-data?hgDisssolvedMin=1.0&phMax=6.0&alertLevel=CRITICO",
               "protocol": "http",
               "host": ["localhost"],
               "port": "8082",
               "path": ["api", "v1", "environmental-data"],
               "query": [
-                { "key": "phMin", "value": "5.0" }
+                { "key": "hgDisssolvedMin", "value": "1.0" },
+                { "key": "phMax", "value": "6.0" },
+                { "key": "alertLevel", "value": "CRITICO" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Filtered Data - Alertas por Impacto",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8082/api/v1/environmental-data?alertType=IMPACTO",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8082",
+              "path": ["api", "v1", "environmental-data"],
+              "query": [
+                { "key": "alertType", "value": "IMPACTO" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Filtered Data - Alertas por Riesgo",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8082/api/v1/environmental-data?alertType=RIESGO",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8082",
+              "path": ["api", "v1", "environmental-data"],
+              "query": [
+                { "key": "alertType", "value": "RIESGO" }
               ]
             }
           }

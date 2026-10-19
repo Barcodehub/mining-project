@@ -26,13 +26,10 @@ public class AnalyticsService {
     }
 
     public List<FusionAnalytics> getFusionAnalytics() {
-        List<ClusterAnalytics> clusters = getClusterAnalytics();
-        List<ReportAnalytics> reports = getReportAnalytics();
-
-        Map<String, Double> saiMap = clusters.stream()
+        Map<String, Double> saiMap = getClusterAnalytics().stream()
                 .collect(Collectors.toMap(ClusterAnalytics::getClusterId, ClusterAnalytics::getSai));
 
-        return reports.stream()
+        return getReportAnalytics().stream()
                 .filter(r -> saiMap.containsKey(r.getClusterId()))
                 .map(r -> new FusionAnalytics(r.getClusterId(), saiMap.get(r.getClusterId()), r.getCri()))
                 .collect(Collectors.toList());
@@ -40,42 +37,46 @@ public class AnalyticsService {
 
     public CorrelationAnalytics getCorrelationAnalytics() {
         List<FusionAnalytics> fusions = getFusionAnalytics();
+        if (fusions.isEmpty()) return new CorrelationAnalytics(0.0, null);
 
-        if (fusions.isEmpty()) {
-            return new CorrelationAnalytics(0.0, null);
-        }
-
-        // Implementar correlación Spearman manualmente
-        List<Double> saiList = fusions.stream().map(FusionAnalytics::getSai).collect(Collectors.toList());
-        List<Double> criList = fusions.stream().map(FusionAnalytics::getCri).collect(Collectors.toList());
-
-        double spearman = calculateSpearman(saiList, criList);
-        return new CorrelationAnalytics(spearman, null); // p-value opcional, no implementado
+        List<Double> sai = fusions.stream().map(FusionAnalytics::getSai).collect(Collectors.toList());
+        List<Double> cri = fusions.stream().map(FusionAnalytics::getCri).collect(Collectors.toList());
+        return new CorrelationAnalytics(calculateSpearman(sai, cri), null);
     }
 
     private double calculateSpearman(List<Double> x, List<Double> y) {
         int n = x.size();
         if (n <= 1) return 0.0;
-
-        // Rank x
-        List<Double> rankX = rank(x);
-        List<Double> rankY = rank(y);
-
-        // Calculate d^2
+        List<Double> rx = rank(x), ry = rank(y);
         double sumD2 = 0.0;
-        for (int i = 0; i < n; i++) {
-            double d = rankX.get(i) - rankY.get(i);
-            sumD2 += d * d;
-        }
-
-        // Spearman = 1 - (6 * sumD2) / (n * (n^2 - 1))
-        return 1.0 - (6.0 * sumD2) / (n * (n * n - 1));
+        for (int i = 0; i < n; i++) { double d = rx.get(i) - ry.get(i); sumD2 += d * d; }
+        return 1.0 - (6.0 * sumD2) / ((double) n * (n * n - 1));
     }
 
     private List<Double> rank(List<Double> values) {
-        List<Double> sorted = values.stream().sorted().collect(Collectors.toList());
-        return values.stream()
-                .map(v -> (double) (sorted.indexOf(v) + 1))
-                .collect(Collectors.toList());
+        int n = values.size();
+        // Build array of (value, originalIndex)
+        java.util.List<java.util.Map.Entry<Double, Integer>> entries = new java.util.ArrayList<>();
+        for (int i = 0; i < n; i++) entries.add(new java.util.AbstractMap.SimpleEntry<>(values.get(i), i));
+        // Sort by value
+        entries.sort(java.util.Comparator.comparingDouble(java.util.Map.Entry::getKey));
+
+        double[] ranks = new double[n];
+        int i = 0;
+        while (i < n) {
+            int j = i;
+            double v = entries.get(i).getKey();
+            while (j + 1 < n && Double.compare(entries.get(j + 1).getKey(), v) == 0) j++;
+            // average rank for ties: (i+1 .. j+1)
+            double avgRank = ( (double)(i + 1) + (double)(j + 1) ) / 2.0;
+            for (int k = i; k <= j; k++) {
+                ranks[entries.get(k).getValue()] = avgRank;
+            }
+            i = j + 1;
+        }
+
+        java.util.List<Double> result = new java.util.ArrayList<>(n);
+        for (int idx = 0; idx < n; idx++) result.add(ranks[idx]);
+        return result;
     }
 }

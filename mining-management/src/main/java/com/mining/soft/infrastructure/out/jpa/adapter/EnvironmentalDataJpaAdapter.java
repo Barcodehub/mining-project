@@ -47,6 +47,7 @@ public class EnvironmentalDataJpaAdapter implements IEnvironmentalDataPersistenc
     @Override
     @Cacheable(value = "adapters", key = "#sensorType")
     public Optional<Adapter> findAdapterBySensorType(String sensorType) {
-        return adapterRepository.findBySensorType(sensorType).map(entityMapper::toAdapterModel);
+        return adapterRepository.findFirstBySensorTypeOrderByCreatedAtDesc(sensorType)
+                .map(entityMapper::toAdapterModel);
     }
 }
