@@ -1,0 +1,17 @@
+{
+  "sensorType": "corponor_report",
+  "mapping": {
+    "device_id": "estacion",
+    "cluster_id": "cuenca",
+    "lat": "punto.lat",
+    "lng": "punto.lon",
+    "altitude": "punto.msnm",
+    "timestamp": "fecha",
+    "temperature": "campo.temperatura_c",
+    "ph": "campo.ph",
+    "dissolved_oxygen": "campo.oxigeno_mg_l",
+    "turbidity": "campo.turbiedad_ntu",
+    "hg_total": {"path": "laboratorio.hg_total_mg_l", "factor": 1000},
+    "arsenic": "laboratorio.as_total_mg_l"
+  }
+}

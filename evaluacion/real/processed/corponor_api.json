@@ -1,0 +1,354 @@
+[
+ {
+  "sensorType": "corponor_report",
+  "payload": {
+   "estacion": "CORPONOR-RIO_ZULIA-ID3",
+   "cuenca": "RIO_ZULIA",
+   "punto": {
+    "lat": 7.307996,
+    "lon": -72.747837,
+    "msnm": 2414.0
+   },
+   "fecha": "2025-12-10T12:00:00Z",
+   "campo": {
+    "temperatura_c": "24.3",
+    "ph": "7.48",
+    "oxigeno_mg_l": "7.65",
+    "turbiedad_ntu": "15.0"
+   },
+   "laboratorio": {
+    "hg_total_mg_l": "0.0010",
+    "as_total_mg_l": "<0.008"
+   }
+  },
+  "meta": {
+   "documento": "corponor_zulia_2025_IR-25-08.pdf",
+   "informe": "IR-25-08 (10-dic-2025)",
+   "id": "3",
+   "nombre": "Rio La Plata-Despues de los vertimientos de aguas residuales del suelo urbano",
+   "cuenca": "Rio Zulia",
+   "categoria": "OTRO",
+   "fecha_aproximada": true
+  }
+ },
+ {
+  "sensorType": "corponor_report",
+  "payload": {
+   "estacion": "CORPONOR-RIO_ZULIA-ID8",
+   "cuenca": "RIO_ZULIA",
+   "punto": {
+    "lat": 7.631034,
+    "lon": -72.773347,
+    "msnm": 787.0
+   },
+   "fecha": "2025-12-10T12:00:00Z",
+   "campo": {
+    "temperatura_c": "23.8",
+    "ph": "7.84",
+    "oxigeno_mg_l": "5.74",
+    "turbiedad_ntu": "9.43"
+   },
+   "laboratorio": {
+    "hg_total_mg_l": "0.0006",
+    "as_total_mg_l": "<0.008"
+   }
+  },
+  "meta": {
+   "documento": "corponor_zulia_2025_IR-25-08.pdf",
+   "informe": "IR-25-08 (10-dic-2025)",
+   "id": "8",
+   "nombre": "Rio Zulia-Puente Union",
+   "cuenca": "Rio Zulia",
+   "categoria": "OTRO",
+   "fecha_aproximada": true
+  }
+ },
+ {
+  "sensorType": "corponor_report",
+  "payload": {
+   "estacion": "CORPONOR-RIO_ZULIA-ID12",
+   "cuenca": "RIO_ZULIA",
+   "punto": {
+    "lat": 7.95617,
+    "lon": -72.593465,
+    "msnm": 184.0
+   },
+   "fecha": "2025-12-10T12:00:00Z",
+   "campo": {
+    "temperatura_c": "24.1",
+    "ph": "7.79",
+    "oxigeno_mg_l": "5.24",
+    "turbiedad_ntu": "80.9"
+   },
+   "laboratorio": {
+    "hg_total_mg_l": "<0.0005",
+    "as_total_mg_l": "<0.008"
+   }
+  },
+  "meta": {
+   "documento": "corponor_zulia_2025_IR-25-08.pdf",
+   "informe": "IR-25-08 (10-dic-2025)",
+   "id": "12",
+   "nombre": "Rio Zulia-Despues de los vertimientos del suelo urbano",
+   "cuenca": "Rio Zulia",
+   "categoria": "OTRO",
+   "fecha_aproximada": true
+  }
+ },
+ {
+  "sensorType": "corponor_report",
+  "payload": {
+   "estacion": "CORPONOR-RIO_ZULIA-ID17",
+   "cuenca": "RIO_ZULIA",
+   "punto": {
+    "lat": 7.63917,
+    "lon": -72.793687,
+    "msnm": 865.0
+   },
+   "fecha": "2025-12-10T12:00:00Z",
+   "campo": {
+    "temperatura_c": "24.2",
+    "ph": "7.75",
+    "oxigeno_mg_l": "8.36",
+    "turbiedad_ntu": "11.8"
+   },
+   "laboratorio": {
+    "hg_total_mg_l": "0.0007",
+    "as_total_mg_l": "<0.008"
+   }
+  },
+  "meta": {
+   "documento": "corponor_zulia_2025_IR-25-08.pdf",
+   "informe": "IR-25-08 (10-dic-2025)",
+   "id": "17",
+   "nombre": "Rio Arboledas-Despues de los vertimientos del suelo urbano",
+   "cuenca": "Rio Zulia",
+   "categoria": "OTRO",
+   "fecha_aproximada": true
+  }
+ },
+ {
+  "sensorType": "corponor_report",
+  "payload": {
+   "estacion": "CORPONOR-RIO_ZULIA-ID23",
+   "cuenca": "RIO_ZULIA",
+   "punto": {
+    "lat": 7.909559,
+    "lon": -72.632447,
+    "msnm": 234.0
+   },
+   "fecha": "2025-12-10T12:00:00Z",
+   "campo": {
+    "temperatura_c": "24.0",
+    "ph": "7.62",
+    "oxigeno_mg_l": "4.13",
+    "turbiedad_ntu": "73.8"
+   },
+   "laboratorio": {
+    "hg_total_mg_l": "<0.0005",
+    "as_total_mg_l": "<0.008"
+   }
+  },
+  "meta": {
+   "documento": "corponor_zulia_2025_IR-25-08.pdf",
+   "informe": "IR-25-08 (10-dic-2025)",
+   "id": "23",
+   "nombre": "Rio Peralonso-Despues de los vertimientos del centro poblado de Cornejo",
+   "cuenca": "Rio Zulia",
+   "categoria": "OTRO",
+   "fecha_aproximada": true
+  }
+ },
+ {
+  "sensorType": "corponor_report",
+  "payload": {
+   "estacion": "CORPONOR-RIO_ZULIA-ID24",
+   "cuenca": "RIO_ZULIA",
+   "punto": {
+    "lat": 7.917823,
+    "lon": -72.587231,
+    "msnm": 208.0
+   },
+   "fecha": "2025-12-10T12:00:00Z",
+   "campo": {
+    "temperatura_c": "24.2",
+    "ph": "7.16",
+    "oxigeno_mg_l": "0.00",
+    "turbiedad_ntu": "18.5"
+   },
+   "laboratorio": {
+    "hg_total_mg_l": "<0.0005",
+    "as_total_mg_l": "<0.008"
+   }
+  },
+  "meta": {
+   "documento": "corponor_zulia_2025_IR-25-08.pdf",
+   "informe": "IR-25-08 (10-dic-2025)",
+   "id": "24",
+   "nombre": "Quebrada Tonchala-Antes de la confluencia con el rio Zulia",
+   "cuenca": "Rio Zulia",
+   "categoria": "OTRO",
+   "fecha_aproximada": true
+  }
+ },
+ {
+  "sensorType": "corponor_report",
+  "payload": {
+   "estacion": "CORPONOR-RIO_PAMPLONITA-ID4",
+   "cuenca": "RIO_PAMPLONITA",
+   "punto": {
+    "lat": 7.395567,
+    "lon": -72.620667,
+    "msnm": 1991.0
+   },
+   "fecha": "2025-09-17T12:00:00Z",
+   "campo": {
+    "temperatura_c": "21.4",
+    "ph": "7.51",
+    "oxigeno_mg_l": "7.45",
+    "turbiedad_ntu": "18.40"
+   },
+   "laboratorio": {
+    "hg_total_mg_l": "<0.0005",
+    "as_total_mg_l": "0.012"
+   }
+  },
+  "meta": {
+   "documento": "corponor_pamplonita_2025_IR-25-01.pdf",
+   "informe": "IR-25-01 (17-sep-2025)",
+   "id": "4",
+   "nombre": "Escuela Los Naranjos",
+   "cuenca": "Rio Pamplonita",
+   "categoria": "OTRO",
+   "fecha_aproximada": true
+  }
+ },
+ {
+  "sensorType": "corponor_report",
+  "payload": {
+   "estacion": "CORPONOR-RIO_PAMPLONITA-ID10",
+   "cuenca": "RIO_PAMPLONITA",
+   "punto": {
+    "lat": 7.868286,
+    "lon": -72.500615,
+    "msnm": 341.0
+   },
+   "fecha": "2025-09-17T12:00:00Z",
+   "campo": {
+    "temperatura_c": "24.0",
+    "ph": "7.49",
+    "oxigeno_mg_l": "7.25",
+    "turbiedad_ntu": "8.53"
+   },
+   "laboratorio": {
+    "hg_total_mg_l": "<0.0005",
+    "as_total_mg_l": "0.010"
+   }
+  },
+  "meta": {
+   "documento": "corponor_pamplonita_2025_IR-25-01.pdf",
+   "informe": "IR-25-01 (17-sep-2025)",
+   "id": "10",
+   "nombre": "Puente Benito Hernandez (San Rafael)",
+   "cuenca": "Rio Pamplonita",
+   "categoria": "OTRO",
+   "fecha_aproximada": true
+  }
+ },
+ {
+  "sensorType": "corponor_report",
+  "payload": {
+   "estacion": "CORPONOR-RIO_PAMPLONITA-ID11",
+   "cuenca": "RIO_PAMPLONITA",
+   "punto": {
+    "lat": 7.884788,
+    "lon": -72.490912,
+    "msnm": 318.0
+   },
+   "fecha": "2025-09-17T12:00:00Z",
+   "campo": {
+    "temperatura_c": "24.6",
+    "ph": "7.47",
+    "oxigeno_mg_l": "8.46",
+    "turbiedad_ntu": "4.43"
+   },
+   "laboratorio": {
+    "hg_total_mg_l": "0.0008",
+    "as_total_mg_l": "0.015"
+   }
+  },
+  "meta": {
+   "documento": "corponor_pamplonita_2025_IR-25-01.pdf",
+   "informe": "IR-25-01 (17-sep-2025)",
+   "id": "11",
+   "nombre": "Puente Elias M. Soto",
+   "cuenca": "Rio Pamplonita",
+   "categoria": "OTRO",
+   "fecha_aproximada": true
+  }
+ },
+ {
+  "sensorType": "corponor_report",
+  "payload": {
+   "estacion": "CORPONOR-RIO_PAMPLONITA-ID12",
+   "cuenca": "RIO_PAMPLONITA",
+   "punto": {
+    "lat": 7.898913,
+    "lon": -72.483434,
+    "msnm": 300.0
+   },
+   "fecha": "2025-09-17T12:00:00Z",
+   "campo": {
+    "temperatura_c": "24.3",
+    "ph": "7.54",
+    "oxigeno_mg_l": "8.16",
+    "turbiedad_ntu": "9.78"
+   },
+   "laboratorio": {
+    "hg_total_mg_l": "<0.0005",
+    "as_total_mg_l": "<0.008"
+   }
+  },
+  "meta": {
+   "documento": "corponor_pamplonita_2025_IR-25-01.pdf",
+   "informe": "IR-25-01 (17-sep-2025)",
+   "id": "12",
+   "nombre": "Puente Jorge Gaitan Duran",
+   "cuenca": "Rio Pamplonita",
+   "categoria": "OTRO",
+   "fecha_aproximada": true
+  }
+ },
+ {
+  "sensorType": "corponor_report",
+  "payload": {
+   "estacion": "CORPONOR-RIO_PAMPLONITA-ID13",
+   "cuenca": "RIO_PAMPLONITA",
+   "punto": {
+    "lat": 7.911964,
+    "lon": -72.485333,
+    "msnm": 297.0
+   },
+   "fecha": "2025-09-17T12:00:00Z",
+   "campo": {
+    "temperatura_c": "24.2",
+    "ph": "7.89",
+    "oxigeno_mg_l": "7.65",
+    "turbiedad_ntu": "10.60"
+   },
+   "laboratorio": {
+    "hg_total_mg_l": "<0.0005",
+    "as_total_mg_l": "<0.008"
+   }
+  },
+  "meta": {
+   "documento": "corponor_pamplonita_2025_IR-25-01.pdf",
+   "informe": "IR-25-01 (17-sep-2025)",
+   "id": "13",
+   "nombre": "Puente Enrique Cuadros Corredor (La Gazapa)",
+   "cuenca": "Rio Pamplonita",
+   "categoria": "OTRO",
+   "fecha_aproximada": true
+  }
+ }
+]

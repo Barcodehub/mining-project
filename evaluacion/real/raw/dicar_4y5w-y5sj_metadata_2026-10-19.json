@@ -1,0 +1,749 @@
+{
+  "id" : "4y5w-y5sj",
+  "name" : "Resultados operativos realizados por la Policía Nacional en control a la explotación ilícita de yacimiento minero",
+  "assetType" : "dataset",
+  "attribution" : "Dirección General de la Policía Nacional - DIPON, Bogotá D.C.",
+  "attributionLink" : "https://www.policia.gov.co/",
+  "averageRating" : 0,
+  "category" : "Seguridad y Defensa",
+  "createdAt" : 1598635000,
+  "diciBackend" : false,
+  "displayType" : "table",
+  "downloadCount" : 1040,
+  "hideFromCatalog" : false,
+  "hideFromDataJson" : false,
+  "licenseId" : "CC_40_BY_SA",
+  "locked" : false,
+  "newBackend" : true,
+  "numberOfComments" : 0,
+  "oid" : 41430192,
+  "provenance" : "official",
+  "publicationAppendEnabled" : false,
+  "publicationDate" : 1751668612,
+  "publicationGroup" : 17496945,
+  "publicationStage" : "published",
+  "rowsUpdatedAt" : 1788277854,
+  "rowsUpdatedBy" : "yvgz-36de",
+  "tableId" : 19953208,
+  "totalTimesRated" : 0,
+  "viewCount" : 4089,
+  "viewLastModified" : 1788277852,
+  "viewType" : "tabular",
+  "approvals" : [ {
+    "reviewedAt" : 1598824701,
+    "reviewedAutomatically" : false,
+    "state" : "approved",
+    "submissionId" : 6958681,
+    "submissionObject" : "public_audience_request",
+    "submissionOutcome" : "change_audience",
+    "submittedAt" : 1598638024,
+    "targetAudience" : "public",
+    "workflowId" : 2188,
+    "reviewer" : {
+      "id" : "r4qn-dwdd",
+      "displayName" : "Ministerio de Tecnologías de la Información y las Comunicaciones - Datos Abiertos"
+    },
+    "submissionDetails" : {
+      "permissionType" : "READ"
+    },
+    "submissionOutcomeApplication" : {
+      "endedAt" : 1598824701,
+      "failureCount" : 0,
+      "startedAt" : 1598824701,
+      "status" : "success"
+    },
+    "submitter" : {
+      "id" : "yvgz-36de",
+      "displayName" : "POLICÍA - DICAR"
+    }
+  } ],
+  "clientContext" : {
+    "clientContextVariables" : [ ],
+    "inheritedVariables" : { }
+  },
+  "columns" : [ {
+    "id" : 613408688,
+    "name" : "FECHA DE HECHO",
+    "dataTypeName" : "calendar_date",
+    "description" : "",
+    "fieldName" : "fecha_de_hecho",
+    "position" : 1,
+    "renderTypeName" : "calendar_date",
+    "tableColumnId" : 158324125,
+    "cachedContents" : {
+      "non_null" : "24973",
+      "largest" : "2026-08-30T00:00:00.000",
+      "null" : "0",
+      "top" : [ {
+        "item" : "2026-07-24T00:00:00.000",
+        "count" : "222"
+      }, {
+        "item" : "2026-02-19T00:00:00.000",
+        "count" : "192"
+      }, {
+        "item" : "2026-03-05T00:00:00.000",
+        "count" : "186"
+      }, {
+        "item" : "2026-02-10T00:00:00.000",
+        "count" : "172"
+      }, {
+        "item" : "2026-03-19T00:00:00.000",
+        "count" : "167"
+      }, {
+        "item" : "2026-03-03T00:00:00.000",
+        "count" : "149"
+      }, {
+        "item" : "2026-03-12T00:00:00.000",
+        "count" : "148"
+      }, {
+        "item" : "2026-02-12T00:00:00.000",
+        "count" : "145"
+      }, {
+        "item" : "2026-01-28T00:00:00.000",
+        "count" : "133"
+      }, {
+        "item" : "2026-03-04T00:00:00.000",
+        "count" : "121"
+      }, {
+        "item" : "2026-01-21T00:00:00.000",
+        "count" : "121"
+      }, {
+        "item" : "2026-02-20T00:00:00.000",
+        "count" : "116"
+      }, {
+        "item" : "2026-03-13T00:00:00.000",
+        "count" : "115"
+      }, {
+        "item" : "2025-01-23T00:00:00.000",
+        "count" : "115"
+      }, {
+        "item" : "2026-01-23T00:00:00.000",
+        "count" : "114"
+      }, {
+        "item" : "2025-02-10T00:00:00.000",
+        "count" : "111"
+      }, {
+        "item" : "2025-03-19T00:00:00.000",
+        "count" : "109"
+      }, {
+        "item" : "2025-06-12T00:00:00.000",
+        "count" : "108"
+      }, {
+        "item" : "2026-01-19T00:00:00.000",
+        "count" : "108"
+      }, {
+        "item" : "2026-01-22T00:00:00.000",
+        "count" : "108"
+      } ],
+      "smallest" : "2024-07-01T00:00:00.000",
+      "count" : "24973",
+      "cardinality" : "24973"
+    },
+    "format" : { }
+  }, {
+    "id" : 613408689,
+    "name" : "DEPARTAMENTO",
+    "dataTypeName" : "text",
+    "description" : "",
+    "fieldName" : "departamento",
+    "position" : 2,
+    "renderTypeName" : "text",
+    "tableColumnId" : 113669983,
+    "cachedContents" : {
+      "non_null" : "24973",
+      "largest" : "VICHADA",
+      "null" : "0",
+      "top" : [ {
+        "item" : "ANTIOQUIA",
+        "count" : "6688"
+      }, {
+        "item" : "BOYACÁ",
+        "count" : "2180"
+      }, {
+        "item" : "SANTANDER",
+        "count" : "2120"
+      }, {
+        "item" : "CUNDINAMARCA",
+        "count" : "1436"
+      }, {
+        "item" : "VALLE",
+        "count" : "1276"
+      }, {
+        "item" : "HUILA",
+        "count" : "1080"
+      }, {
+        "item" : "CHOCÓ",
+        "count" : "1070"
+      }, {
+        "item" : "CALDAS",
+        "count" : "859"
+      }, {
+        "item" : "TOLIMA",
+        "count" : "853"
+      }, {
+        "item" : "NORTE DE SANTANDER",
+        "count" : "833"
+      }, {
+        "item" : "BOLÍVAR",
+        "count" : "736"
+      }, {
+        "item" : "CAQUETÁ",
+        "count" : "703"
+      }, {
+        "item" : "META",
+        "count" : "690"
+      }, {
+        "item" : "CÓRDOBA",
+        "count" : "658"
+      }, {
+        "item" : "RISARALDA",
+        "count" : "604"
+      }, {
+        "item" : "PUTUMAYO",
+        "count" : "583"
+      }, {
+        "item" : "CESAR",
+        "count" : "557"
+      }, {
+        "item" : "ATLÁNTICO",
+        "count" : "480"
+      }, {
+        "item" : "CAUCA",
+        "count" : "354"
+      }, {
+        "item" : "NARIÑO",
+        "count" : "287"
+      } ],
+      "smallest" : "AMAZONAS",
+      "count" : "24973",
+      "cardinality" : "24973"
+    },
+    "format" : { }
+  }, {
+    "id" : 613408690,
+    "name" : "MUNICIPIO",
+    "dataTypeName" : "text",
+    "description" : "",
+    "fieldName" : "municipio",
+    "position" : 3,
+    "renderTypeName" : "text",
+    "tableColumnId" : 113669984,
+    "cachedContents" : {
+      "non_null" : "24973",
+      "largest" : "Zona Bananera",
+      "null" : "0",
+      "top" : [ {
+        "item" : "San Roque",
+        "count" : "1070"
+      }, {
+        "item" : "Buriticá",
+        "count" : "874"
+      }, {
+        "item" : "San Pablo de Borbur",
+        "count" : "864"
+      }, {
+        "item" : "Quibdó (CT)",
+        "count" : "752"
+      }, {
+        "item" : "Segovia",
+        "count" : "724"
+      }, {
+        "item" : "Florencia (CT)",
+        "count" : "682"
+      }, {
+        "item" : "California",
+        "count" : "497"
+      }, {
+        "item" : "Remedios",
+        "count" : "491"
+      }, {
+        "item" : "Cali (CT)",
+        "count" : "419"
+      }, {
+        "item" : "Giraldo",
+        "count" : "391"
+      }, {
+        "item" : "Neiva (CT)",
+        "count" : "323"
+      }, {
+        "item" : "Ibagué (CT)",
+        "count" : "310"
+      }, {
+        "item" : "Villavicencio (CT)",
+        "count" : "307"
+      }, {
+        "item" : "Pamplona",
+        "count" : "292"
+      }, {
+        "item" : "La Pintada",
+        "count" : "285"
+      }, {
+        "item" : "Manizales (CT)",
+        "count" : "250"
+      }, {
+        "item" : "Turbaco",
+        "count" : "249"
+      }, {
+        "item" : "Bucaramanga (CT)",
+        "count" : "248"
+      }, {
+        "item" : "Girón",
+        "count" : "242"
+      }, {
+        "item" : "Barbosa",
+        "count" : "239"
+      } ],
+      "smallest" : "Abejorral",
+      "count" : "24973",
+      "cardinality" : "24973"
+    },
+    "format" : { }
+  }, {
+    "id" : 613408691,
+    "name" : "CONDUCTA",
+    "dataTypeName" : "text",
+    "description" : "",
+    "fieldName" : "conducta",
+    "position" : 4,
+    "renderTypeName" : "text",
+    "tableColumnId" : 113669985,
+    "cachedContents" : {
+      "non_null" : "24973",
+      "largest" : "VOLQUETA",
+      "null" : "0",
+      "top" : [ {
+        "item" : "MINAS INTERVENIDAS",
+        "count" : "12857"
+      }, {
+        "item" : "CASO CONOCIDO MINERIA ILEGAL",
+        "count" : "3015"
+      }, {
+        "item" : "INCAUTACIÓN",
+        "count" : "1601"
+      }, {
+        "item" : "MOTORES",
+        "count" : "1541"
+      }, {
+        "item" : "MOTOBOMBAS",
+        "count" : "1103"
+      }, {
+        "item" : "CAPTURAS",
+        "count" : "1078"
+      }, {
+        "item" : "RETROEXCAVADORA",
+        "count" : "912"
+      }, {
+        "item" : "DESTRUCCIÓN",
+        "count" : "517"
+      }, {
+        "item" : "DRAGA BUZO(MINERIA)",
+        "count" : "435"
+      }, {
+        "item" : "EXCAVADORA",
+        "count" : "303"
+      }, {
+        "item" : "MERCURIO",
+        "count" : "213"
+      }, {
+        "item" : "CLASIFICADORA (MINERIA)",
+        "count" : "201"
+      }, {
+        "item" : "VOLQUETA",
+        "count" : "195"
+      }, {
+        "item" : "ORO",
+        "count" : "138"
+      }, {
+        "item" : "DRAGA (MINERIA)",
+        "count" : "131"
+      }, {
+        "item" : "PLANTA DE BENEFICIO MINERO",
+        "count" : "94"
+      }, {
+        "item" : "INDUGEL",
+        "count" : "66"
+      }, {
+        "item" : "A.C.P.M (COMBUSTIBLE)",
+        "count" : "63"
+      }, {
+        "item" : "ARENA",
+        "count" : "43"
+      }, {
+        "item" : "ANFO",
+        "count" : "43"
+      } ],
+      "smallest" : "A.C.P.M",
+      "count" : "24973",
+      "cardinality" : "24973"
+    },
+    "format" : { }
+  }, {
+    "id" : 613408692,
+    "name" : "UNIDAD DE MEDIDA",
+    "dataTypeName" : "text",
+    "description" : "",
+    "fieldName" : "unidad_de_medida",
+    "position" : 5,
+    "renderTypeName" : "text",
+    "tableColumnId" : 113669987,
+    "cachedContents" : {
+      "non_null" : "24973",
+      "largest" : "999",
+      "null" : "0",
+      "top" : [ {
+        "item" : "1",
+        "count" : "17667"
+      }, {
+        "item" : "2",
+        "count" : "2174"
+      }, {
+        "item" : "3",
+        "count" : "1172"
+      }, {
+        "item" : "4",
+        "count" : "822"
+      }, {
+        "item" : "5",
+        "count" : "544"
+      }, {
+        "item" : "6",
+        "count" : "394"
+      }, {
+        "item" : "8",
+        "count" : "244"
+      }, {
+        "item" : "7",
+        "count" : "231"
+      }, {
+        "item" : "0",
+        "count" : "160"
+      }, {
+        "item" : "10",
+        "count" : "154"
+      }, {
+        "item" : "9",
+        "count" : "114"
+      }, {
+        "item" : "11",
+        "count" : "96"
+      }, {
+        "item" : "12",
+        "count" : "91"
+      }, {
+        "item" : "14",
+        "count" : "62"
+      }, {
+        "item" : "15",
+        "count" : "56"
+      }, {
+        "item" : "16",
+        "count" : "48"
+      }, {
+        "item" : "13",
+        "count" : "43"
+      }, {
+        "item" : "20",
+        "count" : "41"
+      }, {
+        "item" : "18",
+        "count" : "26"
+      }, {
+        "item" : "100",
+        "count" : "24"
+      } ],
+      "smallest" : "0",
+      "count" : "24973",
+      "cardinality" : "24973"
+    },
+    "format" : { }
+  }, {
+    "id" : 613408694,
+    "name" : "METRO/DPTO",
+    "dataTypeName" : "text",
+    "description" : "",
+    "fieldName" : "metro_dpto",
+    "position" : 6,
+    "renderTypeName" : "text",
+    "tableColumnId" : 158324121,
+    "cachedContents" : {
+      "non_null" : "24973",
+      "largest" : "VICHADA",
+      "null" : "0",
+      "top" : [ {
+        "item" : "ANTIOQUIA",
+        "count" : "6688"
+      }, {
+        "item" : "BOYACÁ",
+        "count" : "2180"
+      }, {
+        "item" : "SANTANDER",
+        "count" : "2120"
+      }, {
+        "item" : "CUNDINAMARCA",
+        "count" : "1436"
+      }, {
+        "item" : "VALLE",
+        "count" : "1276"
+      }, {
+        "item" : "HUILA",
+        "count" : "1080"
+      }, {
+        "item" : "CHOCÓ",
+        "count" : "1070"
+      }, {
+        "item" : "CALDAS",
+        "count" : "859"
+      }, {
+        "item" : "TOLIMA",
+        "count" : "853"
+      }, {
+        "item" : "NORTE DE SANTANDER",
+        "count" : "833"
+      }, {
+        "item" : "BOLÍVAR",
+        "count" : "736"
+      }, {
+        "item" : "CAQUETÁ",
+        "count" : "703"
+      }, {
+        "item" : "META",
+        "count" : "690"
+      }, {
+        "item" : "CÓRDOBA",
+        "count" : "658"
+      }, {
+        "item" : "RISARALDA",
+        "count" : "604"
+      }, {
+        "item" : "PUTUMAYO",
+        "count" : "583"
+      }, {
+        "item" : "CESAR",
+        "count" : "557"
+      }, {
+        "item" : "ATLÁNTICO",
+        "count" : "480"
+      }, {
+        "item" : "CAUCA",
+        "count" : "354"
+      }, {
+        "item" : "NARIÑO",
+        "count" : "287"
+      } ],
+      "smallest" : "AMAZONAS",
+      "count" : "24973",
+      "cardinality" : "24973"
+    },
+    "format" : { }
+  }, {
+    "id" : 613408701,
+    "name" : "SERVICIOS",
+    "dataTypeName" : "text",
+    "description" : "",
+    "fieldName" : "servicios",
+    "position" : 7,
+    "renderTypeName" : "text",
+    "tableColumnId" : 158324129,
+    "cachedContents" : {
+      "non_null" : "24973",
+      "largest" : "999",
+      "null" : "0",
+      "top" : [ {
+        "item" : "1",
+        "count" : "17667"
+      }, {
+        "item" : "2",
+        "count" : "2174"
+      }, {
+        "item" : "3",
+        "count" : "1172"
+      }, {
+        "item" : "4",
+        "count" : "822"
+      }, {
+        "item" : "5",
+        "count" : "544"
+      }, {
+        "item" : "6",
+        "count" : "394"
+      }, {
+        "item" : "8",
+        "count" : "244"
+      }, {
+        "item" : "7",
+        "count" : "231"
+      }, {
+        "item" : "0",
+        "count" : "160"
+      }, {
+        "item" : "10",
+        "count" : "154"
+      }, {
+        "item" : "9",
+        "count" : "114"
+      }, {
+        "item" : "11",
+        "count" : "96"
+      }, {
+        "item" : "12",
+        "count" : "91"
+      }, {
+        "item" : "14",
+        "count" : "62"
+      }, {
+        "item" : "15",
+        "count" : "56"
+      }, {
+        "item" : "16",
+        "count" : "48"
+      }, {
+        "item" : "13",
+        "count" : "43"
+      }, {
+        "item" : "20",
+        "count" : "41"
+      }, {
+        "item" : "18",
+        "count" : "26"
+      }, {
+        "item" : "100",
+        "count" : "24"
+      } ],
+      "smallest" : "0",
+      "count" : "24973",
+      "cardinality" : "24973"
+    },
+    "format" : { }
+  }, {
+    "id" : 613408697,
+    "name" : "HECHOS ID",
+    "dataTypeName" : "text",
+    "description" : "",
+    "fieldName" : "hechos_id",
+    "position" : 8,
+    "renderTypeName" : "text",
+    "tableColumnId" : 158324124,
+    "cachedContents" : {
+      "non_null" : "24973",
+      "largest" : "VOLQUETA",
+      "null" : "0",
+      "top" : [ {
+        "item" : "MINAS INTERVENIDAS",
+        "count" : "12857"
+      }, {
+        "item" : "CASO CONOCIDO MINERIA ILEGAL",
+        "count" : "3015"
+      }, {
+        "item" : "INCAUTACIÓN",
+        "count" : "1601"
+      }, {
+        "item" : "MOTORES",
+        "count" : "1541"
+      }, {
+        "item" : "MOTOBOMBAS",
+        "count" : "1103"
+      }, {
+        "item" : "CAPTURAS",
+        "count" : "1078"
+      }, {
+        "item" : "RETROEXCAVADORA",
+        "count" : "912"
+      }, {
+        "item" : "DESTRUCCIÓN",
+        "count" : "517"
+      }, {
+        "item" : "DRAGA BUZO(MINERIA)",
+        "count" : "435"
+      }, {
+        "item" : "EXCAVADORA",
+        "count" : "303"
+      }, {
+        "item" : "MERCURIO",
+        "count" : "213"
+      }, {
+        "item" : "CLASIFICADORA (MINERIA)",
+        "count" : "201"
+      }, {
+        "item" : "VOLQUETA",
+        "count" : "195"
+      }, {
+        "item" : "ORO",
+        "count" : "138"
+      }, {
+        "item" : "DRAGA (MINERIA)",
+        "count" : "131"
+      }, {
+        "item" : "PLANTA DE BENEFICIO MINERO",
+        "count" : "94"
+      }, {
+        "item" : "INDUGEL",
+        "count" : "66"
+      }, {
+        "item" : "A.C.P.M (COMBUSTIBLE)",
+        "count" : "63"
+      }, {
+        "item" : "ARENA",
+        "count" : "43"
+      }, {
+        "item" : "ANFO",
+        "count" : "43"
+      } ],
+      "smallest" : "A.C.P.M",
+      "count" : "24973",
+      "cardinality" : "24973"
+    },
+    "format" : { }
+  } ],
+  "grants" : [ {
+    "inherited" : false,
+    "type" : "viewer",
+    "flags" : [ "public" ]
+  } ],
+  "license" : {
+    "name" : "Creative Commons Attribution | Share Alike 4.0 International",
+    "logoUrl" : "images/licenses/cc30bysa.png",
+    "termsLink" : "http://creativecommons.org/licenses/by-sa/4.0/legalcode"
+  },
+  "metadata" : {
+    "custom_fields" : {
+      "Información de la Entidad" : {
+        "Municipio" : "Bogotá D.C.",
+        "Nombre de la Entidad" : "Dirección General de la Policía Nacional - DIPON, Bogotá D.C.",
+        "DIVIPOLA Municipio" : "11001",
+        "Orden" : "Nacional",
+        "Sector" : "Defensa",
+        "Departamento" : "Bogotá D.C."
+      },
+      "Información de Datos" : {
+        "Cobertura Geográfica" : "Nacional",
+        "Idioma" : "Español",
+        "Frecuencia de Actualización" : "Trimestral"
+      }
+    },
+    "availableDisplayTypes" : [ "table", "fatrow", "page" ]
+  },
+  "owner" : {
+    "id" : "yvgz-36de",
+    "displayName" : "POLICÍA - DICAR",
+    "profileImageUrlLarge" : "/api/users/yvgz-36de/profile_images/LARGE",
+    "profileImageUrlMedium" : "/api/users/yvgz-36de/profile_images/THUMB",
+    "profileImageUrlSmall" : "/api/users/yvgz-36de/profile_images/TINY",
+    "screenName" : "POLICÍA - DICAR",
+    "type" : "interactive",
+    "flags" : [ "acceptedEula", "mayBeStoriesCoOwner" ]
+  },
+  "query" : { },
+  "rights" : [ "read" ],
+  "tableAuthor" : {
+    "id" : "yvgz-36de",
+    "displayName" : "POLICÍA - DICAR",
+    "profileImageUrlLarge" : "/api/users/yvgz-36de/profile_images/LARGE",
+    "profileImageUrlMedium" : "/api/users/yvgz-36de/profile_images/THUMB",
+    "profileImageUrlSmall" : "/api/users/yvgz-36de/profile_images/TINY",
+    "screenName" : "POLICÍA - DICAR",
+    "type" : "interactive",
+    "flags" : [ "acceptedEula", "mayBeStoriesCoOwner" ]
+  },
+  "tags" : [ "operativos", "explotación", "ilícita", "yacimiento", "minero", "control" ],
+  "flags" : [ "default", "ownerMayBeContacted", "restorable", "restorePossibleForType" ]
+}

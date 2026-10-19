@@ -1,0 +1,217 @@
+{
+ "T1": "EPSG:3116 -> EPSG:4326 (pyproj)",
+ "T2": "arsenico >= 1 interpretado como ug/L y convertido a mg/L",
+ "T3": "adapter cdmb_open_data: mercurio_mg_l x1000 -> ug/L",
+ "changes": [
+  {
+   "row": 231,
+   "field": "arsenico_mg_l",
+   "rule": "T2",
+   "from": "<5.00",
+   "to": "<0.005"
+  },
+  {
+   "row": 268,
+   "field": "arsenico_mg_l",
+   "rule": "T2",
+   "from": "<5.00",
+   "to": "<0.005"
+  },
+  {
+   "row": 270,
+   "field": "arsenico_mg_l",
+   "rule": "T2",
+   "from": "<5.00",
+   "to": "<0.005"
+  },
+  {
+   "row": 274,
+   "field": "arsenico_mg_l",
+   "rule": "T2",
+   "from": "5",
+   "to": "0.005"
+  },
+  {
+   "row": 275,
+   "field": "arsenico_mg_l",
+   "rule": "T2",
+   "from": "<5.00",
+   "to": "<0.005"
+  },
+  {
+   "row": 276,
+   "field": "arsenico_mg_l",
+   "rule": "T2",
+   "from": "<5.00",
+   "to": "<0.005"
+  },
+  {
+   "row": 277,
+   "field": "arsenico_mg_l",
+   "rule": "T2",
+   "from": "<5.00",
+   "to": "<0.005"
+  },
+  {
+   "row": 278,
+   "field": "arsenico_mg_l",
+   "rule": "T2",
+   "from": "<5.00",
+   "to": "<0.005"
+  },
+  {
+   "row": 279,
+   "field": "arsenico_mg_l",
+   "rule": "T2",
+   "from": "<5.00",
+   "to": "<0.005"
+  },
+  {
+   "row": 280,
+   "field": "arsenico_mg_l",
+   "rule": "T2",
+   "from": "<5.00",
+   "to": "<0.005"
+  },
+  {
+   "row": 281,
+   "field": "arsenico_mg_l",
+   "rule": "T2",
+   "from": "8.56",
+   "to": "0.00856"
+  },
+  {
+   "row": 282,
+   "field": "arsenico_mg_l",
+   "rule": "T2",
+   "from": "16.9",
+   "to": "0.0169"
+  },
+  {
+   "row": 283,
+   "field": "arsenico_mg_l",
+   "rule": "T2",
+   "from": "<5.00",
+   "to": "<0.005"
+  },
+  {
+   "row": 284,
+   "field": "arsenico_mg_l",
+   "rule": "T2",
+   "from": "<5.00",
+   "to": "<0.005"
+  },
+  {
+   "row": 285,
+   "field": "arsenico_mg_l",
+   "rule": "T2",
+   "from": "5.63",
+   "to": "0.00563"
+  },
+  {
+   "row": 286,
+   "field": "arsenico_mg_l",
+   "rule": "T2",
+   "from": "11.8",
+   "to": "0.0118"
+  },
+  {
+   "row": 287,
+   "field": "arsenico_mg_l",
+   "rule": "T2",
+   "from": "<5.00",
+   "to": "<0.005"
+  },
+  {
+   "row": 288,
+   "field": "arsenico_mg_l",
+   "rule": "T2",
+   "from": "<5.00",
+   "to": "<0.005"
+  },
+  {
+   "row": 289,
+   "field": "arsenico_mg_l",
+   "rule": "T2",
+   "from": "<5.00",
+   "to": "<0.005"
+  },
+  {
+   "row": 290,
+   "field": "arsenico_mg_l",
+   "rule": "T2",
+   "from": "<5.00",
+   "to": "<0.005"
+  },
+  {
+   "row": 291,
+   "field": "arsenico_mg_l",
+   "rule": "T2",
+   "from": "<5.00",
+   "to": "<0.005"
+  },
+  {
+   "row": 292,
+   "field": "arsenico_mg_l",
+   "rule": "T2",
+   "from": "<5.00",
+   "to": "<0.005"
+  },
+  {
+   "row": 293,
+   "field": "arsenico_mg_l",
+   "rule": "T2",
+   "from": "<5.00",
+   "to": "<0.005"
+  },
+  {
+   "row": 294,
+   "field": "arsenico_mg_l",
+   "rule": "T2",
+   "from": "<5.00",
+   "to": "<0.005"
+  },
+  {
+   "row": 295,
+   "field": "arsenico_mg_l",
+   "rule": "T2",
+   "from": "<5.00",
+   "to": "<0.005"
+  },
+  {
+   "row": 299,
+   "field": "arsenico_mg_l",
+   "rule": "T2",
+   "from": "<5.00",
+   "to": "<0.005"
+  },
+  {
+   "row": 300,
+   "field": "arsenico_mg_l",
+   "rule": "T2",
+   "from": "5",
+   "to": "0.005"
+  },
+  {
+   "row": 321,
+   "field": "arsenico_mg_l",
+   "rule": "T2",
+   "from": "<5.00",
+   "to": "<0.005"
+  },
+  {
+   "row": 322,
+   "field": "arsenico_mg_l",
+   "rule": "T2",
+   "from": "<5.00",
+   "to": "<0.005"
+  },
+  {
+   "row": 333,
+   "field": "arsenico_mg_l",
+   "rule": "T2",
+   "from": "<5.00",
+   "to": "<0.005"
+  }
+ ]
+}

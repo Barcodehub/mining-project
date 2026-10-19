@@ -86,7 +86,7 @@ public class AmbientalConfig {
 
     @Getter @Setter
     public static class PerfilTermicoConfig {
-        private double altitudFriaMin = 2000;
+        private double altitudFriaMin = 2001;
         private PerfilTermico porDefecto = PerfilTermico.CALIDA;
     }
 

@@ -130,7 +130,7 @@ ambiental:
 
   # Perfil térmico del cuerpo de agua (Decreto 1076, art. 2.2.3.3.9.10).
   perfil-termico:
-    altitud-fria-min: 2000     # m s. n. m. (pisos frío y páramo)
+    altitud-fria-min: 2001     # m s. n. m.: piso frío 2001–3000 y páramo (Caldas 1802, en IGAC IN-GAG-PC05-13, tabla 3)
     por-defecto: CALIDA
 
   # Rangos físicamente plausibles: fuera de ellos, el valor no se usa y se marca.
