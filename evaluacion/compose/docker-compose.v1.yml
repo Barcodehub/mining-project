@@ -1,0 +1,7 @@
+# Override para comparar contra el sistema v1 (etiqueta git v1-paper).
+# Requiere el worktree:  git worktree add --detach ../mineria-v1 v1-paper  y su jar compilado.
+services:
+  mining-management:
+    build:
+      context: ../mineria-v1/mining-management
+    image: exp-mining-management-v1

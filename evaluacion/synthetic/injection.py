@@ -42,7 +42,7 @@ def main():
                                            "hg_total", "cyanide", "arsenic", "altitude")}
                 m[param] = v
                 floor, ev = expected_floor(m, pol)
-                payload = {"deviceId": f"INJ-{bi:03d}", "latitude": 7.30, "longitude": -72.90,
+                payload = {"deviceId": f"INJ-{len(out):05d}", "latitude": 7.30, "longitude": -72.90,
                            "clusterId": "INYECCION", "timestamp": "2026-01-15T12:00:00Z",
                            **{k: x for k, x in m.items() if x is not None}}
                 out.append({"sensorType": "multi_parameter_sensor", "payload": payload,
