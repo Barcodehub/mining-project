@@ -65,3 +65,6 @@ PLAN_ACCION.md
 
 ### Precargas repetidas de las corridas de rendimiento (van completas a Zenodo)
 evaluacion/results/**/perf/**/preload_*.jsonl
+
+# Configuración local de herramientas
+.claude/settings.local.json

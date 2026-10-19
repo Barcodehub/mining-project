@@ -141,7 +141,7 @@ services:
     volumes:
       - ./evaluacion/k6:/k6
       - ./evaluacion/results:/results
-    entrypoint: ["k6", "run", "/k6/load_test.js"]
+    entrypoint: ["k6", "run", "/k6/load_test_v2.js"]
     depends_on:
       - influxdb
     environment:

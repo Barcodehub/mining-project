@@ -25,6 +25,8 @@ El sistema está dividido en capas con estrictos límites de dependencia:
 - **Comentarios y Multimedia:** Relaciones `OneToMany` para adjuntar `PostImage` (URL) y generar interacción a través de comentarios.
 
 ### 2. Gestión de Sensores y Datos Ambientales
+- **Modelo de alerta normativo (v2):** cada medición se clasifica al ingresar con 11 factores en tres dimensiones (humana, ecológica, geoquímica), umbrales trazables a la norma colombiana (Res. 2115/2007, Decreto 1076/2015, Res. 122/2012) y a criterios EPA/CCME, puntaje compuesto renormalizado sobre las dimensiones evaluables y **piso normativo** (ninguna superación legal queda oculta por el promedio). Toda la política está en `src/main/resources/config-ambiental.yaml` y se cambia sin recompilar.
+- **Calidad de datos:** los valores censurados (`<LD`) se guardan como medidos con su límite; los centinelas de la fuente (p. ej., `-999`) se tratan como ausentes y los valores fuera de rango físico se marcan y no se usan.
 - **Formatos Dinámicos:** Endpoints dedicados al registro de adaptadores (Mappings). Permite a los dispositivos de sensores externos enviar la telemetría en el formato que sea.
 - **Normalización (Mapping Engine):** Evaluador que convierte métricas entrantes por medio del mapeo JSON como `phwater_ong -> ph` ó JSON Path expressions (`meta.id -> device_id`).
 - **Análisis Exploratorio:** Permite acceder a los datos usando *Criteria API* dinámicos basados en combinaciones múltiples (por ejemplo, buscar el `pH` mínimo, máximas temperaturas y ubicación determinada en el mismo query).
@@ -33,16 +35,18 @@ El sistema está dividido en capas con estrictos límites de dependencia:
 ### 3. API Gateway Lógico (Seguridad & Proxy)
 - **Delegación a Microservicio de Usuarios:** `mining-management` actúa como API Gateway ante el cliente consumiendo y orquestando los tokens. La generación de JWT la realiza `mining-users` y es retornado vía proxy (`/api/v1/auth/login`) a través de un `RestClient`.
 - **Seguridad Centralizada:** Este servicio requiere cabecera de *Bearer Authentication* en casi todos sus endpoints sin interconectar persistencias de Usuario ni emitir sus propios Tokens (Arquitectura Sin Estado). En su lugar procesa, filtra y valida criptográficamente (Jwts).
-- **Autorización RBAC:** Aprovecha las etiquetas nativas `@PreAuthorize` de Spring combinadas con las autoridades extraídas del token provisto para determinar permisos (`ADMINISTRADOR`, `INGENIERO`, `MODERADOR` o `CLIENTE`).
+- **Autorización RBAC:** `@PreAuthorize` con el rol del token: `ADMINISTRADOR`/`INGENIERO` registran adapters e ingieren mediciones; `ADMINISTRADOR`/`MODERADOR` validan reportes (el validador se toma del `userId` del token, no del cuerpo); solo `ADMINISTRADOR` consulta la auditoría; cualquier usuario autenticado (`CLIENTE` incluido) crea y consulta reportes.
+- **Protección del reportante:** quien no es validador recibe la ubicación de los reportes generalizada a una cuadrícula de 0.01° y sin identificadores; la auditoría guarda al autor con un seudónimo HMAC-SHA256 (`PSEUDONYM_SECRET`); las fotos se re-codifican desde sus píxeles, lo que elimina EXIF/GPS.
 
 ### 4. Arquitectura Orientada a Eventos (Kafka)
+- **Alertas ambientales:** cada medición en nivel ALERTA o CRÍTICO se publica de forma asíncrona en el tópico `environmental-alerts` (clave = clúster, para conservar el orden por zona) con la clasificación, las superaciones y la marca de tiempo de ingesta. Métricas: `environmental.alerts.published` y `environmental.alerts.publish.failed`.
 - **Productor Asíncrono:** Emite eventos de dominio (ej. `REPORT_CREATED`, `REPORT_VALIDATED`, `COMMENT_CREATED`) hacia el tópico `mining-events`.
 - **Desacoplamiento Total:** No espera respuesta sincrónica de Notificaciones/Auditoría una vez ocurrida la acción crítica, descargando la concurrencia a través de `mining-audit-notifications`.
 
 ### 5. Capa de Analytics y Métricas
 - **Métricas Agrupadas por Cluster:** Calcula indicadores ambientales (SAI - Sensor Alert Index) y ciudadanos (CRI - Citizen Report Index) agrupados por zonas geográficas.
 - **Correlación Estadística:** Implementa análisis de correlación Spearman entre datos IoT y reportes ciudadanos para validar hipótesis científicas.
-- **Datos para Paper:** Los endpoints generan datasets estructurados listos para análisis estadístico y publicación académica.
+- **Correlación con ligaduras y valor p exacto:** Spearman con rangos promedio y prueba de permutación exacta hasta nueve clústeres (Monte Carlo en adelante).
 
 ---
 
@@ -86,7 +90,7 @@ Se han configurado herramientas de integración para la fácil lectura y testing
 ### 1. Swagger UI Automático
 No es necesario leer código para conocer los formatos de entrada exacta, accede al servidor en ejecución y vé a:
 
-> **[http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)**
+> **[http://localhost:8082/swagger-ui.html](http://localhost:8082/swagger-ui.html)**
 
 *Detecta las firmas automáticamente (OpenAPI) sin polución en tu código de negocio.*
 

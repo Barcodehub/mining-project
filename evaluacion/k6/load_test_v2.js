@@ -1,7 +1,7 @@
 /**
  * Prueba de carga v2 (k6).
  *
- * Igual que la v1 (load_test.js) en etapas, mezcla de flujos y umbrales, salvo:
+ * Igual que la v1 (load_test.js, etiqueta git v1-paper) en etapas, mezcla de flujos y umbrales, salvo:
  *  - POST /environmental-data usa un pool de payloads de TRES fuentes heterogéneas:
  *    sintéticos anclados en formato IoT canónico, filas reales de la CDMB y de CORPONOR en su
  *    formato original (data/payload_pool.json). Los adapters se registran en setup().

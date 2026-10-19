@@ -1,358 +1,120 @@
-# Sistema de Gestión de Minería API - VERSIÓN CIENTÍFICAMENTE HONESTA
+# Event-driven early warning middleware for mining-related water contamination
 
-Plataforma basada en microservicios desarrollada con **Spring Boot (Java 17)** y estructurada bajo **Arquitectura Hexagonal**. Permite el registro de actividad minera ilegal, datos de sensores ambientales y notificaciones distribuidas.
+Source code, configuration, data and experiment scripts of the article
 
----
+> B. A. Barco Cardenas, "An Event-Driven Early Warning Middleware for Mining-Related Water Contamination:
+> Integrating Sensor, Laboratory, and Citizen Evidence in Northeastern Colombia," submitted to *IEEE Access*, 2026.
 
-## 🎯 FILOSOFÍA DEL SISTEMA
+The middleware ingests heterogeneous evidence (in-situ probes, laboratory campaigns, citizen reports),
+classifies every measurement **at ingestion** against Colombian legal limits and international aquatic-life
+criteria, and delivers Alert/Critical events through Apache Kafka to an idempotent audit-and-notification
+service that records the end-to-end latency.
 
-### Principio fundamental: **NO INVENTAR DATOS**
-
-Este sistema implementa un enfoque científicamente riguroso:
-
-1. **Solo almacenamos datos MEDIDOS** — Si un campo no viene del sensor o laboratorio, queda en `null`
-2. **Scoring defensivo** — Los algoritmos de alerta solo usan campos presentes, nunca asumen
-3. **Dos tipos de alerta**:
-   - **IMPACTO**: Evidencia directa de contaminación (mercurio medido supera norma)
-   - **RIESGO**: Condiciones ambientales peligrosas (pH bajo, redox bajo, etc.)
-4. **Transparencia total** — Cada medición incluye metadatos de calidad (`dataCompleteness`, `missingFields`, `dataSource`)
+| Git tag | State |
+|---|---|
+| `v2-paper` | System and results reported in the article (this branch) |
+| `v1-paper` | Previous version, used as baseline in the article |
 
 ---
 
-## Arquitectura de Microservicios
+## Architecture
 
-El sistema está diseñado en 3 microservicios principales:
+| Service | Port | Role |
+|---|---|---|
+| `mining-users` | 8081 | Identities, JWT issuance (user id + role) |
+| `mining-management` | 8082 | Source adapters, data-quality gate, classifier, citizen reports, SAI/CRI analytics; Kafka producer |
+| `mining-audit-notifications` | 8083 | Kafka consumer: append-only audit (PostgreSQL), notifications (MongoDB), latency metrics |
 
-1. **mining-management (Core / Puerto 8082)**: 
-   - Microservicio principal y orquestador.
-   - Gestión de reportes de denuncias ciudadanas y foros.
-   - Orquestador lógico (API Gateway Proxy) para consumir el microservicio de autenticación.
-   - Mapping, serialización y almacenamiento dinámico de datos de sensores ambientales.
-   - **Sistema de alertas multidimensional** con scoring de riesgo humano, ecológico y geoquímico.
-   - Almacenamiento seguro por S3.
-   - *Actúa como Emisor de eventos asíncronos en Kafka.*
+Infrastructure (Docker Compose): Kafka + ZooKeeper (Confluent 7.4.0, `9092`), PostgreSQL 15 (`15432`),
+MongoDB 6 (`27017`), Prometheus (`9090`), Grafana (`4000`), InfluxDB (`8086`) and k6 0.54.0.
+All services are Spring Boot 3.2 / Java 17 with a hexagonal (ports and adapters) structure.
 
-2. **mining-users (Auth / Puerto 8081)**:
-   - Microservicio dedicado puramente a Identidad y Acceso (IAM).
-   - Emisión de JWT y gestión de control de roles (RBAC).
+Kafka topics: `environmental-alerts` (key = cluster; only Alert and Critical levels) and `mining-events`
+(report and audit events).
 
-3. **mining-audit-notifications (Event-Driven / Puerto 8083)**:
-   - Consumidor puro orientado a eventos.
-   - Recibe la carga de crear Notificaciones mediante MongoDb.
-   - Recibe la carga de generar trazabilidad de auditoría inmutable (Append-only) utilizando PostgreSQL.
+## Alert model (v2)
 
----
+The whole policy lives in
+[`mining-management/src/main/resources/config-ambiental.yaml`](mining-management/src/main/resources/config-ambiental.yaml);
+every threshold cites its source and can be changed without recompiling.
 
-## 📊 Modelo de Datos Ambiental
+- **11 factors** in three dimensions: human (Res. 2115/2007 and Decree 1076/2015 for Hg, CN, As in water;
+  EPA and Res. 122/2012 for Hg in fish), ecological (EPA aquatic-life CCC/CMC, CCME sediment guidelines,
+  dissolved oxygen by thermal profile) and geochemical (pH, Eh).
+- Strict exceedance; factor score 0 / 0.5 / 1. Censored values (`<LOD`) are kept as measurements and are
+  conclusive when the limit of detection is at or below the Alert threshold.
+- Composite score renormalized over the dimensions that can be evaluated (weights 0.45 / 0.35 / 0.20);
+  levels Normal, Caution, Alert, Critical at 0.25 / 0.50 / 0.75; Indeterminate when nothing is conclusive.
+- **Normative floor**: a Critical human-health exceedance guarantees at least Alert, and any exceedance at
+  least Caution. Each measurement is typed Impact, Risk, Mixed, None or Unknown.
+- Implausible values (e.g., dissolved oxygen > 20 mg/L) and source sentinels (e.g., CDMB `-999`) are
+  flagged, never used.
 
-### Campos OBLIGATORIOS (siempre presentes)
-- `deviceId`, `latitude`, `longitude`, `timestamp`
-- `ph`, `temperature`, `turbidity`
-- **Al menos UNO de**: `hg_total` o `hg_dissolved`
+A measurement is accepted when it has a device identifier, a plausible location and at least one
+recognized parameter.
 
-### Campos OPCIONALES (pueden ser null)
-- **Geoquímicas avanzadas**: `redox`, `dissolved_oxygen`, `organic_carbon`
-- **Mercurio en otros compartimentos**: `hg_sediment`, `hg_fish`, `methylmercury`
+## Access control and reporter protection
 
-### Metadatos de Calidad
-- `alertLevel`: NORMAL | PRECAUCION | ALERTA | CRITICO
-- `alertType`: IMPACTO | RIESGO | MIXTO | DESCONOCIDO
-- `dataCompleteness`: Porcentaje de campos opcionales presentes (0.0 - 1.0)
-- `missingFields`: Lista CSV de campos críticos faltantes
-- `dataSource`: SENSOR | LABORATORIO | MIXTO
+| Operation | Roles |
+|---|---|
+| Register adapters, ingest measurements | `ADMINISTRADOR`, `INGENIERO` |
+| Validate or reject citizen reports | `ADMINISTRADOR`, `MODERADOR` (validator taken from the token) |
+| Query the audit trail | `ADMINISTRADOR` |
+| File and read reports, read data and analytics | any authenticated user (`CLIENTE` included) |
 
-### Unidades
-- `hg_dissolved`, `hg_total`, `methylmercury`: µg/L
-- `hg_sediment`, `hg_fish`: mg/kg
-- `redox`: mV
-- `organic_carbon`: % peso seco
-- `dissolved_oxygen`: mg/L
-- `turbidity`: NTU
-- `temperature`: °C
+Users without a validator role receive report locations generalized to a 0.01° grid and no user
+identifiers; the audit trail stores report authors as HMAC-SHA256 pseudonyms (`PSEUDONYM_SECRET`); uploaded
+images are re-encoded, which strips EXIF/GPS metadata. `evaluacion/scripts/verify_rbac.py` checks all of
+this end to end.
 
----
-
-## Despliegue y Ejecución
-
-### Levantar los contenedores
-Todos los servicios de soporte han sido configurados a través de **Docker Compose**. En la raíz del proyecto, ejecuta:
+## Quick start
 
 ```bash
-docker-compose up -d
+# Build the three services (Java 17)
+(cd mining-users && ./gradlew bootJar) && (cd mining-management && ./gradlew bootJar) \
+  && (cd mining-audit-notifications && ./gradlew bootJar)
+
+docker compose up -d --build
 ```
 
-Esto levantará los siguientes servicios en segundo plano:
-- **Zookeeper & Kafka**: Infraestructura asíncrona en el puerto `9092`.
-- **PostgreSQL**: Base de datos SQL para auditoría en el puerto `5432`.
-- **MongoDB**: Base de datos NoSQL para notificaciones en el puerto `27017`.
-- **Prometheus**: Base de datos Time-Series en el puerto `9090`.
-- **Grafana**: Dashboard de visualización en el puerto `4000`.
-- **K6**: Herramienta de pruebas de carga configurada para ejecutar el script `load_test.js`.
+A seed administrator (`admin@admin.com` / `Admin123`) is created for local use; change it, the JWT secret
+and `PSEUDONYM_SECRET` before any real deployment. Swagger UI: `http://localhost:8082/swagger-ui.html`.
 
-### Generar y cargar datasets
-1. Generar datasets:
-   ```bash
-   docker-compose run --rm mining-management node evaluacion/scripts/generate_datasets.js
-   ```
-2. Cargar datasets:
-   ```bash
-   docker-compose run --rm mining-management node evaluacion/scripts/load_datasets_api.js
-   ```
+Main endpoints (all under `mining-management`, port 8082):
 
-### Ejecutar pruebas de carga
-Para ejecutar las pruebas de carga con K6:
-- Con resultados en un archivo JSON:
-  ```bash
-  docker-compose run --rm k6 --out json=results.json
-  ```
-- Con resultados enviados a InfluxDB para visualización en Grafana:
-  ```bash
-  docker-compose run --rm k6
-  ```
-- Sin guardar resultados:
-  ```bash
-  docker-compose run --rm k6 --no-summary
-  ```
-  - *Nota*: Para escenarios alto (500 VU) añadir "-e ESCENARIO=alto" al comando anterior.
+- `POST /api/v1/auth/login` — JWT (proxied to `mining-users`)
+- `POST /api/v1/adapters` — field mapping of a source format to the canonical schema
+- `POST /api/v1/environmental-data` — ingest and classify; `GET /api/v1/environmental-data[/aggregate]`
+- `POST /api/v1/posts`, `GET /api/v1/reports`, `PATCH /api/v1/reports/{id}/request-validation`,
+  `PATCH /api/v1/reports/{id}/status`
+- `GET /api/v1/analytics/{clusters|reports|fusion|correlation}` — SAI, CRI and Spearman ρ
+- `GET /api/v1/notifications/{userId}`, `GET /api/v1/audit` — proxied to `mining-audit-notifications`
 
----
+## Reproducing the article
 
-## Observabilidad (Prometheus & Grafana)
+See [`evaluacion/README.md`](evaluacion/README.md): real data preparation, synthetic data with known ground
+truth, the experiment runner (each run in a clean Docker environment), and the scripts that produce every
+table and figure from the raw results in `evaluacion/results/2026-10-19/`.
 
-La plataforma completa ha sido instrumentada con **Micrometer** y **Spring Boot Actuator** en los 3 microservicios generados.
+## Repository layout
 
-- **Prometheus** está pre-configurado (`observability/prometheus.yml`) para interrogar localmente a los 3 microservicios cada 15 segundos sobre sus métricas `/actuator/prometheus`.
-- **Grafana** permite visualizar el comportamiento interno de la JVM y rendimiento HTTP. 
-  - *Acceso Grafana:* [http://localhost:4000](http://localhost:4000)
-  - *Credenciales por defecto:* admin / admin
-  - *Setup:* La base de datos `Prometheus` ya fue añadida como proveedor de forma autoconfigurada por *Provisioning*. Puedes agregar dashboards como el **JVM Micrometer**.
-
----
-
-## Referencia Rápida de Endpoints
-
-### 1. Autenticación (Vía Core)
-- `POST /api/v1/auth/login` - Proxifica hacia `mining-users` devolviendo la sesión JWT.
-
-### 2. CORE: Reportes & Foro
-- `POST /api/v1/posts` - Registro (REPORT/FORUM).
-- `GET /api/v1/posts` - Paginado.
-- `GET /api/v1/reports` - Múltiples Query Params dinámicos para los reportes especiales de minería ilegal.
-- Flujos de estado: `PATCH /api/v1/reports/{id}/request-validation` y `PATCH /api/v1/reports/{id}/status`.
-
-### 3. CORE: Environmental Data
-- `POST /api/v1/adapters` - Creación de plantilla/mapping JSON.
-- `POST /api/v1/environmental-data` - Inserción de datos de sensores (acepta campos opcionales en null).
-- `GET /api/v1/environmental-data` - Consulta con filtros avanzados:
-  - Por mercurio: `?hgDisssolvedMin=1.0&hgTotalMin=2.0`
-  - Por nivel de alerta: `?alertLevel=CRITICO`
-  - Por tipo de alerta: `?alertType=IMPACTO` o `?alertType=RIESGO`
-  - Por geoquímica: `?phMin=4.0&phMax=6.0&redoxMax=100`
-- `GET /api/v1/environmental-data/aggregate` - Cálculo de parámetros estadísticos.
-
-### 4. CORE: Analytics
-- `GET /api/v1/analytics/clusters` - Métricas ambientales agrupadas por cluster (SAI).
-- `GET /api/v1/analytics/reports` - Métricas de reportes ciudadanos agrupadas por cluster (CRI).
-- `GET /api/v1/analytics/fusion` - Combinación de SAI y CRI por cluster.
-- `GET /api/v1/analytics/correlation` - Coeficiente de correlación Spearman entre SAI y CRI.
-
-### 5. CORE: Storage AWS
-- `POST /api/storage/upload` - Sube archivos normales con MultipartFile.
-- `POST /api/storage/upload-with-thumbnail` - Generación automática de miniaturas.
-
-### 6. EVENT-DRIVEN: Audit y Notification
-- `GET /api/v1/notifications/{userId}` - Bandejas de Notificaciones universales.
-- `GET /api/v1/audit` - Consulta de Logs inmutables de auditorías de todo el sistema.
-
----
-
-## 🔧 Configuración de Umbrales Ambientales
-
-Los umbrales de alerta son **completamente configurables** sin recompilar el código.
-
-### Archivo: `mining-management/src/main/resources/config-ambiental.yaml`
-
-```yaml
-ambiental:
-  region: "Norte de Santander - Colombia"
-  
-  hg-disuelto:
-    alerta: 1.0       # OMS agua potable: 1 µg/L
-    critico: 2.0      # IDEAM cuerpos de agua: 2 µg/L
-  
-  hg-peces:
-    alerta: 0.3       # FDA advisory
-    critico: 0.5      # FDA action level / OMS
-  
-  ph:
-    critico-bajo: 5.5 # Umbral metilación acelerada
-  
-  redox:
-    critico-bajo: 0   # mV — ambiente reductor
-  
-  pesos-score:
-    riesgo-humano: 0.45
-    riesgo-ecologico: 0.35
-    riesgo-geoquimico: 0.20
+```
+mining-users/  mining-management/  mining-audit-notifications/   microservices
+observability/                     Prometheus, Grafana and PostgreSQL init
+evaluacion/real/                   real data (raw, processed, adapters, scripts)
+evaluacion/synthetic/              generator, event injection and independent normative oracle
+evaluacion/data/v2/                generated datasets (fixed seed)
+evaluacion/k6/                     load test and payload pool
+evaluacion/run_experiments.py      experiment runner
+evaluacion/analysis/               tables, figures, Python replica of the classifier
+evaluacion/results/2026-10-19/     raw results used in the article
 ```
 
-**Para cambiar el estándar regional**: Edita este archivo y reinicia el servicio. No se requiere recompilación.
+## Data sources and licenses
 
----
-
-## 📝 Ejemplos de Request/Response
-
-### Ejemplo 1: Sensor Básico (solo campos obligatorios)
-
-**Request:**
-```json
-POST /api/v1/environmental-data
-{
-  "sensorType": "multi_parameter_sensor",
-  "payload": {
-    "deviceId": "SENSOR-C1-001",
-    "latitude": 8.076432,
-    "longitude": -72.821957,
-    "clusterId": "C1",
-    "ph": 5.12,
-    "hg_dissolved": 2.345678,
-    "hg_total": 25.4321,
-    "turbidity": 87.3,
-    "temperature": 28.4,
-    "redox": -85.0,
-    "dissolved_oxygen": 2.14,
-    "organic_carbon": 3.45,
-    "timestamp": "2026-04-19T14:32:00Z"
-  }
-}
-```
-
-**Response:**
-```json
-{
-  "id": 1042,
-  "deviceId": "SENSOR-C1-001",
-  "latitude": 8.076432,
-  "longitude": -72.821957,
-  "clusterId": "C1",
-  "ph": 5.12,
-  "hgDissolved": 2.345678,
-  "hgTotal": 25.4321,
-  "hgSediment": null,
-  "hgFish": null,
-  "methylmercury": null,
-  "turbidity": 87.3,
-  "temperature": 28.4,
-  "redox": -85.0,
-  "dissolvedOxygen": 2.14,
-  "organicCarbon": 3.45,
-  "humanRiskScore": 1.0,
-  "ecologicalRiskScore": 0.8,
-  "geochemicalRiskScore": 1.0,
-  "totalRiskScore": 0.915,
-  "alertLevel": "CRITICO",
-  "alertType": "MIXTO",
-  "dataCompleteness": 0.625,
-  "missingFields": "hg_sediment,hg_fish,methylmercury",
-  "dataSource": "SENSOR",
-  "timestamp": "2026-04-19T14:32:00"
-}
-```
-
-### Ejemplo 2: Con Datos de Laboratorio
-
-**Request:**
-```json
-POST /api/v1/environmental-data
-{
-  "sensorType": "multi_parameter_sensor",
-  "payload": {
-    "deviceId": "SENSOR-C1-002",
-    "latitude": 8.076432,
-    "longitude": -72.821957,
-    "clusterId": "C1",
-    "ph": 5.12,
-    "hg_dissolved": 2.345678,
-    "hg_total": 25.4321,
-    "hg_sediment": 0.8123,
-    "methylmercury": 0.003456,
-    "hg_fish": 0.3456,
-    "turbidity": 87.3,
-    "temperature": 28.4,
-    "redox": -85.0,
-    "dissolved_oxygen": 2.14,
-    "organic_carbon": 3.45,
-    "timestamp": "2026-04-19T14:32:00Z"
-  }
-}
-```
-
-**Response:**
-```json
-{
-  "id": 1043,
-  "deviceId": "SENSOR-C1-002",
-  "latitude": 8.076432,
-  "longitude": -72.821957,
-  "clusterId": "C1",
-  "ph": 5.12,
-  "hgDissolved": 2.345678,
-  "hgTotal": 25.4321,
-  "hgSediment": 0.8123,
-  "hgFish": 0.3456,
-  "methylmercury": 0.003456,
-  "turbidity": 87.3,
-  "temperature": 28.4,
-  "redox": -85.0,
-  "dissolvedOxygen": 2.14,
-  "organicCarbon": 3.45,
-  "humanRiskScore": 1.0,
-  "ecologicalRiskScore": 1.0,
-  "geochemicalRiskScore": 1.0,
-  "totalRiskScore": 1.0,
-  "alertLevel": "CRITICO",
-  "alertType": "IMPACTO",
-  "dataCompleteness": 1.0,
-  "missingFields": null,
-  "dataSource": "MIXTO",
-  "timestamp": "2026-04-19T14:32:00"
-}
-```
-
----
-
-## Herramientas de Desarrollo
-
-### Postman Collection Completa
-Se incluye a nivel raíz el archivo `postman_collection.json`. Incluye:
-- Ejemplos de sensor básico vs laboratorio completo
-- Filtros por `alertType` (IMPACTO, RIESGO)
-- Filtros por `alertLevel` (CRITICO, ALERTA)
-- Todas las cabeceras, rutas con las llamadas asíncronas, simulación de autenticación proxy JWT
-
----
-
-## 📚 Documentación Adicional
-
-- **`evaluacion/ANALISIS_COMPLETO.md`**: Análisis técnico completo del sistema, datasets, pruebas de rendimiento y correlaciones estadísticas.
-- **`mining-management/README.md`**: Documentación específica del microservicio core.
-- **`mining-users/README.md`**: Documentación del microservicio de autenticación.
-- **`mining-audit-notifications/README.md`**: Documentación del microservicio de eventos.
-
----
-
-## 🎓 Rigor Científico
-
-Este sistema fue diseñado para ser utilizado en investigación académica y publicaciones científicas. Por ello:
-
-1. **No inventa datos** — Solo almacena lo medido
-2. **Transparencia total** — Cada registro indica qué campos faltan
-3. **Umbrales configurables** — Adaptable a diferentes regiones y normativas
-4. **Scoring multidimensional** — Evalúa riesgo humano, ecológico y geoquímico por separado
-5. **Distinción IMPACTO vs RIESGO** — Diferencia entre evidencia directa y condiciones peligrosas
-
----
-
-## Licencia
-
-MIT License - Ver archivo LICENSE para más detalles.
+- Code: [MIT](LICENSE).
+- CDMB surface-water monitoring, datos.gov.co `9fpa-27t2`, and Policía Nacional operations against illegal
+  mining, datos.gov.co `4y5w-y5sj`: CC BY-SA 4.0; derived files keep that license and attribution.
+- CORPONOR 2025 basin reports (IR-25-08, IR-25-01): public documents, transcription documented in
+  [`evaluacion/real/README.md`](evaluacion/real/README.md).
+- GADM 4.1 municipal boundaries are used but not redistributed (see the GADM license).
