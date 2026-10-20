@@ -40,8 +40,9 @@ def main():
     box(ax, 0.00, 0.63, 0.19, 0.33, "Evidence sources", [
         "• In-situ probes (IoT-ready)", "• Laboratory campaigns:", "   CDMB open data", "   (mg/L, '<LOD', −999)",
         "   CORPONOR reports", "   (nested JSON)", "• Citizen reports (app)"], fc="#f2f2f2")
-    box(ax, 0.00, 0.33, 0.19, 0.22, "mining-users", ["• Identity & access", "• JWT issuance", "• Roles: citizen,",
-                                                     "   validator, admin"], fc="#f2f2f2")
+    box(ax, 0.00, 0.33, 0.19, 0.22, "mining-users", ["• Identity & access", "• JWT (user id + role)",
+                                                     "• Roles: administrator,", "   engineer, moderator,",
+                                                     "   citizen"], fc="#f2f2f2")
 
     # Columna 2: núcleo
     box(ax, 0.24, 0.30, 0.39, 0.66, "mining-management (hexagonal core)", [], lw=1.0)
