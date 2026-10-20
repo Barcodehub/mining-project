@@ -36,14 +36,10 @@ Each run starts from a clean Docker environment (`compose down -v` / `up --build
 first (`./gradlew bootJar` in each service).
 
 ```bash
-python evaluacion/run_experiments.py functional --system v2   # real data, injection, field fidelity
-python evaluacion/run_experiments.py functional --system v1   # same inputs against the previous version
+python evaluacion/run_experiments.py functional               # real data, injection, field fidelity
 python evaluacion/run_experiments.py v3                       # sensor-citizen co-localization scenarios
 python evaluacion/run_experiments.py perf --reps 3 --scenarios bajo,medio,alto   # k6, 50/200/500 VU
 ```
-
-The v1 baseline needs a worktree of tag `v1-paper` next to the repository with its jars built:
-`git worktree add --detach ../mineria-v1 v1-paper` (see `compose/docker-compose.v1.yml`).
 
 Additional end-to-end checks against a running stack:
 
@@ -52,7 +48,7 @@ python evaluacion/scripts/verify_e2e.py     # alert path: ingestion â†’ Kafka â†
 python evaluacion/scripts/verify_rbac.py    # role-based access and validator taken from the token
 ```
 
-Raw outputs go to `results/<date>/`. The article uses `results/2026-10-19/` (functional v1/v2, V3 scenarios,
+Raw outputs go to `results/<date>/`. The article uses `results/2026-10-19/` (functional, V3 scenarios,
 performance runs with Prometheus snapshots and container statistics, the 1,000-replicate Monte Carlo,
 `rbac_check.txt`, logs and an environment description per experiment).
 

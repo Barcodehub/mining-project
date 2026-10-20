@@ -1,8 +1,7 @@
 """
-Orquestador de experimentos v2. Cada corrida usa un entorno Docker LIMPIO (compose down -v / up).
+Orquestador de experimentos. Cada corrida usa un entorno Docker LIMPIO (compose down -v / up).
 
-  python evaluacion/run_experiments.py functional --system v2      # V1 (real), V2 (inyección), H3, base V3
-  python evaluacion/run_experiments.py functional --system v1      # mismo insumo canónico contra el v1 (etiqueta v1-paper)
+  python evaluacion/run_experiments.py functional                  # datos reales, inyección de eventos, fidelidad y base de reportes
   python evaluacion/run_experiments.py v3                          # escenarios de reportes (aligned, null, noisy*)
   python evaluacion/run_experiments.py perf --reps 3 --scenarios bajo,medio,alto
   python evaluacion/run_experiments.py all
@@ -31,7 +30,6 @@ import load_api  # noqa: E402
 MGMT, AUDIT, USERS = "http://localhost:8082", "http://localhost:8083", "http://localhost:8081"
 SERVICES = ["zookeeper", "kafka", "mongo", "postgres-audit", "mining-users", "mining-management",
             "mining-audit-notifications"]
-V1_OVERRIDE = ROOT / "evaluacion/compose/docker-compose.v1.yml"
 DATA = ROOT / "evaluacion/data/v2"
 REAL = ROOT / "evaluacion/real/processed"
 
@@ -43,16 +41,13 @@ def sh(cmd, check=True, capture=False, timeout=None):
     return r.stdout if capture else None
 
 
-def compose(project, system="v2"):
-    base = ["docker", "compose", "-p", project, "-f", "docker-compose.yml"]
-    if system == "v1":
-        base += ["-f", str(V1_OVERRIDE)]
-    return base
+def compose(project):
+    return ["docker", "compose", "-p", project, "-f", "docker-compose.yml"]
 
 
-def env_up(project, system="v2"):
-    sh(compose(project, system) + ["down", "-v", "--remove-orphans"], check=False, capture=True)
-    sh(compose(project, system) + ["up", "-d", "--build"] + SERVICES, capture=True)
+def env_up(project):
+    sh(compose(project) + ["down", "-v", "--remove-orphans"], check=False, capture=True)
+    sh(compose(project) + ["up", "-d", "--build"] + SERVICES, capture=True)
     t0 = time.time()
     while time.time() - t0 < 420:
         try:
@@ -66,8 +61,8 @@ def env_up(project, system="v2"):
     raise RuntimeError("el entorno no quedó saludable")
 
 
-def env_down(project, system="v2"):
-    sh(compose(project, system) + ["down", "-v", "--remove-orphans"], check=False, capture=True)
+def env_down(project):
+    sh(compose(project) + ["down", "-v", "--remove-orphans"], check=False, capture=True)
 
 
 def write_json(path, obj):
@@ -125,34 +120,23 @@ def environment_info():
 
 
 # ── Experimentos ───────────────────────────────────────────────────────────
-def functional(system, out):
-    project = f"exp-func-{system}"
+def functional(out):
+    project = "exp-func-v2"
     out.mkdir(parents=True, exist_ok=True)
-    env_up(project, system)
+    env_up(project)
     try:
         canon = real_canonical()
         inj = json.loads((DATA / "inyeccion_eventos.json").read_text(encoding="utf-8"))
-        if system == "v2":
-            load_api.run("adapters", None, MGMT, None, 1)
-            load("measurements", json.loads((REAL / "cdmb_api.json").read_text(encoding="utf-8")), out / "real_cdmb_raw.jsonl")
-            load("measurements", json.loads((REAL / "corponor_api.json").read_text(encoding="utf-8")), out / "real_corponor_raw.jsonl")
+        load_api.run("adapters", None, MGMT, None, 1)
+        load("measurements", json.loads((REAL / "cdmb_api.json").read_text(encoding="utf-8")), out / "real_cdmb_raw.jsonl")
+        load("measurements", json.loads((REAL / "corponor_api.json").read_text(encoding="utf-8")), out / "real_corponor_raw.jsonl")
         load("measurements", canon, out / "real_canonical.jsonl")
         load("measurements", inj, out / "injection.jsonl")
-        if system == "v1":
-            # El v1 responde 500 tras guardar (bug de @CacheEvict) y su GET devuelve solo 10 filas
-            # (setMaxResults(10)); las clasificaciones guardadas se leen directamente de la base.
-            csv_text = sh(compose(project, system) + [
-                "exec", "-T", "postgres-audit", "psql", "-U", "postgres", "-d", "mining_management", "-c",
-                "\\copy (SELECT device_id, alert_level, alert_type, total_risk_score, human_risk_score, "
-                "ecological_risk_score, geochemical_risk_score FROM environmental_data) TO STDOUT WITH CSV HEADER"],
-                capture=True)
-            (out / "v1_stored.csv").write_text(csv_text, encoding="utf-8")
-        else:
-            pub, cons, waited = drain()
-            write_json(out / "drain.json", {"published": pub, "consumed": cons, "seconds": waited})
-            (out / "audit_prometheus.txt").write_text(scrape(AUDIT), encoding="utf-8")
+        pub, cons, waited = drain()
+        write_json(out / "drain.json", {"published": pub, "consumed": cons, "seconds": waited})
+        (out / "audit_prometheus.txt").write_text(scrape(AUDIT), encoding="utf-8")
     finally:
-        env_down(project, system)
+        env_down(project)
 
 
 def v3(out):
@@ -242,20 +226,15 @@ def main():
     sys.stdout.reconfigure(encoding="utf-8")
     ap = argparse.ArgumentParser()
     ap.add_argument("experiment", choices=["functional", "v3", "perf", "all"])
-    ap.add_argument("--system", choices=["v1", "v2"], default="v2")
     ap.add_argument("--reps", type=int, default=3)
     ap.add_argument("--scenarios", default="bajo,medio,alto")
     ap.add_argument("--tag", default=datetime.now().strftime("%Y-%m-%d"))
     a = ap.parse_args()
     out = ROOT / "evaluacion/results" / a.tag
     out.mkdir(parents=True, exist_ok=True)
-    write_json(out / f"environment_{a.experiment}_{a.system}.json", environment_info())
+    write_json(out / f"environment_{a.experiment}_v2.json", environment_info())
     if a.experiment in ("functional", "all"):
-        if a.experiment == "all":
-            functional("v2", out / "functional_v2")
-            functional("v1", out / "functional_v1")
-        else:
-            functional(a.system, out / f"functional_{a.system}")
+        functional(out / "functional_v2")
     if a.experiment in ("v3", "all"):
         v3(out / "v3")
     if a.experiment in ("perf", "all"):

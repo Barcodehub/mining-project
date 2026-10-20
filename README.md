@@ -16,8 +16,7 @@ Archived snapshot of tag `v2-paper`: [doi:10.5281/zenodo.23485438](https://doi.o
 
 | Git tag | State |
 |---|---|
-| `v2-paper` | System and results reported in the article (this branch) |
-| `v1-paper` | Previous version, used as baseline in the article |
+| `v2-paper` | System and results reported in the article |
 
 ---
 

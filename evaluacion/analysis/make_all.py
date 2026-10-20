@@ -98,13 +98,11 @@ def t1_thresholds(pol):
                rows, "Tabla 1 — Factores y umbrales del modelo (fuentes en tabla_umbrales.md)")
 
 
-# ── V1: datos reales, v1 vs v2 ─────────────────────────────────────────────
+# ── Datos reales ─────────────────────────────────────────────
 def v1_real(R, pol):
     raw = jl(R / "functional_v2/real_cdmb_raw.jsonl") + jl(R / "functional_v2/real_corponor_raw.jsonl")
     canon = real_canonical()
     cdmb_meta = [r["meta"] for r in json.loads((ROOT / "evaluacion/real/processed/cdmb_api.json").read_text(encoding="utf-8"))]
-    v1_rows = {r["device_id"]: r for r in csv.DictReader(open(R / "functional_v1/v1_stored.csv", encoding="utf-8"))}
-    v1_resp = jl(R / "functional_v1/real_canonical.jsonl")
     cat = []
     for i, c in enumerate(canon):
         cat.append(cdmb_meta[i]["categoria"] if i < len(cdmb_meta) else "CORPONOR")
@@ -112,15 +110,12 @@ def v1_real(R, pol):
     by = defaultdict(Counter)
     for i, r in enumerate(raw):
         by[cat[i]][r["body"]["alertLevel"]] += 1
-    # v1
-    v1c = Counter()
-    for i, c in enumerate(canon):
-        dev = c["payload"]["deviceId"]
-        if dev in v1_rows:
-            v1c[v1_rows[dev]["alert_level"]] += 1
-        else:
-            msg = v1_resp[i]["body"].get("message", "")
-            v1c["RECHAZADA (Hg ausente o < LD)" if "hg_" in msg else "RECHAZADA (campos de campo faltantes)"] += 1
+    # estado del mercurio en los datos reales (ausente, censurado o numérico)
+    hg_status = Counter()
+    for c in canon:
+        v = c["payload"].get("hg_total")
+        hg_status["numeric" if isinstance(v, (int, float)) and v != -999 else
+                  "censored" if isinstance(v, str) and v.strip().startswith("<") else "absent"] += 1
     # superaciones legales reales y detección
     legal = Counter()
     for i, c in enumerate(canon):
@@ -132,10 +127,7 @@ def v1_real(R, pol):
             legal["con superación humana"] += 1
             lv2 = raw[i]["body"]["alertLevel"]
             legal["v2 ≥ PRECAUCION"] += lv2 in ("PRECAUCION", "ALERTA", "CRITICO")
-            dev = c["payload"]["deviceId"]
-            lv1 = v1_rows[dev]["alert_level"] if dev in v1_rows else "RECHAZADA"
-            legal["v1 ≥ PRECAUCION"] += lv1 in ("PRECAUCION", "ALERTA", "CRITICO")
-            legal["v1 rechazada"] += lv1 == "RECHAZADA"
+            legal["con superación humana y Hg no numérico"] += not isinstance(c["payload"].get("hg_total"), float)
     rows = []
     for k in ("DISTRITO_MINERO", "AGUAS_ABAJO", "OTRO", "CORPONOR"):
         c = by[k]
@@ -143,13 +135,10 @@ def v1_real(R, pol):
     tot = Counter()
     for c in by.values():
         tot.update(c)
-    rows.append(["TOTAL v2", sum(tot.values())] + [tot.get(lv, 0) for lv in LEVELS])
+    rows.append(["TOTAL", sum(tot.values())] + [tot.get(lv, 0) for lv in LEVELS])
     save_table("T2_v1_reales_por_categoria", ["Categoría", "n"] + LEVELS, rows,
-               "Tabla 2 — V1: 345 mediciones reales (CDMB 2024–2025 + CORPONOR 2025) clasificadas por el v2")
-    rows2 = [[k, v] for k, v in sorted(v1c.items())]
-    save_table("T2b_v1_sistema_v1", ["Resultado en el sistema v1", "n"], rows2,
-               "Tabla 2b — Mismas 345 mediciones en el sistema v1 (etiqueta v1-paper)")
-    KEY["v1_real"] = {"v2_levels": dict(tot), "v1_outcomes": dict(v1c), "legal_human": dict(legal)}
+               "Tabla 2 — V1: 345 mediciones reales (CDMB 2025 + CORPONOR 2025) clasificadas")
+    KEY["v1_real"] = {"levels": dict(tot), "hg_status": dict(hg_status), "legal_human": dict(legal)}
 
     # CN en distrito/aguas abajo vs resto (independiente del modelo): Fisher
     cn_hi = cn_lo = n_hi = n_lo = 0
@@ -204,48 +193,24 @@ def fig_map(raw, canon, cat):
     save_fig(fig, "F2_mapa_estaciones")
 
 
-# ── V2: inyección v1 vs v2 frente al oráculo ───────────────────────────────
+# ── Inyección de eventos frente al oráculo ───────────────────────────────────────
 def v2_injection(R, pol):
     inj = json.loads((ROOT / "evaluacion/data/v2/inyeccion_eventos.json").read_text(encoding="utf-8"))
-    v2 = jl(R / "functional_v2/injection.jsonl")
-    v1 = {r["device_id"]: r for r in csv.DictReader(open(R / "functional_v1/v1_stored.csv", encoding="utf-8"))}
-    res = {"v2": defaultdict(Counter), "v1": defaultdict(Counter)}
-    for r in v2:
+    res = defaultdict(Counter)
+    for r in jl(R / "functional_v2/injection.jsonl"):
         rec = inj[r["i"]]
         m = {k: rec["payload"].get(k) for k in ("ph", "temperature", "turbidity", "dissolved_oxygen", "hg_total",
                                                  "cyanide", "arsenic", "altitude")}
-        t = rec["meta"]["target"]
-        res["v2"][t][check(r["body"]["alertLevel"], m, pol)] += 1
-        s = v1.get(rec["payload"]["deviceId"])
-        res["v1"][t]["REJECTED" if s is None else check(s["alert_level"], m, pol)] += 1
+        res[rec["meta"]["target"]][check(r["body"]["alertLevel"], m, pol)] += 1
     outcomes = ["OK", "MASKED", "FLOOR_VIOLATION", "FALSE_ALARM", "REJECTED"]
-    rows = []
-    for sysn in ("v1", "v2"):
-        tot = Counter()
-        for t in ("hg_total", "cyanide", "arsenic", "ph", "dissolved_oxygen"):
-            c = res[sysn][t]
-            tot.update(c)
-            rows.append([sysn, t, sum(c.values())] + [c.get(o, 0) for o in outcomes])
-        rows.append([sysn, "TOTAL", sum(tot.values())] + [tot.get(o, 0) for o in outcomes])
-        KEY[f"injection_{sysn}"] = dict(tot)
-    save_table("T3_v2_inyeccion", ["Sistema", "Parámetro", "n"] + outcomes, rows,
+    rows, tot = [], Counter()
+    for t in ("hg_total", "cyanide", "arsenic", "ph", "dissolved_oxygen"):
+        tot.update(res[t])
+        rows.append([t, sum(res[t].values())] + [res[t].get(o, 0) for o in outcomes])
+    rows.append(["TOTAL", sum(tot.values())] + [tot.get(o, 0) for o in outcomes])
+    KEY["injection"] = dict(tot)
+    save_table("T3_v2_inyeccion", ["Parámetro", "n"] + outcomes, rows,
                "Tabla 3 — V2: 3.564 variantes inyectadas sobre 99 observaciones reales, frente al oráculo normativo")
-    fig, axes = plt.subplots(1, 2, figsize=(COL2, 2.2), sharey=True)
-    colors = {"OK": "#1b9e77", "MASKED": "#d95f02", "FLOOR_VIOLATION": "#e6ab02", "FALSE_ALARM": "#7570b3",
-              "REJECTED": "#999999"}
-    targets = ["hg_total", "cyanide", "arsenic", "ph", "dissolved_oxygen"]
-    labels = ["Hg", "CN", "As", "pH", "DO"]
-    for ax, sysn in zip(axes, ("v1", "v2")):
-        left = np.zeros(len(targets))
-        for o in outcomes:
-            vals = np.array([res[sysn][t].get(o, 0) / max(1, sum(res[sysn][t].values())) for t in targets]) * 100
-            ax.barh(labels, vals, left=left, color=colors[o], label={"OK": "Correct", "MASKED": "Masked", "FLOOR_VIOLATION": "Floor violation", "FALSE_ALARM": "False alarm", "REJECTED": "Rejected"}[o])
-            left += vals
-        ax.set_title(f"System {sysn}")
-        ax.set_xlim(0, 100)
-        ax.set_xlabel("% of injected variants")
-    axes[1].legend(loc="center left", bbox_to_anchor=(1.01, 0.5), frameon=False)
-    save_fig(fig, "F3_inyeccion_v1_v2")
 
 
 # ── H3: fidelidad de la normalización heterogénea ──────────────────────────

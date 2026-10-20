@@ -1,12 +1,10 @@
 /**
- * Prueba de carga v2 (k6).
+ * Prueba de carga (k6): tres escenarios (50, 200 y 500 VU) con la mezcla de flujos del uso esperado.
  *
- * Igual que la v1 (load_test.js, etiqueta git v1-paper) en etapas, mezcla de flujos y umbrales, salvo:
  *  - POST /environmental-data usa un pool de payloads de TRES fuentes heterogéneas:
  *    sintéticos anclados en formato IoT canónico, filas reales de la CDMB y de CORPONOR en su
  *    formato original (data/payload_pool.json). Los adapters se registran en setup().
- *  - Se elimina el contador de "alertas críticas" de la v1, que sumaba filas devueltas por los GET.
- *    El conteo de alertas reales sale del servidor (environmental_alerts_published_total,
+ *  - El conteo de alertas reales sale del servidor (environmental_alerts_published_total,
  *    alert_consumed_total) y, del lado cliente, de la clasificación de cada POST
  *    (mediciones_publicables_total = respuestas con nivel ALERTA o CRITICO).
  *  - Los reportes usan los clústeres sintéticos SIM-A…SIM-G.
@@ -36,7 +34,7 @@ const medicionesPorFuente = {
   corponor_report: new Counter('mediciones_fuente_corponor_total'),
 };
 
-// ── Perfiles de carga (idénticos a la v1) ──────────────────────────────────
+// ── Perfiles de carga ──────────────────────────────────────────────────────
 const PERFILES = {
   bajo: {
     scenarios: { carga_baja: { executor: 'ramping-vus', startVUs: 0, gracefulRampDown: '10s',
@@ -88,7 +86,7 @@ function isoNow() { return new Date().toISOString(); }
 function isoDateBack(days) { const d = new Date(); d.setDate(d.getDate() - days); return d.toISOString(); }
 function authHeaders(token) { return { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }; }
 
-// ── Flujos (mismas proporciones que la v1) ─────────────────────────────────
+// ── Flujos (40% reportes, 30% mediciones, 10% crear reporte, 10% ingesta, 5% agregados, 5% analítica) ──
 function crearReporte(token) {
   const c = randomItem(CLUSTERS);
   const payload = JSON.stringify({
