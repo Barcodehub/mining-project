@@ -13,7 +13,7 @@ service that records the end-to-end latency.
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23485437.svg)](https://doi.org/10.5281/zenodo.23485437)
 
 Archived on Zenodo: [doi:10.5281/zenodo.23485437](https://doi.org/10.5281/zenodo.23485437) (resolves to the latest
-release, `release-2026-10`, which contains the code, data and results reported in the article).
+release, which contains the code, data and results reported in the article).
 
 ---
 

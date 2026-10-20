@@ -1,7 +1,6 @@
 cff-version: 1.2.0
 message: "If you use this software or data, please cite the article and this archive."
 title: "Event-driven early warning middleware for mining-related water contamination: code, data and experiments"
-version: release-2026-10
 date-released: 2026-10-19
 license: MIT
 doi: "10.5281/zenodo.23485437"
