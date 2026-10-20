@@ -3,7 +3,7 @@
 Source code, configuration, data and experiment scripts of the article
 
 > B. A. Barco Cardenas, "An Event-Driven Early Warning Middleware for Mining-Related Water Contamination:
-> Integrating Sensor, Laboratory, and Citizen Evidence in Northeastern Colombia," submitted to *IEEE Access*, 2026.
+> Integrating Sensor, Laboratory, and Citizen Evidence in Northeastern Colombia," manuscript submitted for publication, 2026.
 
 The middleware ingests heterogeneous evidence (in-situ probes, laboratory campaigns, citizen reports),
 classifies every measurement **at ingestion** against Colombian legal limits and international aquatic-life
